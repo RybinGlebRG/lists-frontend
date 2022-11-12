@@ -1,0 +1,16 @@
+export const BOOK_LIST = "BOOK_LIST";
+export const SERIES_LIST = "SERIES_LIST";
+export const SIGN_IN = "SIGN_IN";
+export const SERIES_ITEM = "SERIES_ITEM";
+export const BOOK = "BOOK";
+export const ADD_BOOK = "ADD_BOOK";
+export const BOOK_V2 = "BOOK_V2";
+export const ADD_TITLE = "ADD_TITLE";
+export const TITLES_LIST = "TITLES_LIST";
+export const TITLE = "TITLE";
+export const UPDATE_BOOK = "UPDATE_BOOK";
+export const UPDATE_TITLE = "UPDATE_TITLE";
+export const AUTHOR_LIST = "AUTHOR_LIST";
+export const AUTHOR = "AUTHOR";
+export const AUTHOR_ADD = "AUTHOR_ADD";
+export const SERIES_ADD = "SERIES_ADD";

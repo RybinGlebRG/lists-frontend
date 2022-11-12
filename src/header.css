@@ -1,0 +1,39 @@
+#headerDiv {
+    background-color: #ffffff;
+    
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 0.8px solid #ececec;
+}
+
+#settingsDiv {
+    /* align-self: end; */
+    margin:0px 30px 0px 0px; 
+}
+
+#fillerDiv {
+    flex-grow: 1;
+}
+
+#settingsLabel {
+    font-size: 16px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    cursor: pointer;
+}
+
+
+#settingsLabel:hover {
+    color: #202020;
+}
+
+#listsDiv {
+    margin:7px 10px 5px 15px; 
+}
+
+#listsLabel {
+    font-size: 30px;
+    font-family: 'Harrington', cursive;
+    cursor: pointer;
+    color: #45b29d;
+}

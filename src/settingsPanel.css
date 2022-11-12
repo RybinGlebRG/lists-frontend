@@ -1,0 +1,79 @@
+#div_settingsPanel{
+    display: flex;
+    flex-direction: column;
+}
+
+#labelDiv_settingsPanel{
+    margin-top: 30px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
+
+#label_settingsPanel{
+    font-size: 35px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    color: #464646;
+
+}
+
+#loginDiv_settingsPanel {
+    display: flex;
+    flex-direction: column;
+    margin-right: 50px;
+}
+
+#formInternal_settingsPanel{
+    display: flex;
+    flex-direction: column;
+}
+
+.lableClass_settingsPanel {
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.lableDiv_settingsPanel {
+    font-size: 16px;
+    margin-bottom: 7px;
+}
+
+.inputDiv_settingsPanel{
+    width: 100%;
+    text-align:center;
+    margin-bottom: 23px;
+}
+
+.inputClass_settingsPanel{
+    display: block;
+    width: 100%;
+    font-size: 16px;
+	font-family: 'Ubuntu', sans-serif;
+    margin:0 0 10px 0;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px 3%;
+    box-sizing: border-box;
+    
+}
+
+.inputClass_settingsPanel:focus{
+    outline:none;
+    border-color: #5f887e;
+}
+
+.inputClass_settingsPanel.error{
+    border-color: #da1305;
+    
+}
+
+.buttonDiv_settingsPanel{
+    display: flex;
+    text-align:center;
+    margin-top: 40px;
+}
+
+.warningLable_settingsPanel{
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 16px;
+    color: #da1305;
+}
