@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Row, Col, ListGroup, Alert, Button, Form } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import {
     openSignIn,
     bookSetLoadingState,
@@ -238,6 +238,11 @@ class ListPanel extends React.Component{
 										<p class="font-weight-bold">{item.title}</p>
 									</div>
 								</div>
+								{item.bookType ? (
+									<div class="row">
+									<div class="col">Type: {item.bookType.typeName}</div>
+								</div>
+								) : null}								
 								<div class="row">
 									<div class="col">Status: {item.bookStatus.statusName}</div>
 								</div>

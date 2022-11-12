@@ -6,7 +6,8 @@ import {
     openSignIn,
     bookSetLoadingState,
     openUpdateBook,
-    openReadList
+    openReadList,
+    openSeriesItem
 } from '../../redux/actionCreators'
 
 class Book extends React.Component{
@@ -201,9 +202,25 @@ class Book extends React.Component{
                                     </div>
                                 </div>
                                 <div class="row border-bottom">
-                                    <div class="col ml-2">
-                                        <p>{this.state.data.series.length > 0 ? this.state.data.series[0].title: "N/A"}</p>
-                                    </div>                            
+                                    {
+                                        this.state.data.series.length > 0 ? (
+                                            <div class="col ml-2">
+                                                <a 
+                                                    href="#"
+                                                    role="button"
+                                                    onClick={() => {
+                                                        this.props.openSeriesItem(this.state.data.series[0].seriesId);
+                                                    }}
+                                                ><p>{this.state.data.series[0].title}</p></a>
+                                            </div>
+                                        ) : (
+                                            <div 
+                                                class="col ml-2"
+                                            >
+                                                <p>--</p>
+                                            </div> 
+                                        )
+                                    }                           
                                 </div> 
                                 <div class="row  mt-2">
                                     <div class="col">
@@ -285,7 +302,8 @@ export default connect(
             openSignIn,
             // bookSetLoadingState,
             openUpdateBook,
-            openReadList
+            openReadList,
+            openSeriesItem
         }
         
 	)(Book)
