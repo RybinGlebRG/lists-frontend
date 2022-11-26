@@ -1,8 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 import ReadList from './readList/readList'
 import WatchList from './watchList/watchList'
 import Header from './header.js'
@@ -41,20 +37,20 @@ class DisplayArea extends React.Component{
 		}
 
 		return (
-			<Row>
-				<Col>
-					<Row>
-						<Col>
+			<div class="row">
+				<div class="col">
+					<div class="row">
+						<div class="col">
 							{header}
-						</Col>
-					</Row>
-					<Row>
-						<Col>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
 							{list}
-						</Col>	
-					</Row>
-				</Col>
-			</Row>
+						</div>	
+					</div>
+				</div>
+			</div>
 		)
 	}
 	
@@ -69,18 +65,18 @@ class DisplayArea extends React.Component{
 			)
 		} else {
 			displayPanel=(
-				<Row>
-					<Col>
+				<div class="row">
+					<div class="col">
 						{this.renderBody()}
-					</Col>
-				</Row>
+					</div>
+				</div>
 			)	
 		}
 
 		return (
-			<Container fluid className="h-100">
+			<div class="container-fluid h-100">
 				{displayPanel}
-			</Container>
+			</div>
 		)
 		
 	}

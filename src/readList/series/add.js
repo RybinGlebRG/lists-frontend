@@ -74,6 +74,10 @@ class SeriesItemAdd extends React.Component{
             book.lastChapter = values.lastChapter;
         }
 
+        if (values.bookType != null && values.bookType != ""){
+            book.bookTypeId = values.bookType;
+        }
+
         fetch(
 			window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.readListId}/books`,
 			{
@@ -144,7 +148,8 @@ class SeriesItemAdd extends React.Component{
                                         status: null,
                                         series: this.state.series.seriesId,
                                         order: null,
-                                        lastChapter: null
+                                        lastChapter: null,
+                                        bookType: null
                                     }}
                                     validate={values => {
                                         const errors = {};
@@ -268,6 +273,21 @@ class SeriesItemAdd extends React.Component{
                                                     value={values.lastChapter}
                                                 />
                                             </div>
+                                            <div class="form-group" controlId="bookType">
+                                                <label>Book Type</label >
+                                                <select class="form-control" 
+                                                    as="select"
+                                                    name="bookType"
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    value={values.bookType}      
+                                                >   
+                                                    <option value='' >--</option>
+                                                    <option value="1">Book</option>
+                                                    <option value="2">Light Novel</option>
+                                                    <option value="3">Webtoon</option>
+                                                </select>
+                                            </div>
                                             <button  class="btn btn-primary"
                                                 variant="primary" 
                                                 type="submit"
@@ -299,7 +319,7 @@ class SeriesItemAdd extends React.Component{
             displayPanel=( 
 				<div class="d-flex justify-content-center">
 					<div class="spinner-border m-5" role="status">
-						<span class="sr-only">Loading...</span>
+						<span class="sr-only"/>
 					</div>
 				</div>
 			);
