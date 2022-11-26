@@ -1,13 +1,11 @@
 import React from 'react';
 import { Formik } from 'formik';
-import { Row, Col, ListGroup, Alert, Button, Form } from 'react-bootstrap';
-import {openBookList, setJWT, loginUser} from '../redux/actionCreators.js'
+import {openBookList, loginUser} from '../redux/actionCreators.js'
 import { connect } from 'react-redux'
 
 class LoginPanel extends React.Component{
     
     onLogin(in_vals){
-        // const temp = JSON.stringify(in_vals);
         const vals={
             "username": in_vals.login,
             "password": in_vals.password
@@ -29,8 +27,6 @@ class LoginPanel extends React.Component{
         })
         .then(
             result=>{
-            // this.props.setJWT(result.user.token);
-            // this.props.setUser(result.user)
             this.props.loginUser(result.token, in_vals.login);
             this.props.openBookList();
             
@@ -46,17 +42,15 @@ class LoginPanel extends React.Component{
     
     render(){
         return(
-            <Row className="d-flex h-100 flex-column">
-                <Col className="d-flex justify-content-center align-items-center">
-                    <Row className="d-flex  justify-content-center align-items-stretch">
-                        <Col md="auto">
-                            <Row className="justify-content-center">
-                                <Col md="auto">
+                    <div class="row h-100 justify-content-center align-items-center">
+                        <div class="col-md-auto">
+                            <div class="row justify-content-center">
+                                <div class="col-md-auto mb-2">
                                     <h3>Sign in</h3>
-                                </Col>
-                            </Row>
-                            <Row className="justify-content-center">
-                                <Col md="auto">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
                                     <Formik 
                                         initialValues={{ 						 
                                             login: null,
@@ -73,8 +67,10 @@ class LoginPanel extends React.Component{
 
                                             return errors;
                                         }}
-                                        onSubmit={(values) => {
+                                        onSubmit={(values, {setSubmitting, resetForm}) => {
+                                            setSubmitting(true);
                                             this.onLogin(values)
+                                            setSubmitting(false);
                                         }}
                                     >
                                         {
@@ -87,59 +83,61 @@ class LoginPanel extends React.Component{
                                                     handleSubmit,
                                                     isSubmitting 
                                             }) => (
-                                            <Form
+                                            <form
                                                 onSubmit={handleSubmit}
                                             >
-                                                <Form.Group controlId="login">
-                                                    <Form.Control 
-                                                        type="text" 
-                                                        placeholder="Login"
-                                                        name="login"
-                                                        onChange={handleChange}
-                                                        onBlur={handleBlur}
-                                                        value={values.login}
-                                                    />
-                                                    {touched.login && errors.login ? (
-                                                    <Form.Text className="text-danger">
-                                                        {errors.login}
-                                                    </Form.Text>
-                                                    ): null}
-                                                </Form.Group>
-                                                <Form.Group controlId="password">
-                                                    <Form.Control 
-                                                        type="password" 
-                                                        name="password"
-                                                        placeholder="Password"
-                                                        onChange={handleChange}
-                                                        onBlur={handleBlur}
-                                                        value={values.password}
-                                                    />
-                                                    {touched.password && errors.password ? (
-                                                    <Form.Text className="text-danger">
-                                                        {errors.password}
-                                                    </Form.Text>
-                                                    ): null}
-                                                </Form.Group>
-                                                <Row className="justify-content-center">
-                                                    <Col md="auto">
-                                                        <Button 
+                                                <div class="mb-2">
+                                                    <div class="form-group" controlId="login">
+                                                        <input class="form-control" 
+                                                            type="text" 
+                                                            placeholder="Login"
+                                                            name="login"
+                                                            onChange={handleChange}
+                                                            onBlur={handleBlur}
+                                                            value={values.login}
+                                                        />
+                                                        {touched.login && errors.login ? (
+                                                        <label className="text-danger">
+                                                            {errors.login}
+                                                        </label>
+                                                        ): null}
+                                                    </div>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <div class="form-group" controlId="password">
+                                                        <input class="form-control"
+                                                            type="password" 
+                                                            name="password"
+                                                            placeholder="Password"
+                                                            onChange={handleChange}
+                                                            onBlur={handleBlur}
+                                                            value={values.password}
+                                                        />
+                                                        {touched.password && errors.password ? (
+                                                        <label className="text-danger">
+                                                            {errors.password}
+                                                        </label>
+                                                        ): null}
+                                                    </div> 
+                                                </div>       
+                                                <div class="row justify-content-center">
+                                                    <div class="col-md-auto">
+                                                        <button  class="btn btn-primary"
                                                             variant="primary" 
                                                             type="submit"
                                                             disabled={isSubmitting}
-                                                        >Sign in</Button>
-                                                    </Col>
-                                                </Row>
-                                                </Form>
+                                                        >Sign in</button>
+                                                    </div>
+                                                </div>
+                                            </form>
                                                     
                                             )
                                         }
                                     </Formik>
-                                </Col>
-                            </Row>
-                        </Col>
-                    </Row>
-                </Col>
-            </Row>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
         )
     }
 }
@@ -147,5 +145,5 @@ class LoginPanel extends React.Component{
 // export default LoginPanel;
 export default connect(
 	null,
-	{ openBookList, setJWT, loginUser }
+	{ openBookList, loginUser }
   )(LoginPanel)

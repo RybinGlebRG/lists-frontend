@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Row, Col } from 'react-bootstrap';
 import {
     openSignIn,
     bookSetLoadingState,
@@ -108,7 +107,7 @@ class ListPanel extends React.Component{
 			return(
 				<div class="d-flex justify-content-center">
 					<div class="spinner-border m-5" role="status">
-						<span class="sr-only">Loading...</span>
+						<span class="sr-only"/>
 					</div>
 				</div>
 			)
@@ -156,14 +155,14 @@ class ListPanel extends React.Component{
 		}
 
 		let controls=(
-			<Row>
-				<Col>
-				<Row>
-					<Col bsPrefix="col pb-2 mt-4 mb-2 border-bottom">			
-						<Row>
-							<Col>
+			<div class="row">
+				<div class="col">
+				<div class="row">
+					<div class="col pb-2 mt-4 mb-2 border-bottom">			
+						<div class="row">
+							<div class="col">
 								<h3>Book List</h3>
-							</Col>
+							</div>
 							<div class="col-md-auto">
 									<button 
 										type="button"
@@ -191,22 +190,22 @@ class ListPanel extends React.Component{
 										</svg>
 								  </button>
 								</div>
-						</Row>
+						</div>
 						
-					</Col>	
-				</Row>
+					</div>	
+				</div>
 				<div class="row">
 					<div class="col pb-2 mt-2 mb-2 border-bottom">
 						{bookOrdering}
 					</div>
 				</div>
-				<Row>
-					<Col>
+				<div class="row">
+					<div class="col">
 						{this.getTableData()}
-					</Col>
-				</Row>			
-				</Col>
-			</Row>
+					</div>
+				</div>			
+				</div>
+			</div>
 		)
 
 		return controls;
