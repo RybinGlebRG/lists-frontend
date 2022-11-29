@@ -4,17 +4,16 @@ import Col from 'react-bootstrap/Col'
 import ListPanel from './books/listPanel.js'
 import SettingsPanel from '../settingsPanel.js'
 import LeftMenu from './leftMenu.js' 
-import SeriesList from './series/list.js'
-import SeriesItem from './series/item.js'
+import SeriesList from '../series/list.js'
+import SeriesItem from '../series/item.js'
 import Book from './books/book.js'
 import BookAdd from './books/add.js'
 import BookEdit from './books/edit.js'
 import AuthorList from './authors/list.js'
 import Author from './authors/view.js'
 import AuthorAdd from './authors/add.js'
-import SeriesAdd from './series/addSeries.js'
+import SeriesAdd from '../series/addSeries.js'
 import { connect } from 'react-redux'
-import {SERIES_LIST, BOOK_LIST, SIGN_IN, SERIES_ITEM, BOOK, ADD_BOOK, BOOK_V2, UPDATE_BOOK, AUTHOR_LIST} from '../panels.js'
 import * as panels from '../panels.js'
 import {openSignIn, openBook, openBookList, openAddBook, openBookV2} from '../redux/actionCreators';
 
@@ -28,7 +27,7 @@ class ReadList extends React.Component{
     render(){
         const panel = -1;
 		let displayPanel;
-		if (this.props.store.panelType===BOOK_LIST){
+		if (this.props.store.panelType===panels.BOOK_LIST){
 			displayPanel= (
 			<div>
 				<ListPanel 
@@ -42,7 +41,7 @@ class ReadList extends React.Component{
 				/>
 			</div>
 			)
-		} else if (this.props.store.panelType===ADD_BOOK){
+		} else if (this.props.store.panelType===panels.ADD_BOOK){
 			displayPanel=(<BookAdd/>)			
 		} else if (panel===4){
 			displayPanel=(
@@ -50,13 +49,13 @@ class ReadList extends React.Component{
 				user = {this.state.user}
 				/>
 			)
-		} else if (this.props.store.panelType===SERIES_LIST){
-            displayPanel=(<SeriesList/>)
-        } else if (this.props.store.panelType===BOOK_V2){
+		// } else if (this.props.store.panelType===panels.SERIES_LIST){
+        //     displayPanel=(<SeriesList/>)
+        } else if (this.props.store.panelType===panels.BOOK_V2){
 			displayPanel=(<Book/>)
-		} else if (this.props.store.panelType===SERIES_ITEM){
-			displayPanel=(<SeriesItem/>)
-		} else if (this.props.store.panelType===UPDATE_BOOK){
+		// } else if (this.props.store.panelType===panels.SERIES_ITEM){
+		// 	displayPanel=(<SeriesItem/>)
+		} else if (this.props.store.panelType===panels.UPDATE_BOOK){
 			displayPanel=(<BookEdit/>)
 		} else if (this.props.store.panelType===panels.AUTHOR_LIST){
 			displayPanel=(<AuthorList/>)
@@ -64,13 +63,13 @@ class ReadList extends React.Component{
 			displayPanel=(<Author/>)
 		}else if (this.props.store.panelType===panels.AUTHOR_ADD){
 			displayPanel=(<AuthorAdd/>)
-		} else if (this.props.store.panelType===panels.SERIES_ADD){
-			displayPanel=(<SeriesAdd/>)
+		// } else if (this.props.store.panelType===panels.SERIES_ADD){
+		// 	displayPanel=(<SeriesAdd/>)
 		}
 
 
         let leftMenu;
-		if (this.props.store.panelType !== SIGN_IN) {
+		if (this.props.store.panelType !== panels.SIGN_IN) {
 			leftMenu = (<LeftMenu/>)
 		}
 

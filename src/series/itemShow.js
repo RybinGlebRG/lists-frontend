@@ -5,7 +5,7 @@ import {
     openBookV2,
     seriesItemSetLoadingState,
     openSignIn
-} from '../../redux/actionCreators'
+} from '../redux/actionCreators'
 
 class SeriesItemShow extends React.Component{
     constructor(props){

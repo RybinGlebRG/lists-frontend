@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {
     openSeriesItemShow,
     openSignIn
-} from '../../redux/actionCreators'
+} from '../redux/actionCreators'
 import { Formik} from 'formik';
 
 class SeriesItemAdd extends React.Component{
