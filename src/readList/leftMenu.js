@@ -29,14 +29,14 @@ class LeftMenu extends React.Component{
                         }}
                     >Book List</Nav.Link>
                 </Nav.Item>
-                <Nav.Item>
+                {/* <Nav.Item>
                     <Nav.Link 
                         eventKey="2"
                         onSelect={()=>{
-                            this.props.openSeriesList(function(){this.props.openSeriesList()})
+                            this.props.openSeriesList()
                         }}
                     >Series List</Nav.Link>
-                </Nav.Item>
+                </Nav.Item> */}
                 <Nav.Item>
                     <Nav.Link 
                         eventKey="3"

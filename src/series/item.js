@@ -1,7 +1,4 @@
 import React from 'react';
-import Container from 'react-bootstrap/Container'
-import ListGroup from 'react-bootstrap/ListGroup'
-import Alert from 'react-bootstrap/Alert' 
 import { Row, Col, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import {
@@ -11,7 +8,7 @@ import {
     openBookV2,
     openSeriesItem,
     seriesItemAddBook
-} from '../../redux/actionCreators'
+} from '../redux/actionCreators'
 import SeriesItemShow from './itemShow' 
 import SeriesItemAdd from './add'
 
@@ -102,7 +99,7 @@ class SeriesItem extends React.Component{
             displayResult=( 
             <div class="d-flex justify-content-center">
             <div class="spinner-border m-5" role="status">
-                <span class="sr-only">Loading...</span>
+                <span class="sr-only"></span>
             </div>
             </div>);
         } else {
@@ -153,8 +150,10 @@ class SeriesItem extends React.Component{
             )
         }
         return (
-            <div>
-                {displayResult}
+            <div class="row justify-content-center">
+                <div class="col col-md-10 pr-5">
+                    {displayResult}
+                </div>
             </div>
         )
     };

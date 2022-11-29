@@ -1,7 +1,7 @@
 import React from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Alert from 'react-bootstrap/Alert'
-import {openSignIn, openSeriesItem, openSeriesAdd} from '../../redux/actionCreators';
+import {openSignIn, openSeriesItem, openSeriesAdd} from '../redux/actionCreators';
 import { connect } from 'react-redux';
 
 class SeriesList extends React.Component {
@@ -101,13 +101,13 @@ class SeriesList extends React.Component {
 			);
 		}
 		return (
-			<div class="row">
-				<div class="col ">
+			<div class="row justify-content-center">
+				<div class="col col-md-10 pr-5">
 					<div class="row">
 						<div class="col pb-2 mt-4 mb-2 border-bottom">
 							<div class="row">
 								<div class="col">
-									<h3>Series list</h3>
+									<h3>Series</h3>
 								</div>
 								<div class="col-md-auto">
 									<button 

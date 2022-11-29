@@ -118,7 +118,7 @@ class TitlesList extends React.Component{
 			displayPanel=( 
 				<div class="d-flex justify-content-center">
 					<div class="spinner-border m-5" role="status">
-						<span class="sr-only">Loading...</span>
+						<span class="sr-only"></span>
 					</div>
 				</div>
 			);
@@ -137,7 +137,7 @@ class TitlesList extends React.Component{
 						<Col  bsPrefix="col pb-2 mt-4 mb-2 border-bottom">
 							<Row>
 								<Col>
-									<h3>Series list</h3>
+									<h3>Titles</h3>
 								</Col>
 								<div class="col-md-auto">
 									<button 

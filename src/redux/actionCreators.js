@@ -1,9 +1,8 @@
 import * as actionTypes from "./actionTypes";
 
-export function openSeriesList(func) {
+export function openSeriesList() {
     return {
-        type: actionTypes.OPEN_SERIES_LIST,
-        func: func
+        type: actionTypes.OPEN_SERIES_LIST
     }
 }
 

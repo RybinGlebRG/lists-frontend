@@ -1,6 +1,7 @@
 import React from 'react';
 import ReadList from './readList/readList'
 import WatchList from './watchList/watchList'
+import SeriesMain from './series/SeriesMain'
 import Header from './header.js'
 import LoginPanel from './login/login.js'
 import { connect } from 'react-redux'
@@ -24,16 +25,14 @@ class DisplayArea extends React.Component{
 
 
 	renderBody(){
-		let header=(
-			<Header/>
-		)
 
 		let list;
 		if (this.props.store.listType === "readList"){
 			list = (<ReadList/>)
-		}
-		else {
+		} else if (this.props.store.listType === "watchList"){
 			list = (<WatchList/>)
+		} else {
+			list = (<SeriesMain/>)
 		}
 
 		return (
@@ -41,7 +40,7 @@ class DisplayArea extends React.Component{
 				<div class="col">
 					<div class="row">
 						<div class="col">
-							{header}
+							<Header/>
 						</div>
 					</div>
 					<div class="row">

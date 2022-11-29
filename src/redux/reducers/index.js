@@ -67,7 +67,8 @@ export function lists(state = initialState, action){
         case actionTypes.OPEN_SERIES_LIST:{
             return {
                 ...state, 
-                panel: SERIES_LIST
+                panel: SERIES_LIST,
+                listType: 'seriesList',
             }
         }
         case actionTypes.OPEN_BOOK_LIST:
@@ -77,7 +78,8 @@ export function lists(state = initialState, action){
         case actionTypes.OPEN_SERIES_ITEM:{
             return {
                 ...state, 
-                panel: SERIES_ITEM,         
+                panel: SERIES_ITEM, 
+                listType: 'seriesList',        
                 seriesItem:{
                     ...state.seriesItem,
                     seriesId: action.payload.seriesId,
@@ -140,6 +142,7 @@ export function lists(state = initialState, action){
         case actionTypes.OPEN_BOOK_V2:{
             return {
                 ...state,
+                listType: 'readList',
                 book: {
                     bookId: action.payload.bookId
                 },

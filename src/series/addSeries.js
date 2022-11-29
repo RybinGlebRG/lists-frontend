@@ -1,5 +1,5 @@
 import React from 'react';
-import {openSignIn,openSeriesList} from '../../redux/actionCreators';
+import {openSignIn,openSeriesList} from '../redux/actionCreators';
 import { connect } from 'react-redux';
 import { Formik} from 'formik';
 
