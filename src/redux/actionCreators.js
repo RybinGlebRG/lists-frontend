@@ -22,7 +22,6 @@ export function openSignIn() {
 export function openSeriesItem(seriesId, bc_dif) {
     return {
         type: actionTypes.OPEN_SERIES_ITEM,
-        bc_dif: bc_dif,
         payload: {
             seriesId
         }
