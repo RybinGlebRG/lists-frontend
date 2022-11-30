@@ -1,7 +1,7 @@
 import React from 'react'
 import SeriesList from './list.js'
 import SeriesItem from './item.js'
-import SeriesAdd from './add.js'
+import SeriesAdd from './addSeries.js'
 import * as panels from '../panels.js'
 import { connect } from 'react-redux';
 

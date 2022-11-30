@@ -84,31 +84,33 @@ class SeriesAdd extends React.Component {
 						onSubmit={handleSubmit}
 					>
 						{/* {console.log(values)} */}
-						<div class="form-group" controlId="title">
-							<label>Title</label>
-							<input class="form-control" 
-								type="text" 
-								placeholder="Title"
-								name="title"
-								onChange={handleChange}
-								onBlur={handleBlur}
-								value={values.title}
-							/>
-							{touched.title && errors.title ? (
-							<label className="text-danger">
-								{errors.title}
-							</label>
-							): null}
+						<div class="mb-2">
+							<div class="form-group" controlId="title">
+								<input class="form-control" 
+									type="text" 
+									placeholder="Title"
+									name="title"
+									onChange={handleChange}
+									onBlur={handleBlur}
+									value={values.title}
+								/>
+								{touched.title && errors.title ? (
+								<label className="text-danger">
+									{errors.title}
+								</label>
+								): null}
+							</div>
 						</div>
-						
-						<button  class="btn btn-primary"
-							variant="primary" 
-							type="submit"
-							disabled={isSubmitting}
-						>
-							Submit
-						</button>
-						</form>
+						<div class="row justify-content-left">
+							<div class="col-md-auto">
+								<button  class="btn btn-primary"
+									variant="primary" 
+									type="submit"
+									disabled={isSubmitting}
+								>Submit</button>
+							</div>
+						</div>
+					</form>
 					)
 				}
 			</Formik>
@@ -123,8 +125,8 @@ class SeriesAdd extends React.Component {
 		}
 
 		return (
-			<div class="row">
-				<div class="col">
+			<div class="row justify-content-center">
+				<div class="col col-md-10 pr-5">
 					<div class="row">
 						<div class="col pb-2 mt-4 mb-2 border-bottom">
 							<h3>Add Series</h3>
