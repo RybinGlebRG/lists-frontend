@@ -112,23 +112,21 @@ class SeriesItemShow extends React.Component{
             </div>);
         } else {
             displayResult=this.state.books.map(item =>{
-                let badge
+                let badge;
                 if (item.bookStatus.statusName==='Completed'){
                     badge=(
-                        <span class="badge badge-success badge-pill">
+                        <span class="badge text-bg-success rounded-pill">
                             {item.bookStatus.statusName}
                         </span>
                     )
                 } else if (item.bookStatus.statusName==='In Progress') {
                     badge=(
-                        <span class="badge badge-warning badge-pill ">
+                        <span class="badge rounded-pill text-bg-warning">
                             {item.bookStatus.statusName}
                             
                             
                             {item.lastChapter !== undefined ? (
-                                <span class="badge badge-secondary badge-pill ml-1">
-                                Ch. {item.lastChapter}
-                            </span>
+                                <span class="badge text-bg-secondary rounded-pill ml-1 ms-1">Ch. {item.lastChapter}</span>
                             ): null
                             }
                         </span>
