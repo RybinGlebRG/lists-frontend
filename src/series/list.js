@@ -65,7 +65,7 @@ class SeriesList extends React.Component {
 						
 					>
 						{item.title}
-						<span class="badge badge-primary badge-pill">
+						<span class="badge text-bg-secondary rounded-pill">
 							{item.bookCount}
 						</span>
 					</ListGroup.Item>
