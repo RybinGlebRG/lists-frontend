@@ -10,7 +10,8 @@ class BookEdit extends React.Component{
 		super(props);
 		this.state={
             authors:null,
-            series: null
+            series: null,
+            bookTypes: null
         };
 
     }
@@ -58,10 +59,24 @@ class BookEdit extends React.Component{
 
         let series = await res.json()
 
+        let bookTypes = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/bookTypes`,
+		{
+			method: "GET",
+			headers: {
+				'Authorization': `Bearer ${this.props.store.JWT}`
+			}
+        });
+        if (!bookTypes.ok){
+            bookTypes = await bookTypes.json();
+            throw new Error('Error: '+bookTypes.error);
+        }
+        bookTypes = await bookTypes.json();
+
         let out = {
             book,
             authors: authors.items,
-            series: series.items
+            series: series.items,
+            bookTypes: bookTypes.items
         }
 
 
@@ -73,7 +88,8 @@ class BookEdit extends React.Component{
         .then(result =>{
             this.setState({
                 authors: result.authors,
-                series: result.series
+                series: result.series,
+                bookTypes: result.bookTypes
             });
             this.props.saveBookEdit(true,null,result.book);  
         })
@@ -82,32 +98,6 @@ class BookEdit extends React.Component{
             this.props.saveBookEdit(true,error.error,null)
         });
     }
-
-    // loadBook(){
-    //     fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.listId}/books/${this.props.store.bookId}`,
-	// 	{
-	// 		method: "GET",
-	// 		headers: {
-	// 			'Authorization': `Bearer ${this.props.store.JWT}`
-	// 		}
-    //     })
-    //     .then(
-    //         res => {
-    //             if (!res.ok){
-    //                 throw new Error('Some network error');
-    //             }
-    //             return res.json();
-    //         })
-    //     .then(
-    //         res => {
-	// 			this.props.saveBookEdit(true,null,res)
-    //         }
-    //     )
-    //     .catch(
-    //         error => {
-	// 			this.props.saveBookEdit(true,error,null)
-    //     });
-    // }
 
     saveValues(values){
         let book = {
@@ -189,6 +179,11 @@ class BookEdit extends React.Component{
             let seriesItems=[]
             for (let i = 0; i < this.state.series.length; i++){
                 seriesItems.push(<option value={this.state.series[i].seriesId}>{this.state.series[i].title}</option>)
+            }
+
+            let bookTypes=[]
+            for (let i = 0; i < this.state.bookTypes.length; i++){
+                bookTypes.push(<option value={this.state.bookTypes[i].id}>{this.state.bookTypes[i].name}</option>)
             }
 
 
@@ -359,9 +354,10 @@ class BookEdit extends React.Component{
                                     value={values.bookType}      
                                 >   
                                     <option value='' >--</option>
-                                    <option value="1">Book</option>
+                                    {/* <option value="1">Book</option>
                                     <option value="2">Light Novel</option>
-                                    <option value="3">Webtoon</option>
+                                    <option value="3">Webtoon</option> */}
+                                    {bookTypes}
                                 </select>
                             </div>
 
