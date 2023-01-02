@@ -13,8 +13,7 @@ class SeriesItemShow extends React.Component{
 		this.state={
 			error: null,
             isLoaded: false,
-            series: null,
-            books: null
+            series: null
         };
     }
 
@@ -37,56 +36,36 @@ class SeriesItemShow extends React.Component{
 
         let series = await res.json();
 
-        let books = []
-        for await (const item of series.books ){
-            res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.readListId}/books/${item.bookId}`,
-            {
-                method: "GET",
-                headers: {
-                    'Authorization': `Bearer ${this.props.store.JWT}`
-                }
-            });
-            if (!res.ok){
-                let result=await res.json();
-                throw new Error('Error: '+result.error);
-            };
+        // let books = []
+        // for await (const item of series.books ){
+        //     res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.readListId}/books/${item.bookId}`,
+        //     {
+        //         method: "GET",
+        //         headers: {
+        //             'Authorization': `Bearer ${this.props.store.JWT}`
+        //         }
+        //     });
+        //     if (!res.ok){
+        //         let result=await res.json();
+        //         throw new Error('Error: '+result.error);
+        //     };
 
-            let book = await res.json();
-            books.push(book);
-        }
+        //     let book = await res.json();
+        //     books.push(book);
+        // }
 
         let out= {
-            series,
-            books
+            series
         }
 
         return out;
     }
-
-    // loadItem(){
-    //     let seriesItemApi = new SeriesItemApi(this.props.openSignIn);
-    //     seriesItemApi.getBooks(
-    //         this.props.store.listId,
-    //         this.props.store.seriesId,
-    //         this.props.store.JWT,
-    //         (result) => {
-    //             this.props.seriesItemSetLoadingState(null, true, result)
-
-    //         },
-    //         (error) => {
-    //             this.props.seriesItemSetLoadingState(error, true, {})
-    //         }
-
-
-    //     );
-    // }
 
     componentDidMount(){
 		this.loadData()
         .then(result =>{
             this.setState({
                 series: result.series,
-                books: result.books,
                 isLoaded: true
             });  
         })
@@ -111,7 +90,7 @@ class SeriesItemShow extends React.Component{
             </div>
             </div>);
         } else {
-            displayResult=this.state.books.map(item =>{
+            displayResult=this.state.series.items.map(item =>{
                 let badge;
                 if (item.bookStatus.statusName==='Completed'){
                     badge=(
