@@ -11,6 +11,8 @@ import {
 } from '../redux/actionCreators'
 import SeriesItemShow from './itemShow' 
 import SeriesItemAdd from './add'
+import SeriesEdit from './editList'
+import * as seriesForms from './forms.js'
 
 class SeriesItem extends React.Component{
     constructor(props){
@@ -103,6 +105,19 @@ class SeriesItem extends React.Component{
             </div>
             </div>);
         } else {
+            let mode;
+            // if (this.props.store.seriesFrom===seriesForms.ADD_ITEM){
+            //     mode=(<SeriesItemAdd/>)
+            // } else if (this.props.store.seriesFrom===seriesForms.SHOW_ITEMS) {
+            //     mode=(<SeriesItemShow/>)
+            // } else if (this.props.store.seriesFrom===seriesForms.EDIT_SERIES){
+            //     mode=(<SeriesEdit/>)
+            // }
+            if (this.props.store.isAdd){
+                mode=(<SeriesItemAdd/>)
+            } else {
+                mode=(<SeriesItemShow/>)
+            }
             displayResult=(
                 <div>
                     <div class="mb-4 mt-4 border-bottom">
@@ -144,7 +159,7 @@ class SeriesItem extends React.Component{
                                     </div>
                     </Row>
                     </div>
-                    {this.props.store.isAdd ? <SeriesItemAdd/> : <SeriesItemShow/>}  
+                    {mode}
                     
                 </div>
             )
@@ -167,7 +182,8 @@ const mapStatetoProps = (state) => {
             readListId: state.listId,
             seriesId: state.seriesItem.seriesId,
             JWT: state.JWT,
-            isAdd: state.seriesItem.isAdd
+            isAdd: state.seriesItem.isAdd,
+            seriesForm: state.series.form
         }
     };
 }
