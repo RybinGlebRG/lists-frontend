@@ -33,5 +33,6 @@ export const OPEN_ADD_BOOK = 'OPEN_ADD_BOOK';
 export const OPEN_BOOK_V2 = 'OPEN_BOOK_V2';
 export const OPEN_UPDATE_BOOK = 'OPEN_UPDATE_BOOK';
 
-// ReadList.Series
+// Series
 export const OPEN_SERIES_ADD = 'OPEN_SERIES_ADD';
+export const OPEN_SERIES_EDIT = 'OPEN_SERIES_EDIT';

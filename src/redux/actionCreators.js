@@ -238,3 +238,11 @@ export function openSeriesAdd(){
         type: actionTypes.OPEN_SERIES_ADD,
     }
 }
+export function openSeriesEdit(seriesId){
+    return {
+        type: actionTypes.OPEN_SERIES_EDIT,
+        payload: {
+            seriesId: seriesId
+        }
+    }
+}

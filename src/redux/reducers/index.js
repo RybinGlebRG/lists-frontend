@@ -121,6 +121,10 @@ export function lists(state = initialState, action){
         case actionTypes.OPEN_SERIES_ITEM_SHOW:{
             return {
                 ...state, 
+                series:{
+                    ...state.series,
+                    form: seriesForms.SHOW_ITEMS
+                },
                 seriesItem:{
                     ...state.seriesItem,
                     isAdd:false,
@@ -270,10 +274,14 @@ export function lists(state = initialState, action){
             } 
 
 
-        // BookSeries
+        // Series
         case actionTypes.SERIES_ITEM_ADD_BOOK:{
             return {
                 ...state, 
+                series:{
+                    ...state.series,
+                    form: seriesForms.ADD_ITEM
+                },
                 seriesItem:{
                     ...state.seriesItem,
                     isAdd:true,
@@ -286,6 +294,20 @@ export function lists(state = initialState, action){
             return {
                 ...state,
                 panel: panels.SERIES_ADD
+            }
+        }
+        case actionTypes.OPEN_SERIES_EDIT:{
+            return {
+                ...state,
+                series:{
+                    ...state.series,
+                    form: seriesForms.EDIT_SERIES
+                },
+                seriesItem:{
+                    ...state.seriesItem,
+                    seriesId: action.payload.seriesId
+                    
+                }
             }
         }
 

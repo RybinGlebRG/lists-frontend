@@ -131,13 +131,42 @@ class SeriesItemAdd extends React.Component{
             authorsItems.push(<option value={this.state.authors[i].authorId}>{this.state.authors[i].name}</option>)
         }
 
+        let header = (
+            <div>
+                <div class="mb-4 mt-4 border-bottom">
+                    <div class="row">
+                        <div class="col">
+                            <div class="pb-0 mt-3 mb-2 ">
+                                <h2>{this.state.series.title} (Add book)</h2>
+                            </div>
+                        </div>
+                        <div class="col-md-auto">
+                            <button 
+                                type="button"
+                                class="btn btn-secondary btn-sm"
+                                onClick={()=>{
+                                    this.props.openSeriesItemShow();
+                                }}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
+                                    <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>            
+            </div>
+        )
+
         let result=(
             <div class="row">
                     <div class="col">
                         <div class="row">
-                            <div class="col pb-2 mt-4 mb-2 border-bottom">
+                            {header}
+                            {/* <div class="col pb-2 mt-4 mb-2 border-bottom">
                                 <h3>Add Book</h3>
-                            </div>
+                            </div> */}
                         </div>
                         <div class="row">
                             <div class="col">
