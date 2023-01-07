@@ -1,6 +1,7 @@
 import * as actionTypes from '../actionTypes'
 import {SERIES_LIST, BOOK_LIST, SIGN_IN, SERIES_ITEM, BOOK, ADD_BOOK, BOOK_V2, ADD_TITLE, TITLES_LIST, READ_LIST} from '../../panels.js'
 import * as panels from '../../panels.js'
+import * as seriesForms from '../../series/forms.js'
 // import seriesItem from '../../seriesItem/seriesItem';
 
 const initialState = {
@@ -12,6 +13,9 @@ const initialState = {
     JWT:null,
     seriesId:null,
     bc_dif: null,
+    series:{
+        form: seriesForms.SHOW_ITEMS
+    },
     seriesList:{
         error: null,
         isLoaded: false,

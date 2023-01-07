@@ -224,7 +224,7 @@ export function saveBookEdit(isLoaded,error,book){
 }
 
 
-// BookSeries
+// Series
 export function seriesItemAddBook(seriesId){
     return {
         type: actionTypes.SERIES_ITEM_ADD_BOOK,

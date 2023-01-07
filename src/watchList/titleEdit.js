@@ -3,6 +3,7 @@ import { Row, Col, Button, Alert} from 'react-bootstrap'
 import { connect } from 'react-redux'
 import {openTitle} from '../redux/actionCreators';
 import { Formik} from 'formik';
+import * as dateUtils from '../utils/dateUtils'
 
 class TitleEdit extends React.Component{
     constructor(props){
@@ -53,8 +54,9 @@ class TitleEdit extends React.Component{
     }
 
     saveValues(values){
-        let dt = new Date(values.createDate+"Z")
-        dt = dt.toISOString()
+        // let dt = new Date(values.createDate+"Z")
+        // dt = dt.toISOString()
+        let dt = dateUtils.postprocessValues(values.createDate);
         let title = {
             name: values.name,
             statusId: values.status,
@@ -112,16 +114,17 @@ class TitleEdit extends React.Component{
 				</div>
 			);
 		} else {
-            let createDate=this.state.data.create_date_utc;
-            createDate = createDate+".000Z";
-            createDate = new Date(createDate);
-            // createDate = createDate.toISOString();
-            createDate = createDate.getUTCFullYear() + '-' +
-				(createDate.getUTCMonth()+1).toString().padStart(2,"0") + '-' +
-				createDate.getUTCDate().toString().padStart(2,"0") + 'T' +
-				createDate.getUTCHours().toString().padStart(2,"0") + ':' +
-				createDate.getUTCMinutes().toString().padStart(2,"0");
-            // createDate = createDate.substring(0,createDate.length-1);
+            // let createDate=this.state.data.create_date_utc;
+            // createDate = createDate+".000Z";
+            // createDate = new Date(createDate);
+            // // createDate = createDate.toISOString();
+            // createDate = createDate.getUTCFullYear() + '-' +
+			// 	(createDate.getUTCMonth()+1).toString().padStart(2,"0") + '-' +
+			// 	createDate.getUTCDate().toString().padStart(2,"0") + 'T' +
+			// 	createDate.getUTCHours().toString().padStart(2,"0") + ':' +
+			// 	createDate.getUTCMinutes().toString().padStart(2,"0");
+            // // createDate = createDate.substring(0,createDate.length-1);
+            let createDate = dateUtils.preprocessValues(this.state.data.create_date_utc)
 			displayPanel=(	
 				<Row>
                     <Col>

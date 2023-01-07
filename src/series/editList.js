@@ -1,13 +1,11 @@
 import React from 'react';
-import ListGroup from 'react-bootstrap/ListGroup';
 import { connect } from 'react-redux';
 import {
     openBookV2,
-    seriesItemSetLoadingState,
     openSignIn
 } from '../redux/actionCreators'
 
-class SeriesItemShow extends React.Component{
+class SeriesEdit extends React.Component{
     constructor(props){
 		super(props);
 		this.state={
@@ -16,8 +14,6 @@ class SeriesItemShow extends React.Component{
             series: null
         };
     }
-
-    
 
 
     async loadData(){
@@ -112,16 +108,16 @@ class SeriesItemShow extends React.Component{
                     )
                 }
                 return (
-                        <ListGroup.Item 
+                        <li class="list-group-item d-flex justify-content-between list-group-item-action"
                             action 
-                            bsPrefix="list-group-item d-flex justify-content-between  list-group-item-action"
+                            draggable="true"
                             onClick={()=>{
                                 this.props.openBookV2(item.bookId)
                             }}
                         >
                             {item.title}
                             {badge}
-                        </ListGroup.Item>
+                        </li>
                 )
                  
             }
@@ -139,11 +135,12 @@ class SeriesItemShow extends React.Component{
 
     render(){
         return (
-        <ListGroup>
+        <ul class="list-group">
 			{this.renderTableData()}
-		</ListGroup>
+		</ul>
         )
     }
+
 
 }
 
@@ -152,7 +149,9 @@ const mapStatetoProps = (state) => {
         store: {
             readListId: state.listId,
             seriesId: state.seriesItem.seriesId,
-            JWT: state.JWT
+            JWT: state.JWT,
+            isAdd: state.seriesItem.isAdd,
+            seriesForm: state.series.form
         }
     };
 }
@@ -163,4 +162,4 @@ export default connect(
         openBookV2,
         openSignIn
     }
-)(SeriesItemShow)
+)(SeriesEdit)
