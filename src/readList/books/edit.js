@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Row, Col, ListGroup, Alert, Button, Form } from 'react-bootstrap';
 import { openBookV2, titleAddSetResult, saveBookEdit } from '../../redux/actionCreators'
 import { Formik} from 'formik';
+import * as dateUtils from '../../utils/dateUtils'
 
 
 class BookEdit extends React.Component{
@@ -100,12 +101,15 @@ class BookEdit extends React.Component{
     }
 
     saveValues(values){
+        // let dt = new Date(values.createDate+"Z")
+        // dt = dt.toISOString()
+        let dt = dateUtils.postprocessValues(values.createDate);
         let book = {
             readListId: this.props.store.listId,
             title: values.title,
             status: values.status,
             lastChapter: values.lastChapter,
-            insertDateUTC: this.props.store.book.insertDate
+            insertDateUTC: dt //this.props.store.book.insertDate
         }
 
         if (values.author != ""){
@@ -170,6 +174,8 @@ class BookEdit extends React.Component{
 				</div>
 			);
         } else {
+            let createDate = dateUtils.preprocessValues(this.props.store.book.insertDate)
+
             let authorsItems=[]
             for (let i = 0; i < this.state.authors.length; i++){
                 // authorsItems.push(<option key={i} value={i}>{i}</option>)
@@ -222,7 +228,8 @@ class BookEdit extends React.Component{
                                 series: this.props.store.book.series.length > 0 ?this.props.store.book.series[0].seriesId: null,
                                 order: this.props.store.book.series.length > 0 ? this.props.store.book.series[0].seriesOrder: null,
                                 lastChapter: this.props.store.book.lastChapter,
-                                bookType: this.props.store.book.bookType ? this.props.store.book.bookType.typeId: null
+                                bookType: this.props.store.book.bookType ? this.props.store.book.bookType.typeId: null,
+                                createDate: createDate
                             }}
                             validate={values => {
                                 const errors = {};
@@ -359,6 +366,17 @@ class BookEdit extends React.Component{
                                     <option value="3">Webtoon</option> */}
                                     {bookTypes}
                                 </select>
+                            </div>
+
+                            <div class="form-group" controlId="createDate">
+                                <label>Create date UTC</label>
+                                <input class="form-control" 
+                                    type="datetime-local" 
+                                    name="createDate"
+                                    value={values.createDate}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                />
                             </div>
 
                             <button  class="btn btn-primary"
