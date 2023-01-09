@@ -5,9 +5,12 @@ import {
     openBookV2,
     // seriesItemSetLoadingState,
     openSignIn,
-    openSeriesEdit,
+    // openSeriesEdit,
     seriesItemAddBook
 } from '../redux/actionCreators'
+import {
+	openSeriesEdit
+} from './seriesSlice'
 
 class SeriesItemShow extends React.Component{
     constructor(props){
@@ -168,7 +171,7 @@ class SeriesItemShow extends React.Component{
                                     <h2>{this.state.series.title}</h2>
                                 </div>
                             </div>
-                            <div class="col-md-auto">
+                            {/* <div class="col-md-auto">
                                 <button 
                                     type="button"
                                     class="btn btn-success btn-sm"
@@ -180,7 +183,7 @@ class SeriesItemShow extends React.Component{
                                             <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
                                         </svg>
                                 </button>
-                            </div>
+                            </div> */}
                             <div class="col-md-auto">
                                 <button 
                                     type="button"
@@ -264,9 +267,9 @@ class SeriesItemShow extends React.Component{
 const mapStatetoProps = (state) => {   
     return {
         store: {
-            readListId: state.listId,
-            seriesId: state.seriesItem.seriesId,
-            JWT: state.JWT
+            readListId: state.listsReducer.listId,
+            seriesId: state.listsReducer.seriesItem.seriesId,
+            JWT: state.listsReducer.JWT
         }
     };
 }

@@ -281,14 +281,14 @@ class ListPanel extends React.Component{
 const mapStatetoProps = (state) => {   
     return {
         store: {
-            listId: state.listId,
-            seriesId: state.seriesItem.seriesId,
-            JWT: state.JWT,
-            list: state.seriesItem.list,
-            error: state.seriesItem.error,
-            isLoaded: state.seriesItem.isLoaded,
-            isAdd: state.seriesItem.isAdd,
-			isReload: state.bookList.isReload
+            listId: state.listsReducer.listId,
+            seriesId: state.listsReducer.seriesItem.seriesId,
+            JWT: state.listsReducer.JWT,
+            list: state.listsReducer.seriesItem.list,
+            error: state.listsReducer.seriesItem.error,
+            isLoaded: state.listsReducer.seriesItem.isLoaded,
+            isAdd: state.listsReducer.seriesItem.isAdd,
+			isReload: state.listsReducer.bookList.isReload
         }
     };
 }

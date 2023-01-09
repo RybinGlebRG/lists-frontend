@@ -1,9 +1,12 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { connect,useDispatch } from 'react-redux';
 import {
     openSignIn,
     openSeriesItemShow
 } from '../redux/actionCreators'
+import {
+	openSeriesItem
+} from './seriesSlice'
 
 class SeriesEdit extends React.Component{
     constructor(props){
@@ -13,8 +16,9 @@ class SeriesEdit extends React.Component{
             isLoaded: false,
             series: null,
             dragIndex: null,
-            dragOverIndex: null,
+            dragOverIndex: null
         };
+        // this.dispatch = useDispatch()
 
         this.dragStart = this.dragStart.bind(this);
         this.dragEnter = this.dragEnter.bind(this);
@@ -69,24 +73,6 @@ class SeriesEdit extends React.Component{
         };
 
         let series = await res.json();
-
-        // let books = []
-        // for await (const item of series.books ){
-        //     res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.readListId}/books/${item.bookId}`,
-        //     {
-        //         method: "GET",
-        //         headers: {
-        //             'Authorization': `Bearer ${this.props.store.JWT}`
-        //         }
-        //     });
-        //     if (!res.ok){
-        //         let result=await res.json();
-        //         throw new Error('Error: '+result.error);
-        //     };
-
-        //     let book = await res.json();
-        //     books.push(book);
-        // }
 
         let out= {
             series
@@ -178,9 +164,23 @@ class SeriesEdit extends React.Component{
                             <div class="col-md-auto">
                                 <button 
                                     type="button"
+                                    class="btn btn-success btn-sm"
+                                    onClick={()=>{
+                                        alert("Not implemented!");
+                                        // this.props.seriesItemAddBook(this.state.series.seriesId);
+                                    }}
+                                >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                                            <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
+                                        </svg>
+                                </button>
+                            </div>
+                            <div class="col-md-auto">
+                                <button 
+                                    type="button"
                                     class="btn btn-secondary btn-sm"
                                     onClick={()=>{
-                                        this.props.openSeriesItemShow();
+                                        this.props.openSeriesItem();
                                     }}
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
@@ -198,26 +198,6 @@ class SeriesEdit extends React.Component{
             
             
             let items = this.state.series.items.map((item,index) =>{
-                let badge;
-                if (item.bookStatus.statusName==='Completed'){
-                    badge=(
-                        <span class="badge text-bg-success rounded-pill">
-                            {item.bookStatus.statusName}
-                        </span>
-                    )
-                } else if (item.bookStatus.statusName==='In Progress') {
-                    badge=(
-                        <span class="badge rounded-pill text-bg-warning">
-                            {item.bookStatus.statusName}
-                            
-                            
-                            {item.lastChapter !== undefined ? (
-                                <span class="badge text-bg-secondary rounded-pill ml-1 ms-1">Ch. {item.lastChapter}</span>
-                            ): null
-                            }
-                        </span>
-                    )
-                }
                 return (
                         <li class="list-group-item d-flex justify-content-between list-group-item-action"
                             action 
@@ -230,7 +210,6 @@ class SeriesEdit extends React.Component{
                             }}
                         >
                             {item.title}
-                            {badge}
                         </li>
                 ) 
             } 
@@ -299,11 +278,10 @@ class SeriesEdit extends React.Component{
 const mapStatetoProps = (state) => {   
     return {
         store: {
-            readListId: state.listId,
-            seriesId: state.seriesItem.seriesId,
-            JWT: state.JWT,
-            isAdd: state.seriesItem.isAdd,
-            seriesForm: state.series.form
+            readListId: state.listsReducer.listId,
+            seriesId: state.listsReducer.seriesItem.seriesId,
+            JWT: state.listsReducer.JWT,
+            isAdd: state.listsReducer.seriesItem.isAdd
         }
     };
 }
@@ -312,6 +290,7 @@ export default connect(
     mapStatetoProps,
     { 
         openSeriesItemShow,
-        openSignIn
+        openSignIn,
+        openSeriesItem
     }
 )(SeriesEdit)

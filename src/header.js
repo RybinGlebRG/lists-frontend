@@ -79,7 +79,7 @@ class Header extends React.Component{
 const mapStatetoProps = (state) => {
 	return {
 		store: {
-			listType: state.listType
+			listType: state.listsReducer.listType
 		}
 	};
 }

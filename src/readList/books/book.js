@@ -289,9 +289,9 @@ class Book extends React.Component{
 const mapStatetoProps = (state) => {
 	return {
 		store: {
-			JWT: state.JWT,
-			listId: state.listId,
-            bookId: state.book.bookId,
+			JWT: state.listsReducer.JWT,
+			listId: state.listsReducer.listId,
+            bookId: state.listsReducer.book.bookId,
 		}
 	};
 }

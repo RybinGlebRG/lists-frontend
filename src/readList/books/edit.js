@@ -411,20 +411,20 @@ class BookEdit extends React.Component{
 const mapStatetoProps = (state) => {
 	return {
 		store: {
-			JWT: state.JWT,
-			listId: state.listId,
-            bookId: state.book.bookId,
+			JWT: state.listsReducer.JWT,
+			listId: state.listsReducer.listId,
+            bookId: state.listsReducer.book.bookId,
             // title: state.book.title,
             // authorName: state.book.authorName,
             // authorId: state.book.authorId,
             // statusName: state.book.statusName,
             // statusId: state.book.statusName==="In progress"?1:2,
             // lastChapter: state.book.lastChapter,
-            seriesTitle: state.book.seriesTitle,
+            seriesTitle: state.listsReducer.book.seriesTitle,
             // seriesOrder: state.book.seriesOrder,
-            isLoaded: state.bookEdit.isLoaded,
-            error: state.bookEdit.error,
-            book: state.bookEdit.book
+            isLoaded: state.listsReducer.bookEdit.isLoaded,
+            error: state.listsReducer.bookEdit.error,
+            book: state.listsReducer.bookEdit.book
 		}
 	};
 }

@@ -139,12 +139,12 @@ class SeriesList extends React.Component {
 const mapStatetoProps = (state) => {
 	return {
 		store: {
-			JWT: state.JWT,
-			listId: state.listId,
-			error: state.seriesList.error,
-			isLoaded: state.seriesList.isLoaded,
-			list: state.seriesList.list,
-			bookCounts: state.seriesList.bookCounts
+			JWT: state.listsReducer.JWT,
+			listId: state.listsReducer.listId,
+			error: state.listsReducer.seriesList.error,
+			isLoaded: state.listsReducer.seriesList.isLoaded,
+			list: state.listsReducer.seriesList.list,
+			bookCounts: state.listsReducer.seriesList.bookCounts
 		}
 	};
 }
