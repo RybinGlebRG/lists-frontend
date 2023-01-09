@@ -12,10 +12,9 @@ import {
 import SeriesItemShow from './itemShow' 
 import SeriesItemAdd from './add'
 import SeriesEdit from './editList'
+import ChooseBooks from './chooseBooks';
 import * as seriesForms from './forms.js'
-import {
-	selectSeries
-} from './seriesSlice'
+
 
 class SeriesItem extends React.Component{
     constructor(props){
@@ -115,6 +114,8 @@ class SeriesItem extends React.Component{
                 displayResult=(<SeriesItemShow/>)
             } else if (this.props.store.seriesForm===seriesForms.EDIT_SERIES){
                 displayResult=(<SeriesEdit/>)
+            } else if (this.props.store.seriesForm===seriesForms.CHOOSE_BOOKS){
+                displayResult=(<ChooseBooks/>)
             }
         }
         return (

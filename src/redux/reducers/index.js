@@ -84,7 +84,11 @@ export default function lists(state = initialState, action){
             return {
                 ...state, 
                 panel: SERIES_ITEM, 
-                listType: 'seriesList',        
+                listType: 'seriesList',  
+                series:{
+                    ...state.series,
+                    form:seriesForms.SHOW_ITEMS
+                },      
                 seriesItem:{
                     ...state.seriesItem,
                     seriesId: action.payload.seriesId,

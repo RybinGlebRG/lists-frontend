@@ -12,11 +12,14 @@ export const seriesSlice = createSlice({
         },
         openSeriesEdit: state=>{
             state.form = seriesForms.EDIT_SERIES
+        },
+        openChooseBooks: state=>{
+            state.form = seriesForms.CHOOSE_BOOKS
         }
     }
 })
 
-export const {openSeriesItem, openSeriesEdit} = seriesSlice.actions
+export const {openSeriesItem, openSeriesEdit, openChooseBooks} = seriesSlice.actions
 export const selectSeries = state => state.series
 
 export default seriesSlice.reducer

@@ -1,8 +1,11 @@
 import React from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Alert from 'react-bootstrap/Alert'
-import {openSignIn, openSeriesItem, openSeriesAdd} from '../redux/actionCreators';
+import {openSignIn, openSeriesItem as openSeriesItemOld , openSeriesAdd} from '../redux/actionCreators';
 import { connect } from 'react-redux';
+import {
+	openSeriesItem
+} from './seriesSlice'
 
 class SeriesList extends React.Component {
 
@@ -59,7 +62,8 @@ class SeriesList extends React.Component {
 					<ListGroup.Item 
 						action 
 						onClick={() => {
-							this.props.openSeriesItem(item.seriesId);
+							this.props.openSeriesItem();
+							this.props.openSeriesItemOld(item.seriesId);
 						}} 
 						bsPrefix="list-group-item d-flex justify-content-between list-group-item-action"
 						
@@ -150,5 +154,5 @@ const mapStatetoProps = (state) => {
 }
 export default connect(
 	mapStatetoProps,
-	{ openSignIn, openSeriesItem, openSeriesAdd }
+	{ openSignIn, openSeriesItem, openSeriesAdd, openSeriesItemOld }
   )(SeriesList)

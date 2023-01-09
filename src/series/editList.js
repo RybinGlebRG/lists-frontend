@@ -2,10 +2,11 @@ import React from 'react';
 import { connect,useDispatch } from 'react-redux';
 import {
     openSignIn,
-    openSeriesItemShow
+    // openSeriesItemShow
 } from '../redux/actionCreators'
 import {
-	openSeriesItem
+	openSeriesItem,
+    openChooseBooks
 } from './seriesSlice'
 
 class SeriesEdit extends React.Component{
@@ -166,8 +167,8 @@ class SeriesEdit extends React.Component{
                                     type="button"
                                     class="btn btn-success btn-sm"
                                     onClick={()=>{
-                                        alert("Not implemented!");
-                                        // this.props.seriesItemAddBook(this.state.series.seriesId);
+                                        // alert("Not implemented!");
+                                        this.props.openChooseBooks();
                                     }}
                                 >
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
@@ -289,8 +290,9 @@ const mapStatetoProps = (state) => {
 export default connect(
     mapStatetoProps,
     { 
-        openSeriesItemShow,
+        // openSeriesItemShow,
         openSignIn,
-        openSeriesItem
+        openSeriesItem,
+        openChooseBooks
     }
 )(SeriesEdit)
