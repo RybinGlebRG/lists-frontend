@@ -1,63 +1,72 @@
 import React, {useState, useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { Formik} from 'formik';
+import { Formik, useField} from 'formik';
 import {
     openSeriesItem
 } from './seriesSlice'
+import  {
+    loadSeriesItem
+} from './api'
+
+
+async function loadBooks(JWT, listId, bookOrdering){
+    let body={
+        sort:[{
+            field:"createDate",
+            ordering: bookOrdering
+        }]
+    }
+
+
+    let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${listId}/books/search`,
+    {
+        method: "POST",
+        headers: {
+            'Authorization': `Bearer ${JWT}`,
+            'Content-Type': 'application/json;charset=utf-8',
+        },
+        body: JSON.stringify(body)
+    });
+    if (!res.ok){
+        let result=await res.json();
+        throw new Error('Error: '+result.errorMessage);
+    };
+    let bookList = await res.json();	
+    return bookList;
+}
 
 export default function ChooseBooks(props) {
     const dispatch = useDispatch();
     const [error,setError] = useState(null);
     const [isLoaded,setIsLoaded] = useState(false);
     const [books,setBooks] = useState(null);
+    const [series,setSeries] = useState(null);
+    const [bookOrdering,setBookOrdering] = useState("DESC");
     let store={
         JWT: useSelector(state=>state.listsReducer.JWT),
         listId: useSelector(state=>state.listsReducer.listId),
         seriesId: useSelector(state=>state.listsReducer.seriesItem.seriesId)
     }
-    const bookOrdering= "DESC";
 
     useEffect(()=>{
-        const loadData = async ()=>{
-            let body={
-                    sort:[{
-                        field:"createDate",
-                        ordering: bookOrdering
-                    }]
-                }
-    
-    
-            let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${store.listId}/books/search`,
-            {
-                method: "POST",
-                headers: {
-                    'Authorization': `Bearer ${store.JWT}`,
-                    'Content-Type': 'application/json;charset=utf-8',
-                },
-                body: JSON.stringify(body)
-            });
-            if (!res.ok){
-                let result=await res.json();
-                throw new Error('Error: '+result.errorMessage);
-            };
-            let bookList = await res.json();	
-            return bookList;
-        
-        }
+        let promises=[];
+        promises.push(loadBooks(store.JWT, store.listId, bookOrdering));
+        promises.push(loadSeriesItem(store.JWT, store.listId, store.seriesId));
 
-        loadData()
-		.then(res=>{
-            setBooks(res.items);
+        Promise.all(promises)
+        .then(([books, series]) =>{
+            setBooks(books.items);
+            setSeries(series.series)
             setError(null);
-            setIsLoaded(true);     
-		})
+            setIsLoaded(true);   
+        })
 		.catch(err=>{
             setError(err.message);
             setIsLoaded(true);
 		});
 
 
-    },[store.listId])
+    },[])
 
     let display;
 
@@ -77,7 +86,7 @@ export default function ChooseBooks(props) {
                     <div class="row">
                         <div class="col">
                             <div class="pb-0 mt-3 mb-2 ">
-                                <h2>(Add books)</h2>
+                                <h2>(Choose books)</h2>
                             </div>
                         </div>
                         <div class="col-md-auto">
@@ -99,16 +108,25 @@ export default function ChooseBooks(props) {
             </div>
         );
 
+        let checked = series.items.map((item)=>{
+            return String(item.bookId);
+        })
+
+
+
         let items = books.map((item) =>{
-            return (
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id={item.bookId}/>
-                    <label class="form-check-label" for={item.bookId}>
-                    {item.title}
-                    </label>
-                </div>
-            )
-             
+            const CheckField = ()=>{
+                const [field] = useField({ name: "checkValue", type: "checkbox", value: String(item.bookId) });
+                return (
+                    <div class="form-check">
+                        <input {...field} class="form-check-input" type="checkbox" id={item.bookId}/>
+                        <label class="form-check-label" for={item.bookId}>{item.title}</label>
+                    </div>
+                )
+            }            
+             return (
+                <CheckField/>
+             );
         });
         display=(
             <div class="row">
@@ -122,32 +140,16 @@ export default function ChooseBooks(props) {
                         <div class="col">                
                             <Formik 
                                 initialValues={{ 						 
-                                    title: null, 
-                                    author: null,
-                                    status: null,
-                                    series: null,
-                                    order: null,
-                                    lastChapter: null,
-                                    bookType: null
+                                    checkValue: checked
                                 }}
                                 validate={values => {
-                                    const errors = {};
-                                    if (!values.title) {
-                                        errors.title = 'Title must be set';
-                                    }
-                                    if ((values.series && !values.order) || (values.order && !values.series)) {
-                                        errors.series = 'Series and Order must be set together';
-                                        errors.order = 'Series and Order must be set together';
-                                    }
-                                    if (!values.status){
-                                        errors.status = 'Status must be set';
-                                    }
-                    
+                                    const errors = {};                    
                                     return errors;
                                 }}
                                 onSubmit={(values, {setSubmitting, resetForm}) => {
                                     setSubmitting(true);
-                                    this.saveVals(values);
+                                    console.log(values)
+                                    // this.saveVals(values);
                                     setSubmitting(false);
                                 }}
                             >
@@ -164,14 +166,15 @@ export default function ChooseBooks(props) {
                                         <form
                                             onSubmit={handleSubmit}
                                         >
-                                            {items}
-                                            {/* <button  class="btn btn-primary"
+                                            <button  class="btn btn-primary"
                                                 variant="primary" 
                                                 type="submit"
                                                 disabled={isSubmitting}
                                             >
                                                 Submit
-                                            </button> */}
+                                            </button>
+                                            {items}
+                                            
                                         </form>
                                     )
                                 }

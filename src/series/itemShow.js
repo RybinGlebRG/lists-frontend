@@ -9,8 +9,12 @@ import {
     seriesItemAddBook
 } from '../redux/actionCreators'
 import {
-	openSeriesEdit
+	openSeriesEdit,
+    openChooseBooks
 } from './seriesSlice'
+import  {
+    loadSeriesItem
+} from './api'
 
 class SeriesItemShow extends React.Component{
     constructor(props){
@@ -22,52 +26,8 @@ class SeriesItemShow extends React.Component{
         };
     }
 
-    
-
-
-    async loadData(){
-        let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.readListId}/series/${this.props.store.seriesId}`,
-		{
-			method: "GET",
-			headers: {
-				'Authorization': `Bearer ${this.props.store.JWT}`
-			}
-        });
-        let result;
-        if (!res.ok){
-            result=await res.json();
-            throw new Error('Error: '+result.error);
-        };
-
-        let series = await res.json();
-
-        // let books = []
-        // for await (const item of series.books ){
-        //     res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.readListId}/books/${item.bookId}`,
-        //     {
-        //         method: "GET",
-        //         headers: {
-        //             'Authorization': `Bearer ${this.props.store.JWT}`
-        //         }
-        //     });
-        //     if (!res.ok){
-        //         let result=await res.json();
-        //         throw new Error('Error: '+result.error);
-        //     };
-
-        //     let book = await res.json();
-        //     books.push(book);
-        // }
-
-        let out= {
-            series
-        }
-
-        return out;
-    }
-
     componentDidMount(){
-		this.loadData()
+		loadSeriesItem(this.props.store.JWT, this.props.store.readListId, this.props.store.seriesId)
         .then(result =>{
             this.setState({
                 series: result.series,
@@ -187,6 +147,20 @@ class SeriesItemShow extends React.Component{
                             <div class="col-md-auto">
                                 <button 
                                     type="button"
+                                    class="btn btn-success btn-sm"
+                                    onClick={()=>{
+                                        // alert("Not implemented!");
+                                        this.props.openChooseBooks();
+                                    }}
+                                >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                                            <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
+                                        </svg>
+                                </button>
+                            </div>
+                            <div class="col-md-auto">
+                                <button 
+                                    type="button"
                                     class="btn btn-danger btn-sm"
                                     onClick={()=>{
                                         this.props.openSeriesEdit(this.props.store.seriesId);
@@ -280,6 +254,7 @@ export default connect(
         openBookV2,
         openSignIn,
         openSeriesEdit,
-        seriesItemAddBook
+        seriesItemAddBook,
+        openChooseBooks
     }
 )(SeriesItemShow)
