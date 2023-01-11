@@ -5,8 +5,10 @@ import {
     openSeriesItem
 } from './seriesSlice'
 import  {
-    loadSeriesItem
-} from './api'
+    loadSeriesItem,
+    saveSeriesItem
+} from './seriesApi'
+import * as common from './common'
 
 
 async function loadBooks(JWT, listId, bookOrdering){
@@ -68,6 +70,26 @@ export default function ChooseBooks(props) {
 
     },[])
 
+    const saveValues=(values)=>{
+        let body={
+            title: series.title,
+            items: values.checkValue.map((item,index)=>{
+                return {
+                    itemType: "BOOK",
+                    itemId: parseInt(item),
+                    itemOrder: index
+                }
+            })
+        }
+        saveSeriesItem(store.JWT, store.seriesId, body)
+        .then(()=>{
+            dispatch(openSeriesItem());
+        })
+        .catch(error=>{
+            setError(error.message);
+        })
+    }
+
     let display;
 
     if (!isLoaded){
@@ -80,39 +102,9 @@ export default function ChooseBooks(props) {
     } else if (error){
         display=( <div class="alert alert-danger" role="alert">{error}</div>);
     } else {
-        let header = (
-            <div>
-                <div class="mb-4 mt-4 border-bottom">
-                    <div class="row">
-                        <div class="col">
-                            <div class="pb-0 mt-3 mb-2 ">
-                                <h2>(Choose books)</h2>
-                            </div>
-                        </div>
-                        <div class="col-md-auto">
-                            <button 
-                                type="button"
-                                class="btn btn-secondary btn-sm"
-                                onClick={()=>{
-                                    dispatch(openSeriesItem());
-                                }}
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
-                                    <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>            
-            </div>
-        );
-
         let checked = series.items.map((item)=>{
             return String(item.bookId);
         })
-
-
 
         let items = books.map((item) =>{
             const CheckField = ()=>{
@@ -132,11 +124,6 @@ export default function ChooseBooks(props) {
             <div class="row">
                 <div class="col">              
                     <div class="row">
-                        <div class="col">
-                            {header}
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="col">                
                             <Formik 
                                 initialValues={{ 						 
@@ -148,8 +135,9 @@ export default function ChooseBooks(props) {
                                 }}
                                 onSubmit={(values, {setSubmitting, resetForm}) => {
                                     setSubmitting(true);
-                                    console.log(values)
+                                    // console.log(values)
                                     // this.saveVals(values);
+                                    saveValues(values);
                                     setSubmitting(false);
                                 }}
                             >
@@ -163,19 +151,53 @@ export default function ChooseBooks(props) {
                                             handleSubmit,
                                             isSubmitting 
                                     }) => (
-                                        <form
-                                            onSubmit={handleSubmit}
-                                        >
-                                            <button  class="btn btn-primary"
-                                                variant="primary" 
-                                                type="submit"
-                                                disabled={isSubmitting}
-                                            >
-                                                Submit
-                                            </button>
-                                            {items}
-                                            
-                                        </form>
+                                        <div class="row">
+                                            <div class="col">
+                                                <form
+                                                    onSubmit={handleSubmit}
+                                                >
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <common.Header
+                                                                title={series.title + " (Choose books)"}
+                                                                buttons={[
+                                                                    (
+                                                                        <button  class="btn btn-success btn-sm"
+                                                                            variant="primary" 
+                                                                            type="submit"
+                                                                            disabled={isSubmitting}
+                                                                        >
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+                                                                            <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+                                                                            </svg>
+                                                                        </button>
+                                                                    ),
+                                                                    (
+                                                                        <button 
+                                                                            type="button"
+                                                                            class="btn btn-secondary btn-sm"
+                                                                            onClick={()=>{
+                                                                                dispatch(openSeriesItem());
+                                                                            }}
+                                                                        >
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                                                                <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
+                                                                                <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
+                                                                            </svg>
+                                                                        </button>
+                                                                    )
+                                                                ]}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                                {items}
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
                                     )
                                 }
                             </Formik>

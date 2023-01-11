@@ -8,6 +8,7 @@ import {
 	openSeriesItem,
     openChooseBooks
 } from './seriesSlice'
+import * as common from './common'
 
 class SeriesEdit extends React.Component{
     constructor(props){
@@ -129,8 +130,8 @@ class SeriesEdit extends React.Component{
             })
         }
         this.saveDataAsync(tmp)
-        .then(result =>{
-            this.props.openSeriesItemShow();
+        .then(() =>{
+            this.props.openSeriesItem();
         })
         .catch(
             error => {
@@ -153,50 +154,6 @@ class SeriesEdit extends React.Component{
             </div>
             </div>);
         } else {
-            let header = (
-                <div>
-                    <div class="mb-4 mt-4 border-bottom">
-                        <div class="row">
-                            <div class="col">
-                                <div class="pb-0 mt-3 mb-2 ">
-                                    <h2>{this.state.series.title} (Edit)</h2>
-                                </div>
-                            </div>
-                            {/* <div class="col-md-auto">
-                                <button 
-                                    type="button"
-                                    class="btn btn-success btn-sm"
-                                    onClick={()=>{
-                                        // alert("Not implemented!");
-                                        this.props.openChooseBooks();
-                                    }}
-                                >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                                            <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
-                                        </svg>
-                                </button>
-                            </div> */}
-                            <div class="col-md-auto">
-                                <button 
-                                    type="button"
-                                    class="btn btn-secondary btn-sm"
-                                    onClick={()=>{
-                                        this.props.openSeriesItem();
-                                    }}
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
-                                        <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>            
-                </div>
-            )
-
-
-            
             
             let items = this.state.series.items.map((item,index) =>{
                 return (
@@ -221,7 +178,39 @@ class SeriesEdit extends React.Component{
                     <div class="col">
                         <div class="row">
                             <div class="col">
-                                {header}
+                                <common.Header
+                                    title={this.state.series.title + " (Edit)"}
+                                    buttons={[
+                                        (
+                                            <button 
+                                                type="button"
+                                                class="btn btn-success btn-sm"
+                                                onClick={()=>{
+                                                    // alert("Not implemented!")
+                                                    this.saveData();
+                                                }}
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+                                                <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+                                                </svg>
+                                            </button>
+                                        ),
+                                        (
+                                            <button 
+                                                type="button"
+                                                class="btn btn-secondary btn-sm"
+                                                onClick={()=>{
+                                                    this.props.openSeriesItem();
+                                                }}
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
+                                                    <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
+                                                </svg>
+                                            </button>
+                                        )
+                                    ]}
+                                />
                             </div>
                         </div>
                         <div class="row">
@@ -230,18 +219,6 @@ class SeriesEdit extends React.Component{
                                 onDragOver={(e)=>this.dragOver(e)}
                             >
                                 {items}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-auto">
-                                <button 
-                                    type="button"
-                                    class="btn btn-primary btn-sm"
-                                    onClick={()=>{
-                                        // alert("Not implemented!")
-                                        this.saveData();
-                                    }}
-                                >Submit</button>
                             </div>
                         </div>
                     </div>

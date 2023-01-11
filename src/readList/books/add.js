@@ -87,10 +87,10 @@ class BookAdd extends React.Component{
             book.authorId = values.author;
         }
 
-        if (values.series != null && values.series != ""){
-            book.seriesId = values.series;
-            book.order = values.order;
-        }
+        // if (values.series != null && values.series != ""){
+        //     book.seriesId = values.series;
+        //     book.order = values.order;
+        // }
 
         if (values.lastChapter != null && values.lastChapter != ""){
             book.lastChapter = values.lastChapter;
@@ -144,7 +144,7 @@ class BookAdd extends React.Component{
             displayPanel=( 
 				<div class="d-flex justify-content-center">
 					<div class="spinner-border m-5" role="status">
-						<span class="sr-only">Loading...</span>
+						<span class="sr-only"/>
 					</div>
 				</div>
 			);
@@ -174,8 +174,8 @@ class BookAdd extends React.Component{
                                         title: null, 
                                         author: null,
                                         status: null,
-                                        series: null,
-                                        order: null,
+                                        // series: null,
+                                        // order: null,
                                         lastChapter: null,
                                         bookType: null
                                     }}
@@ -184,10 +184,10 @@ class BookAdd extends React.Component{
                                         if (!values.title) {
                                             errors.title = 'Title must be set';
                                         }
-                                        if ((values.series && !values.order) || (values.order && !values.series)) {
-                                            errors.series = 'Series and Order must be set together';
-                                            errors.order = 'Series and Order must be set together';
-                                        }
+                                        // if ((values.series && !values.order) || (values.order && !values.series)) {
+                                        //     errors.series = 'Series and Order must be set together';
+                                        //     errors.order = 'Series and Order must be set together';
+                                        // }
                                         if (!values.status){
                                             errors.status = 'Status must be set';
                                         }
@@ -262,7 +262,7 @@ class BookAdd extends React.Component{
                                                 </label>
                                                 ): null}
                                             </div>
-                                            <div class="form-group" controlId="series">
+                                            {/* <div class="form-group" controlId="series">
                                                 <label>Series</label >
                                                 <select class="form-control" 
                                                     as="select"
@@ -290,7 +290,7 @@ class BookAdd extends React.Component{
                                                     {errors.order}
                                                 </label>
                                                 ): null}
-                                            </div>
+                                            </div> */}
                                             <div class="form-group" controlId="lastChapter">
                                                 <label>Last chapter</label>
                                                 <input class="form-control" 

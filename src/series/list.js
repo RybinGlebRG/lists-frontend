@@ -6,6 +6,9 @@ import { connect } from 'react-redux';
 import {
 	openSeriesItem
 } from './seriesSlice'
+import  {
+    loadSeriesList
+} from './seriesApi'
 
 class SeriesList extends React.Component {
 
@@ -18,24 +21,8 @@ class SeriesList extends React.Component {
 		};
 	}
 
-	async loadData(){
-		let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.listId}/series`,
-		{
-			method: "GET",
-			headers: {
-				'Authorization': 'Bearer '+this.props.store.JWT
-			}
-		});
-		if (!res.ok){
-            throw new Error('Some network error');
-        };
-		let seriesList = await res.json();	
-
-		return seriesList;	
-	}
-
     loadList(){
-		this.loadData()
+		loadSeriesList(this.props.store.JWT, this.props.store.listId,()=>{this.props.openSignIn()})
 		.then(res=>{
 			this.setState({
 				isLoaded:true,
