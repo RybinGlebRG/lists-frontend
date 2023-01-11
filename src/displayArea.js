@@ -84,8 +84,8 @@ class DisplayArea extends React.Component{
 const mapStatetoProps = (state) => {
 	return {
 		store: {
-			panelType: state.panel,
-			listType: state.listType
+			panelType: state.listsReducer.panel,
+			listType: state.listsReducer.listType
 		}
 	};
 }

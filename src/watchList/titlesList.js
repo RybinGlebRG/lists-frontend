@@ -184,9 +184,9 @@ class TitlesList extends React.Component{
 const mapStatetoProps = (state) => {
 	return {
 		store: {
-			JWT: state.JWT,
-			watchListId: state.watchListId,
-			data: state.titlesList.data
+			JWT: state.listsReducer.JWT,
+			watchListId: state.listsReducer.watchListId,
+			data: state.listsReducer.titlesList.data
 		}
 	};
 }

@@ -11,7 +11,7 @@ class BookEdit extends React.Component{
 		super(props);
 		this.state={
             authors:null,
-            series: null,
+            // series: null,
             bookTypes: null
         };
 
@@ -46,19 +46,19 @@ class BookEdit extends React.Component{
 
         let authors = await res.json();
 
-        res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.listId}/series`,
-		{
-			method: "GET",
-			headers: {
-				'Authorization': `Bearer ${this.props.store.JWT}`
-			}
-        });
-        if (!res.ok){
-            result=await res.json();
-            throw new Error('Error: '+result.error);
-        };
+        // res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.listId}/series`,
+		// {
+		// 	method: "GET",
+		// 	headers: {
+		// 		'Authorization': `Bearer ${this.props.store.JWT}`
+		// 	}
+        // });
+        // if (!res.ok){
+        //     result=await res.json();
+        //     throw new Error('Error: '+result.error);
+        // };
 
-        let series = await res.json()
+        // let series = await res.json()
 
         let bookTypes = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/bookTypes`,
 		{
@@ -76,7 +76,7 @@ class BookEdit extends React.Component{
         let out = {
             book,
             authors: authors.items,
-            series: series.items,
+            // series: series.items,
             bookTypes: bookTypes.items
         }
 
@@ -89,7 +89,7 @@ class BookEdit extends React.Component{
         .then(result =>{
             this.setState({
                 authors: result.authors,
-                series: result.series,
+                // series: result.series,
                 bookTypes: result.bookTypes
             });
             this.props.saveBookEdit(true,null,result.book);  
@@ -116,10 +116,10 @@ class BookEdit extends React.Component{
             book.authorId = values.author;
         }
 
-        if (values.series != ""){
-            book.seriesId = values.series;
-            book.order = values.order;
-        }
+        // if (values.series != ""){
+        //     book.seriesId = values.series;
+        //     book.order = values.order;
+        // }
 
         if (values.bookType != null && values.bookType != ""){
             book.bookTypeId = values.bookType;
@@ -169,7 +169,7 @@ class BookEdit extends React.Component{
             displayPanel=( 
 				<div class="d-flex justify-content-center">
 					<div class="spinner-border m-5" role="status">
-						<span class="sr-only">Loading...</span>
+						<span class="sr-only"/>
 					</div>
 				</div>
 			);
@@ -182,10 +182,10 @@ class BookEdit extends React.Component{
                 authorsItems.push(<option value={this.state.authors[i].authorId}>{this.state.authors[i].name}</option>)
             }
 
-            let seriesItems=[]
-            for (let i = 0; i < this.state.series.length; i++){
-                seriesItems.push(<option value={this.state.series[i].seriesId}>{this.state.series[i].title}</option>)
-            }
+            // let seriesItems=[]
+            // for (let i = 0; i < this.state.series.length; i++){
+            //     seriesItems.push(<option value={this.state.series[i].seriesId}>{this.state.series[i].title}</option>)
+            // }
 
             let bookTypes=[]
             for (let i = 0; i < this.state.bookTypes.length; i++){
@@ -225,8 +225,8 @@ class BookEdit extends React.Component{
                                 title: this.props.store.book.title, 
                                 author: this.props.store.book.authors.length > 0 ? this.props.store.book.authors[0].authorId: null,
                                 status: this.props.store.book.bookStatus.statusId,
-                                series: this.props.store.book.series.length > 0 ?this.props.store.book.series[0].seriesId: null,
-                                order: this.props.store.book.series.length > 0 ? this.props.store.book.series[0].seriesOrder: null,
+                                // series: this.props.store.book.series.length > 0 ?this.props.store.book.series[0].seriesId: null,
+                                // order: this.props.store.book.series.length > 0 ? this.props.store.book.series[0].seriesOrder: null,
                                 lastChapter: this.props.store.book.lastChapter,
                                 bookType: this.props.store.book.bookType ? this.props.store.book.bookType.typeId: null,
                                 createDate: createDate
@@ -236,10 +236,10 @@ class BookEdit extends React.Component{
                                 if (!values.title) {
                                     errors.title = 'Title must be set';
                                 }
-                                if ((values.series && !values.order) || (values.order && !values.series)) {
-                                    errors.series = 'Series and Order must be set together';
-                                    errors.order = 'Series and Order must be set together';
-                                }
+                                // if ((values.series && !values.order) || (values.order && !values.series)) {
+                                //     errors.series = 'Series and Order must be set together';
+                                //     errors.order = 'Series and Order must be set together';
+                                // }
                                 if (!values.status){
                                     errors.status = 'Status must be set';
                                 }
@@ -310,7 +310,7 @@ class BookEdit extends React.Component{
                                 </label>
                                 ): null}
                             </div>
-                            <div class="form-group" controlId="series">
+                            {/* <div class="form-group" controlId="series">
                                 <label>Series</label >
                                 <select class="form-control" 
                                     as="select"
@@ -338,7 +338,7 @@ class BookEdit extends React.Component{
                                     {errors.order}
                                 </label>
                                 ): null}
-                            </div>
+                            </div> */}
                             <div class="form-group" controlId="lastChapter">
                                 <label>Last chapter</label>
                                 <input class="form-control" 
@@ -411,20 +411,20 @@ class BookEdit extends React.Component{
 const mapStatetoProps = (state) => {
 	return {
 		store: {
-			JWT: state.JWT,
-			listId: state.listId,
-            bookId: state.book.bookId,
+			JWT: state.listsReducer.JWT,
+			listId: state.listsReducer.listId,
+            bookId: state.listsReducer.book.bookId,
             // title: state.book.title,
             // authorName: state.book.authorName,
             // authorId: state.book.authorId,
             // statusName: state.book.statusName,
             // statusId: state.book.statusName==="In progress"?1:2,
             // lastChapter: state.book.lastChapter,
-            seriesTitle: state.book.seriesTitle,
+            seriesTitle: state.listsReducer.book.seriesTitle,
             // seriesOrder: state.book.seriesOrder,
-            isLoaded: state.bookEdit.isLoaded,
-            error: state.bookEdit.error,
-            book: state.bookEdit.book
+            isLoaded: state.listsReducer.bookEdit.isLoaded,
+            error: state.listsReducer.bookEdit.error,
+            book: state.listsReducer.bookEdit.book
 		}
 	};
 }

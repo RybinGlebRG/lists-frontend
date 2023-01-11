@@ -89,11 +89,11 @@ class ReadList extends React.Component{
 const mapStatetoProps = (state) => {
 	return {
 		store: {
-			panelType: state.panel,
-			JWT: state.JWT,
-			listId: state.listId,
-			bookId: state.book.bookId,
-			listType: state.listType
+			panelType: state.listsReducer.panel,
+			JWT: state.listsReducer.JWT,
+			listId: state.listsReducer.listId,
+			bookId: state.listsReducer.book.bookId,
+			listType: state.listsReducer.listType
 		}
 	};
 }

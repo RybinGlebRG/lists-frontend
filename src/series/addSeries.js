@@ -152,8 +152,8 @@ class SeriesAdd extends React.Component {
 const mapStatetoProps = (state) => {
 	return {
 		store: {
-			JWT: state.JWT,
-			readListId: state.listId
+			JWT: state.listsReducer.JWT,
+			readListId: state.listsReducer.listId
 		}
 	};
 }

@@ -190,9 +190,9 @@ class Author extends React.Component{
 const mapStatetoProps = (state) => {
 	return {
 		store: {
-			JWT: state.JWT,
-			listId: state.listId,
-            authorId: state.author.authorId
+			JWT: state.listsReducer.JWT,
+			listId: state.listsReducer.listId,
+            authorId: state.author.listsReducer.authorId
 		}
 	};
 }

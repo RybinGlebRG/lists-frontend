@@ -1,9 +1,14 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { connect,useDispatch } from 'react-redux';
 import {
     openSignIn,
-    openSeriesItemShow
+    // openSeriesItemShow
 } from '../redux/actionCreators'
+import {
+	openSeriesItem,
+    openChooseBooks
+} from './seriesSlice'
+import * as common from './common'
 
 class SeriesEdit extends React.Component{
     constructor(props){
@@ -13,8 +18,9 @@ class SeriesEdit extends React.Component{
             isLoaded: false,
             series: null,
             dragIndex: null,
-            dragOverIndex: null,
+            dragOverIndex: null
         };
+        // this.dispatch = useDispatch()
 
         this.dragStart = this.dragStart.bind(this);
         this.dragEnter = this.dragEnter.bind(this);
@@ -70,24 +76,6 @@ class SeriesEdit extends React.Component{
 
         let series = await res.json();
 
-        // let books = []
-        // for await (const item of series.books ){
-        //     res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.readListId}/books/${item.bookId}`,
-        //     {
-        //         method: "GET",
-        //         headers: {
-        //             'Authorization': `Bearer ${this.props.store.JWT}`
-        //         }
-        //     });
-        //     if (!res.ok){
-        //         let result=await res.json();
-        //         throw new Error('Error: '+result.error);
-        //     };
-
-        //     let book = await res.json();
-        //     books.push(book);
-        // }
-
         let out= {
             series
         }
@@ -142,8 +130,8 @@ class SeriesEdit extends React.Component{
             })
         }
         this.saveDataAsync(tmp)
-        .then(result =>{
-            this.props.openSeriesItemShow();
+        .then(() =>{
+            this.props.openSeriesItem();
         })
         .catch(
             error => {
@@ -166,58 +154,8 @@ class SeriesEdit extends React.Component{
             </div>
             </div>);
         } else {
-            let header = (
-                <div>
-                    <div class="mb-4 mt-4 border-bottom">
-                        <div class="row">
-                            <div class="col">
-                                <div class="pb-0 mt-3 mb-2 ">
-                                    <h2>{this.state.series.title} (Edit)</h2>
-                                </div>
-                            </div>
-                            <div class="col-md-auto">
-                                <button 
-                                    type="button"
-                                    class="btn btn-secondary btn-sm"
-                                    onClick={()=>{
-                                        this.props.openSeriesItemShow();
-                                    }}
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
-                                        <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>            
-                </div>
-            )
-
-
-            
             
             let items = this.state.series.items.map((item,index) =>{
-                let badge;
-                if (item.bookStatus.statusName==='Completed'){
-                    badge=(
-                        <span class="badge text-bg-success rounded-pill">
-                            {item.bookStatus.statusName}
-                        </span>
-                    )
-                } else if (item.bookStatus.statusName==='In Progress') {
-                    badge=(
-                        <span class="badge rounded-pill text-bg-warning">
-                            {item.bookStatus.statusName}
-                            
-                            
-                            {item.lastChapter !== undefined ? (
-                                <span class="badge text-bg-secondary rounded-pill ml-1 ms-1">Ch. {item.lastChapter}</span>
-                            ): null
-                            }
-                        </span>
-                    )
-                }
                 return (
                         <li class="list-group-item d-flex justify-content-between list-group-item-action"
                             action 
@@ -230,7 +168,6 @@ class SeriesEdit extends React.Component{
                             }}
                         >
                             {item.title}
-                            {badge}
                         </li>
                 ) 
             } 
@@ -241,7 +178,39 @@ class SeriesEdit extends React.Component{
                     <div class="col">
                         <div class="row">
                             <div class="col">
-                                {header}
+                                <common.Header
+                                    title={this.state.series.title + " (Edit)"}
+                                    buttons={[
+                                        (
+                                            <button 
+                                                type="button"
+                                                class="btn btn-success btn-sm"
+                                                onClick={()=>{
+                                                    // alert("Not implemented!")
+                                                    this.saveData();
+                                                }}
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+                                                <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+                                                </svg>
+                                            </button>
+                                        ),
+                                        (
+                                            <button 
+                                                type="button"
+                                                class="btn btn-secondary btn-sm"
+                                                onClick={()=>{
+                                                    this.props.openSeriesItem();
+                                                }}
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
+                                                    <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
+                                                </svg>
+                                            </button>
+                                        )
+                                    ]}
+                                />
                             </div>
                         </div>
                         <div class="row">
@@ -250,18 +219,6 @@ class SeriesEdit extends React.Component{
                                 onDragOver={(e)=>this.dragOver(e)}
                             >
                                 {items}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-auto">
-                                <button 
-                                    type="button"
-                                    class="btn btn-primary btn-sm"
-                                    onClick={()=>{
-                                        // alert("Not implemented!")
-                                        this.saveData();
-                                    }}
-                                >Submit</button>
                             </div>
                         </div>
                     </div>
@@ -299,11 +256,10 @@ class SeriesEdit extends React.Component{
 const mapStatetoProps = (state) => {   
     return {
         store: {
-            readListId: state.listId,
-            seriesId: state.seriesItem.seriesId,
-            JWT: state.JWT,
-            isAdd: state.seriesItem.isAdd,
-            seriesForm: state.series.form
+            readListId: state.listsReducer.listId,
+            seriesId: state.listsReducer.seriesItem.seriesId,
+            JWT: state.listsReducer.JWT,
+            isAdd: state.listsReducer.seriesItem.isAdd
         }
     };
 }
@@ -311,7 +267,9 @@ const mapStatetoProps = (state) => {
 export default connect(
     mapStatetoProps,
     { 
-        openSeriesItemShow,
-        openSignIn
+        // openSeriesItemShow,
+        openSignIn,
+        openSeriesItem,
+        openChooseBooks
     }
 )(SeriesEdit)

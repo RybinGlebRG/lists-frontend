@@ -1,10 +1,11 @@
+import { createSlice } from '@reduxjs/toolkit'
 import * as actionTypes from '../actionTypes'
 import {SERIES_LIST, BOOK_LIST, SIGN_IN, SERIES_ITEM, BOOK, ADD_BOOK, BOOK_V2, ADD_TITLE, TITLES_LIST, READ_LIST} from '../../panels.js'
 import * as panels from '../../panels.js'
 import * as seriesForms from '../../series/forms.js'
 // import seriesItem from '../../seriesItem/seriesItem';
 
-const initialState = {
+export const initialState = {
     user: null,
     listId: 2,
     panel: panels.SIGN_IN,
@@ -66,7 +67,7 @@ const initialState = {
     }
 }
 
-export function lists(state = initialState, action){
+export default function lists(state = initialState, action){
     switch (action.type){
         case actionTypes.OPEN_SERIES_LIST:{
             return {
@@ -83,7 +84,11 @@ export function lists(state = initialState, action){
             return {
                 ...state, 
                 panel: SERIES_ITEM, 
-                listType: 'seriesList',        
+                listType: 'seriesList',  
+                series:{
+                    ...state.series,
+                    form:seriesForms.SHOW_ITEMS
+                },      
                 seriesItem:{
                     ...state.seriesItem,
                     seriesId: action.payload.seriesId,
@@ -316,3 +321,17 @@ export function lists(state = initialState, action){
     }
     
 }
+
+
+// export const indexSlice = createSlice({
+//     name: 'index',
+//     initialState: initialState,
+//     reducers:{
+//         lists: lists
+//     }
+// })
+
+// export const {lists} = indexSlice.actions
+// // export const selectSeries = state => state.series
+
+// export default indexSlice.reducer

@@ -218,10 +218,10 @@ class TitleAdd extends React.Component{
 const mapStatetoProps = (state) => {
 	return {
 		store: {
-			JWT: state.JWT,
-			watchListId: state.watchListId,
-			ok: state.titleAdd.ok,
-			error: state.titleAdd.error
+			JWT: state.listsReducer.JWT,
+			watchListId: state.listsReducer.watchListId,
+			ok: state.listsReducer.titleAdd.ok,
+			error: state.listsReducer.titleAdd.error
 		}
 	};
 }

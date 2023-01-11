@@ -1,8 +1,14 @@
 import React from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Alert from 'react-bootstrap/Alert'
-import {openSignIn, openSeriesItem, openSeriesAdd} from '../redux/actionCreators';
+import {openSignIn, openSeriesItem as openSeriesItemOld , openSeriesAdd} from '../redux/actionCreators';
 import { connect } from 'react-redux';
+import {
+	openSeriesItem
+} from './seriesSlice'
+import  {
+    loadSeriesList
+} from './seriesApi'
 
 class SeriesList extends React.Component {
 
@@ -15,24 +21,8 @@ class SeriesList extends React.Component {
 		};
 	}
 
-	async loadData(){
-		let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.listId}/series`,
-		{
-			method: "GET",
-			headers: {
-				'Authorization': 'Bearer '+this.props.store.JWT
-			}
-		});
-		if (!res.ok){
-            throw new Error('Some network error');
-        };
-		let seriesList = await res.json();	
-
-		return seriesList;	
-	}
-
     loadList(){
-		this.loadData()
+		loadSeriesList(this.props.store.JWT, this.props.store.listId,()=>{this.props.openSignIn()})
 		.then(res=>{
 			this.setState({
 				isLoaded:true,
@@ -59,7 +49,8 @@ class SeriesList extends React.Component {
 					<ListGroup.Item 
 						action 
 						onClick={() => {
-							this.props.openSeriesItem(item.seriesId);
+							this.props.openSeriesItem();
+							this.props.openSeriesItemOld(item.seriesId);
 						}} 
 						bsPrefix="list-group-item d-flex justify-content-between list-group-item-action"
 						
@@ -139,16 +130,16 @@ class SeriesList extends React.Component {
 const mapStatetoProps = (state) => {
 	return {
 		store: {
-			JWT: state.JWT,
-			listId: state.listId,
-			error: state.seriesList.error,
-			isLoaded: state.seriesList.isLoaded,
-			list: state.seriesList.list,
-			bookCounts: state.seriesList.bookCounts
+			JWT: state.listsReducer.JWT,
+			listId: state.listsReducer.listId,
+			error: state.listsReducer.seriesList.error,
+			isLoaded: state.listsReducer.seriesList.isLoaded,
+			list: state.listsReducer.seriesList.list,
+			bookCounts: state.listsReducer.seriesList.bookCounts
 		}
 	};
 }
 export default connect(
 	mapStatetoProps,
-	{ openSignIn, openSeriesItem, openSeriesAdd }
+	{ openSignIn, openSeriesItem, openSeriesAdd, openSeriesItemOld }
   )(SeriesList)

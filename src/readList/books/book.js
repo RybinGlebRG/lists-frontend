@@ -196,7 +196,7 @@ class Book extends React.Component{
                                         <p>{this.state.data.bookStatus.statusName}</p>
                                     </div>                            
                                 </div>   
-                                <div class="row  mt-2">
+                                {/* <div class="row  mt-2">
                                     <div class="col">
                                         <h5>Series</h5>
                                     </div>
@@ -226,13 +226,13 @@ class Book extends React.Component{
                                     <div class="col">
                                         <h5>Order</h5>
                                     </div>
-                                </div>
-                                <div class="row border-bottom">
+                                </div> */}
+                                {/* <div class="row border-bottom">
                                     <div class="col ml-2">
                                         <p>{this.state.data.series.length > 0 ? this.state.data.series[0].seriesOrder: "N/A"}</p>
-                                        {/* <p>{"N/A"}</p> */}
+                                    
                                     </div>                            
-                                </div> 
+                                </div>  */}
                                 <div class="row  mt-2">
                                     <div class="col">
                                         <h5>Last chapter</h5>
@@ -289,9 +289,9 @@ class Book extends React.Component{
 const mapStatetoProps = (state) => {
 	return {
 		store: {
-			JWT: state.JWT,
-			listId: state.listId,
-            bookId: state.book.bookId,
+			JWT: state.listsReducer.JWT,
+			listId: state.listsReducer.listId,
+            bookId: state.listsReducer.book.bookId,
 		}
 	};
 }
