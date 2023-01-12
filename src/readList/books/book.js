@@ -9,6 +9,47 @@ import {
     openReadList,
     openSeriesItem
 } from '../../redux/actionCreators'
+import * as bookApi from './bookApi'
+import {
+	openSeriesItem as openSeriesItemSlice
+} from '../../series/seriesSlice'
+
+const SeriesListBlock = (props)=>{
+    const seriesList = props.seriesList;
+    const onOpenSeriesItem = props.onOpenSeriesItem;
+
+    let display;
+    if (seriesList.length > 0){
+        display = seriesList.map(item=>{
+            return (
+                <div class="row">
+                    <div class="col ml-2">
+                        <a 
+                            href="#"
+                            role="button"
+                            onClick={() => {
+                                onOpenSeriesItem(item.seriesId);
+                            }}
+                        ><p>{item.title}</p></a>
+                    </div>
+                </div>
+            )
+        })
+    } else {
+        <div class="row">
+            <div 
+                class="col ml-2"
+            >
+                <p>--</p>
+            </div> 
+        </div>
+    }
+    return (
+        <div>
+            {display}
+        </div>
+    )
+}
 
 class Book extends React.Component{
 
@@ -22,23 +63,23 @@ class Book extends React.Component{
     
     }
 
-    async loadData(){
-        let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.listId}/books/${this.props.store.bookId}`,
-		{
-			method: "GET",
-			headers: {
-				'Authorization': `Bearer ${this.props.store.JWT}`
-			}
-        });
-        if (!res.ok){
-            let result=await res.json();
-            throw new Error('Error: '+result.errorMessage);
-        };
-        let book = await res.json();
+    // async loadData(){
+    //     let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.listId}/books/${this.props.store.bookId}`,
+	// 	{
+	// 		method: "GET",
+	// 		headers: {
+	// 			'Authorization': `Bearer ${this.props.store.JWT}`
+	// 		}
+    //     });
+    //     if (!res.ok){
+    //         let result=await res.json();
+    //         throw new Error('Error: '+result.errorMessage);
+    //     };
+    //     let book = await res.json();
 
-        return book;       
+    //     return book;       
 
-    }
+    // }
 
     async performDelete(){
         let res = await fetch(
@@ -57,7 +98,7 @@ class Book extends React.Component{
     }
 
     load(){
-        this.loadData()
+        bookApi.loadBook(this.props.store.JWT, this.props.store.listId, this.props.store.bookId, ()=>{this.props.openSignIn()})
         .then(result =>{
             this.setState({
                 isLoaded:true,
@@ -102,7 +143,7 @@ class Book extends React.Component{
             displayResult=( 
             <div class="d-flex justify-content-center">
             <div class="spinner-border m-5" role="status">
-                <span class="sr-only">Loading...</span>
+                <span class="sr-only"/>
             </div>
             </div>);
         } else {
@@ -196,20 +237,21 @@ class Book extends React.Component{
                                         <p>{this.state.data.bookStatus.statusName}</p>
                                     </div>                            
                                 </div>   
-                                {/* <div class="row  mt-2">
+                                <div class="row  mt-2">
                                     <div class="col">
                                         <h5>Series</h5>
                                     </div>
                                 </div>
                                 <div class="row border-bottom">
-                                    {
-                                        this.state.data.series.length > 0 ? (
+                                 <div class="col ml-2">
+                                    {/* {
+                                        this.state.data.seriesList.length > 0 ? (
                                             <div class="col ml-2">
                                                 <a 
                                                     href="#"
                                                     role="button"
                                                     onClick={() => {
-                                                        this.props.openSeriesItem(this.state.data.series[0].seriesId);
+                                                        this.props.openSeriesItem(this.state.data.seriesList[0].seriesId);
                                                     }}
                                                 ><p>{this.state.data.series[0].title}</p></a>
                                             </div>
@@ -220,9 +262,18 @@ class Book extends React.Component{
                                                 <p>--</p>
                                             </div> 
                                         )
-                                    }                           
+                                    }       */}
+                                    <SeriesListBlock
+                                        seriesList={this.state.data.seriesList}
+                                        onOpenSeriesItem={seriesId=>{
+                                            this.props.openSeriesItemSlice();
+                                            this.props.openSeriesItem(seriesId);
+
+                                        }}
+                                    />
+                                    </div>                     
                                 </div> 
-                                <div class="row  mt-2">
+                                {/* <div class="row  mt-2">
                                     <div class="col">
                                         <h5>Order</h5>
                                     </div>
@@ -303,7 +354,8 @@ export default connect(
             // bookSetLoadingState,
             openUpdateBook,
             openReadList,
-            openSeriesItem
+            openSeriesItem,
+            openSeriesItemSlice
         }
         
 	)(Book)
