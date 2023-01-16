@@ -14,3 +14,4 @@ export const AUTHOR_LIST = "AUTHOR_LIST";
 export const AUTHOR = "AUTHOR";
 export const AUTHOR_ADD = "AUTHOR_ADD";
 export const SERIES_ADD = "SERIES_ADD";
+export const METRICS = "METRICS";

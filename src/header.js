@@ -1,12 +1,8 @@
 import React from 'react';
-// import './header.css';
-// import Row from 'react-bootstrap/Row'
-// import Col from 'react-bootstrap/Col'
-// import Navbar from 'react-bootstrap/Navbar'
-// import Nav from 'react-bootstrap/Nav'
-//import Container from 'react-bootstrap/Container'
 import { connect } from 'react-redux'
 import {setListType, openTitlesList, openReadList, openSeriesList} from './redux/actionCreators';
+import {openCategory} from './displayAreaSlice'
+import * as categories from './displayAreaCategories'
 
 class Header extends React.Component{
 
@@ -32,28 +28,31 @@ class Header extends React.Component{
                                 <ul class="navbar-nav">
                                     <li class="nav-item">
                                     <a 
-                                        class={`nav-link ${this.props.store.listType === "readList"? "active": null}`} 
+                                        class={`nav-link ${this.props.store.listType === categories.READ_LIST? "active": null}`} 
                                         href="#"
                                         onClick={() => {
                                             this.props.openReadList();
+                                            this.props.openCategory(categories.READ_LIST);
                                         }}
                                     >Read List</a>
                                     </li>
                                     <li class="nav-item">
                                     <a 
-                                        class={`nav-link ${this.props.store.listType === "watchList"? "active": null}`}
+                                        class={`nav-link ${this.props.store.listType === categories.WATCH_LIST? "active": null}`}
                                         href="#"
                                         onClick={() => {
                                             this.props.openTitlesList();
+                                            this.props.openCategory(categories.WATCH_LIST);
                                         }}
                                     >Watch List</a>
                                     </li>
                                     <li class="nav-item">
                                     <a 
-                                        class={`nav-link ${this.props.store.listType === "seriesList"? "active": null}`} 
+                                        class={`nav-link ${this.props.store.listType === categories.SERIES_MAIN? "active": null}`} 
                                         href="#"
                                         onClick={()=>{
                                             this.props.openSeriesList()
+                                            this.props.openCategory(categories.SERIES_MAIN);
                                     }}
                                     >Series</a>
                                     </li>
@@ -66,6 +65,17 @@ class Header extends React.Component{
                                     }}
                                     >Settings</a>
                                     </li>
+
+                                    <li class="nav-item">
+                                    <a 
+                                        class={`nav-link ${this.props.store.category === categories.METRICS? "active": null}`} 
+                                        href="#"
+                                        onClick={()=>{
+                                            this.props.openCategory(categories.METRICS);
+                                    }}
+                                    >Metrics</a>
+                                    </li>
+
                                 </ul>
                             </div>
                         </div>
@@ -79,7 +89,8 @@ class Header extends React.Component{
 const mapStatetoProps = (state) => {
 	return {
 		store: {
-			listType: state.listsReducer.listType
+			listType: state.listsReducer.listType,
+            category: state.displayAreaReducer.category
 		}
 	};
 }
@@ -90,7 +101,8 @@ export default connect(
             setListType,
             openTitlesList,
             openReadList,
-            openSeriesList
+            openSeriesList,
+            openCategory
         }
         
 	)(Header)
