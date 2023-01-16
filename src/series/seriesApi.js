@@ -1,13 +1,15 @@
-async function checkError(result, onUnauthorized){
-    if (!result.ok){
-        if (result.status===401 && onUnauthorized !== undefined){
-            onUnauthorized()
-        } else {
-            result=await result.json();
-            throw new Error('Error: '+result.errorMessage);
-        }
-    };
-}
+import * as commonApi from '../common/commonApi'
+
+// async function checkError(result, onUnauthorized){
+//     if (!result.ok){
+//         if (result.status===401 && onUnauthorized !== undefined){
+//             onUnauthorized()
+//         } else {
+//             result=await result.json();
+//             throw new Error('Error: '+result.errorMessage);
+//         }
+//     };
+// }
 
 export async function loadSeriesItem(JWT, readListId, seriesId, onUnauthorized){
     let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${readListId}/series/${seriesId}`,
@@ -17,15 +19,7 @@ export async function loadSeriesItem(JWT, readListId, seriesId, onUnauthorized){
 				'Authorization': `Bearer ${JWT}`
 			}
         });
-        // if (!res.ok){
-        //     if (res.status===401 && onUnauthorized !== undefined){
-        //         onUnauthorized()
-        //     } else {
-        //         let result=await res.json();
-        //         throw new Error('Error: '+result.errorMessage);
-        //     }
-        // };
-        await checkError(res, onUnauthorized);
+        await commonApi.checkError(res, onUnauthorized);
         let series = await res.json();
         let out= {
             series
@@ -52,7 +46,7 @@ export async function saveSeriesItem(JWT, seriesId, body, onUnauthorized){
     //         throw new Error('Error: '+result.error);
     //     }
     // };
-    await checkError(res, onUnauthorized);
+    await commonApi.checkError(res, onUnauthorized);
 }
 
 export async function loadSeriesList(JWT, listId, onUnauthorized){
@@ -63,7 +57,7 @@ export async function loadSeriesList(JWT, listId, onUnauthorized){
             'Authorization': 'Bearer '+JWT
         }
     });
-    await checkError(res, onUnauthorized);;
+    await commonApi.checkError(res, onUnauthorized);;
     // if (!res.ok){
     //     if (res.status===401 && onUnauthorized !== undefined){
     //         onUnauthorized()

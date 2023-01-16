@@ -64,9 +64,6 @@ class AuthorList extends React.Component {
 						}}						
 					>
 						{item.name}
-						{/* <span class="badge badge-primary badge-pill">
-							{item.bookCount}
-						</span> */}
 					</li>
 			)
 			 

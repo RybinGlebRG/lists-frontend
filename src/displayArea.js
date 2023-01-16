@@ -6,6 +6,8 @@ import Header from './header.js'
 import LoginPanel from './login/login.js'
 import { connect } from 'react-redux'
 import {SIGN_IN} from './panels.js'
+import * as categories from './displayAreaCategories'
+import Metrics from './metrics/metrics'
 
 
 
@@ -14,25 +16,27 @@ class DisplayArea extends React.Component{
 	constructor(props){
 		super(props);
 		this.state={}
-		this.setUser=this.setUser.bind(this)
+		// this.setUser=this.setUser.bind(this)
 	}
 
-	setUser(user){
-		this.setState({
-			user:user
-		})
-	}
+	// setUser(user){
+	// 	this.setState({
+	// 		user:user
+	// 	})
+	// }
 
 
 	renderBody(){
 
 		let list;
-		if (this.props.store.listType === "readList"){
+		if (this.props.store.category === categories.READ_LIST){
 			list = (<ReadList/>)
-		} else if (this.props.store.listType === "watchList"){
+		} else if (this.props.store.category === categories.WATCH_LIST){
 			list = (<WatchList/>)
-		} else {
+		} else if (this.props.store.category === categories.SERIES_MAIN) {
 			list = (<SeriesMain/>)
+		} else {
+			list= (<Metrics/>)
 		}
 
 		return (
@@ -85,7 +89,8 @@ const mapStatetoProps = (state) => {
 	return {
 		store: {
 			panelType: state.listsReducer.panel,
-			listType: state.listsReducer.listType
+			listType: state.listsReducer.listType,
+			category: state.displayAreaReducer.category
 		}
 	};
 }
