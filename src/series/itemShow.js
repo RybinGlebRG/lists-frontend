@@ -16,6 +16,8 @@ import  {
     loadSeriesItem
 } from './seriesApi'
 import * as common from './common'
+import {openCategory} from '../displayAreaSlice'
+import * as categories from '../displayAreaCategories'
 
 class SeriesItemShow extends React.Component{
     constructor(props){
@@ -111,7 +113,9 @@ class SeriesItemShow extends React.Component{
                         <li class="list-group-item d-flex justify-content-between list-group-item-action"
                             action 
                             onClick={()=>{
-                                this.props.openBookV2(item.bookId)
+                                
+                                this.props.openBookV2(item.bookId);
+                                this.props.openCategory(categories.READ_LIST);
                             }}
                         >
                             {item.title}
@@ -234,6 +238,7 @@ export default connect(
         openSignIn,
         openSeriesEdit,
         seriesItemAddBook,
-        openChooseBooks
+        openChooseBooks,
+        openCategory
     }
 )(SeriesItemShow)

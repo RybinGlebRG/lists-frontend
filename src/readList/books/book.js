@@ -13,6 +13,8 @@ import * as bookApi from './bookApi'
 import {
 	openSeriesItem as openSeriesItemSlice
 } from '../../series/seriesSlice'
+import {openCategory} from '../../displayAreaSlice'
+import * as categories from '../../displayAreaCategories'
 
 const SeriesListBlock = (props)=>{
     const seriesList = props.seriesList;
@@ -268,7 +270,7 @@ class Book extends React.Component{
                                         onOpenSeriesItem={seriesId=>{
                                             this.props.openSeriesItemSlice();
                                             this.props.openSeriesItem(seriesId);
-
+                                            this.props.openCategory(categories.SERIES_MAIN);
                                         }}
                                     />
                                     </div>                     
@@ -355,7 +357,8 @@ export default connect(
             openUpdateBook,
             openReadList,
             openSeriesItem,
-            openSeriesItemSlice
+            openSeriesItemSlice,
+            openCategory
         }
         
 	)(Book)
