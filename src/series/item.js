@@ -10,7 +10,7 @@ import {
     // seriesItemAddBook
 } from '../redux/actionCreators'
 import SeriesItemShow from './itemShow' 
-import SeriesItemAdd from './add'
+import SeriesItemAdd from './SeriesItemAdd'
 import SeriesEdit from './editList'
 import ChooseBooks from './chooseBooks';
 import * as seriesForms from './forms.js'
