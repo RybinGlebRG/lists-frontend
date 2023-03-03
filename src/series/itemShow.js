@@ -87,8 +87,11 @@ class SeriesItemShow extends React.Component{
             </div>
             </div>);
         } else {
+
+            // TODO: Remove filter
+            let items = this.state.series.items.filter(item => item.itemType === "BOOK");
             
-            let items =this.state.series.items.map(item =>{
+            items =items.map(item =>{
                 let badge;
                 if (item.bookStatus.statusName==='Completed'){
                     badge=(
