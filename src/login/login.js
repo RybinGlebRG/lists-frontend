@@ -2,6 +2,7 @@ import React from 'react';
 import { Formik } from 'formik';
 import {openBookList, loginUser} from '../redux/actionCreators.js'
 import { connect } from 'react-redux'
+import { getToken } from './loginAPI'
 
 class LoginPanel extends React.Component{
     
@@ -10,21 +11,7 @@ class LoginPanel extends React.Component{
             "username": in_vals.login,
             "password": in_vals.password
         }
-        fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/users/tokens`,
-			{
-				method: "POST",
-				headers: {
-					'Content-Type': 'application/json;charset=utf-8'
-				},
-				body: JSON.stringify(vals)
-			}
-		)
-        .then(res => {
-            if (!res.ok){
-                throw new Error('Some network error');
-            }
-            return res.json();
-        })
+        getToken(in_vals.login, in_vals.password)
         .then(
             result=>{
             this.props.loginUser(result.token, in_vals.login);
