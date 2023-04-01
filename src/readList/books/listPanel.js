@@ -224,7 +224,10 @@ class ListPanel extends React.Component{
                 +":"+createDate.getMinutes().toString().padStart(2,"0")
                 +":"+createDate.getSeconds().toString().padStart(2,"0");
 			return (
-					<li class="list-group-item d-flex justify-content-between list-group-item-action"
+					<li class={"list-group-item d-flex justify-content-between list-group-item-action "+ 
+						// (item.bookStatus.statusId === 1 ? "text-bg-primary" : "") +
+						(item.bookStatus.statusId === 2 ? "text-bg-secondary" : "")
+					}
 						action
 						onClick={() => {
 							this.props.openBookV2(item.bookId);
