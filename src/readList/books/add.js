@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Formik} from 'formik';
-import {openBookList} from '../../redux/actionCreators';
+import {openBookList, openSignIn} from '../../redux/actionCreators';
+import * as bookApi from './bookApi'
 
 class BookAdd extends React.Component{
 	constructor(props){
@@ -10,7 +11,8 @@ class BookAdd extends React.Component{
 			error: null,
             authors:null,
             series: null,
-            isLoaded: false
+            isLoaded: false,
+            bookTypes: null
         };
 
     }
@@ -45,9 +47,12 @@ class BookAdd extends React.Component{
 
         let series = await res.json()
 
+        let bookTypes = await bookApi.getBookTypes(this.props.store.JWT,()=>{this.props.openSignIn()})
+
         let out = {
             authors: authors.items,
-            series: series.items
+            series: series.items,
+            bookTypes: bookTypes
         }
 
 
@@ -60,7 +65,8 @@ class BookAdd extends React.Component{
             this.setState({
                 authors: result.authors,
                 series: result.series,
-                isLoaded: true
+                isLoaded: true,
+                bookTypes: result.bookTypes
             });  
         })
         .catch(
@@ -159,6 +165,12 @@ class BookAdd extends React.Component{
             for (let i = 0; i < this.state.series.length; i++){
                 seriesItems.push(<option value={this.state.series[i].seriesId}>{this.state.series[i].title}</option>)
             }
+
+            let bookTypes=[]
+            for (let i = 0; i < this.state.bookTypes.length; i++){
+                bookTypes.push(<option value={this.state.bookTypes[i].id}>{this.state.bookTypes[i].name}</option>)
+            }
+
             displayPanel=(
                 <div class="row">
                     <div class="col">
@@ -312,9 +324,10 @@ class BookAdd extends React.Component{
                                                     value={values.bookType}      
                                                 >   
                                                     <option value='' >--</option>
-                                                    <option value="1">Book</option>
+                                                    {/* <option value="1">Book</option>
                                                     <option value="2">Light Novel</option>
-                                                    <option value="3">Webtoon</option>
+                                                    <option value="3">Webtoon</option> */}
+                                                    {bookTypes}
                                                 </select>
                                             </div>
                                             <button  class="btn btn-primary"
@@ -359,6 +372,7 @@ const mapStatetoProps = (state) => {
 export default connect(
     mapStatetoProps,
     {
-        openBookList
+        openBookList,
+        openSignIn
     }
 )(BookAdd)
