@@ -6,6 +6,7 @@ import {
     openBookV2,
 	setBookListReload
 } from '../../redux/actionCreators'
+import Row from './row';
 
 
 class ListPanel extends React.Component{
@@ -224,40 +225,23 @@ class ListPanel extends React.Component{
                 +":"+createDate.getMinutes().toString().padStart(2,"0")
                 +":"+createDate.getSeconds().toString().padStart(2,"0");
 			return (
-					<li class={"list-group-item d-flex justify-content-between list-group-item-action "+ 
+					<li class={"list-group-item list-group-item-action "+ 
 						// (item.bookStatus.statusId === 1 ? "text-bg-primary" : "") +
 						(item.bookStatus.statusId === 2 ? "text-bg-secondary" : "")
 					}
 						action
-						onClick={() => {
-							this.props.openBookV2(item.bookId);
-						}} 
+						// onClick={() => {
+						// 	this.props.openBookV2(item.bookId);
+						// }} 
 					>
-						<div class="row">
-							<div class="col">
-								<div class="row">
-									<div class="col">
-										<p class="font-weight-bold">{item.title}</p>
-									</div>
-								</div>
-								{item.bookType ? (
-									<div class="row">
-									<div class="col">Type: {item.bookType.typeName}</div>
-								</div>
-								) : null}								
-								<div class="row">
-									<div class="col">Status: {item.bookStatus.statusName}</div>
-								</div>
-								{item.lastChapter ? (
-								<div class="row">
-									<div class="col">Last chapter: {item.lastChapter}</div>
-								</div>
-								): null}
-								<div class="row">
-									<div class="col">Added: {createDate}</div>
-								</div>
-							</div>
-						</div>
+						<Row 
+							title={item.title}
+							bookType={item.bookType}
+							bookStatus={item.bookStatus}
+							lastChapter={item.lastChapter}
+							createDate={createDate}
+							bookId={item.bookId}
+						/>
 
 					</li>
 			)
