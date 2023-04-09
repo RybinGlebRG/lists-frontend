@@ -3,6 +3,7 @@ import { createStore, combineReducers } from "redux";
 import lists from "./reducers/index.js";
 import seriesReducer from '../series/seriesSlice'
 import displayAreaReducer from '../displayAreaSlice'
+import booksReducer from '../readList/books/booksSlice.js'
 
 
 // const rootReducer = combineReducers({
@@ -14,7 +15,8 @@ export default  configureStore({
     reducer: {
       listsReducer: lists,
       seriesReducer: seriesReducer,
-      displayAreaReducer: displayAreaReducer
+      displayAreaReducer: displayAreaReducer,
+      booksReducer: booksReducer
     } 
 })
 

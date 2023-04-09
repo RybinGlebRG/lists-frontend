@@ -7,6 +7,7 @@ import {
 	setBookListReload
 } from '../../redux/actionCreators'
 import Row from './row';
+import {switchListOrdering} from './booksSlice'
 
 
 class ListPanel extends React.Component{
@@ -15,7 +16,7 @@ class ListPanel extends React.Component{
 		this.state={
 			switchPanelTo:null,
 			listId:this.props.listId,
-			bookOrdering: "DESC",
+			// bookOrdering: "DESC",
 			error: null,
 			isLoaded: false,
 			list: {}
@@ -40,7 +41,7 @@ class ListPanel extends React.Component{
 		let body={
 				sort:[{
 					field:"createDate",
-					ordering: this.state.bookOrdering
+					ordering: this.props.store.listOrdering
 				}]
 			}
 
@@ -82,15 +83,16 @@ class ListPanel extends React.Component{
 	}
 
 	switchOrdering(){
-		if (this.state.bookOrdering==="DESC"){
-			this.setState({
-				bookOrdering:"ASC"
-			});
-		} else {
-			this.setState({
-				bookOrdering:"DESC"
-			});
-		}
+		// if (this.state.bookOrdering==="DESC"){
+		// 	this.setState({
+		// 		bookOrdering:"ASC"
+		// 	});
+		// } else {
+		// 	this.setState({
+		// 		bookOrdering:"DESC"
+		// 	});
+		// }
+		this.props.switchListOrdering();
 		this.props.setBookListReload(true);
 	}
 
@@ -125,7 +127,7 @@ class ListPanel extends React.Component{
 	getControls(){
 		let bookOrdering;
 
-		if (this.state.bookOrdering==="DESC"){
+		if (this.props.store.listOrdering==="DESC"){
 			bookOrdering = (
 				<button 
 						type="button"
@@ -275,7 +277,8 @@ const mapStatetoProps = (state) => {
             error: state.listsReducer.seriesItem.error,
             isLoaded: state.listsReducer.seriesItem.isLoaded,
             isAdd: state.listsReducer.seriesItem.isAdd,
-			isReload: state.listsReducer.bookList.isReload
+			isReload: state.listsReducer.bookList.isReload,
+			listOrdering: state.booksReducer.listOrdering
         }
     };
 }
@@ -286,7 +289,8 @@ export default connect(
 		openSignIn,
 		bookSetLoadingState,
 		openBookV2,
-		setBookListReload
+		setBookListReload,
+		switchListOrdering
 	}
 	
 )(ListPanel)
