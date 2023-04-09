@@ -8,6 +8,7 @@ import {
 } from '../../redux/actionCreators'
 import Row from './row';
 import {switchListOrdering} from './booksSlice'
+import * as dateUtils from '../../utils/dateUtils'
 
 
 class ListPanel extends React.Component{
@@ -219,14 +220,6 @@ class ListPanel extends React.Component{
 
 	renderTableData(){
 		return this.state.list.map((item) =>{
-			let createDate=item.insertDate;
-            createDate = new Date(createDate);
-            createDate = createDate.getDate().toString().padStart(2,"0")
-                +"."+(createDate.getUTCMonth()+1).toString().padStart(2,"0")
-                +"."+createDate.getFullYear()
-                +" "+createDate.getHours().toString().padStart(2,"0")
-                +":"+createDate.getMinutes().toString().padStart(2,"0")
-                +":"+createDate.getSeconds().toString().padStart(2,"0");
 			return (
 					<li class={"list-group-item list-group-item-action "+ 
 						// (item.bookStatus.statusId === 1 ? "text-bg-primary" : "") +
@@ -242,7 +235,7 @@ class ListPanel extends React.Component{
 							bookType={item.bookType}
 							bookStatus={item.bookStatus}
 							lastChapter={item.lastChapter}
-							createDate={createDate}
+							createDate={dateUtils.formatToDisplay(item.insertDate)}
 							bookId={item.bookId}
 							chainBooks={item.chain}
 						/>

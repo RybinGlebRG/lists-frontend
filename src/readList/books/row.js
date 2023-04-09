@@ -7,6 +7,7 @@ import {
     openBook
 } from './booksSlice'
 import {v4 as uuidv4} from 'uuid';
+import * as dateUtils from '../../utils/dateUtils'
 
 export default function Row(props){
     const dispatch = useDispatch();
@@ -38,7 +39,7 @@ export default function Row(props){
                         bookType={item.bookType}
                         bookStatus={item.bookStatus}
                         lastChapter={item.lastChapter}
-                        createDate={createDate}
+                        createDate={dateUtils.formatToDisplay(item.insertDate)}
                         bookId={item.bookId}
                     />
 

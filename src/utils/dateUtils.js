@@ -16,3 +16,17 @@ export function preprocessValues(date){
 				createDate.getUTCMinutes().toString().padStart(2,"0");
     return createDate;
 }
+
+
+// DD.MM.YYYY HH24:MI:SS
+export function formatToDisplay(date){
+    let createDate=date;
+            createDate = new Date(createDate);
+            createDate = createDate.getDate().toString().padStart(2,"0")
+                +"."+(createDate.getUTCMonth()+1).toString().padStart(2,"0")
+                +"."+createDate.getFullYear()
+                +" "+createDate.getHours().toString().padStart(2,"0")
+                +":"+createDate.getMinutes().toString().padStart(2,"0")
+                +":"+createDate.getSeconds().toString().padStart(2,"0");
+    return createDate;
+}
