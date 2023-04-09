@@ -52,7 +52,7 @@ class BookAdd extends React.Component{
         let out = {
             authors: authors.items,
             series: series.items,
-            bookTypes: bookTypes
+            bookTypes: bookTypes.items
         }
 
 
