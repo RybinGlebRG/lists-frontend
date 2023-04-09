@@ -42,7 +42,8 @@ class ListPanel extends React.Component{
 				sort:[{
 					field:"createDate",
 					ordering: this.props.store.listOrdering
-				}]
+				}],
+				isChainBySeries: true
 			}
 
 
@@ -243,6 +244,7 @@ class ListPanel extends React.Component{
 							lastChapter={item.lastChapter}
 							createDate={createDate}
 							bookId={item.bookId}
+							chainBooks={item.chain}
 						/>
 
 					</li>

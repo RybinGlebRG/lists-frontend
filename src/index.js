@@ -8,6 +8,7 @@ import store from './redux/store'
 
 // Importing the Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.js'
 
 ReactDOM.render(
 	<Provider store={store}>
