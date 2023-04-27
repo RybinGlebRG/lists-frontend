@@ -221,10 +221,7 @@ class ListPanel extends React.Component{
 	renderTableData(){
 		return this.state.list.map((item) =>{
 			return (
-					<li class={"list-group-item list-group-item-action "+ 
-						// (item.bookStatus.statusId === 1 ? "text-bg-primary" : "") +
-						(item.bookStatus.statusId === 2 ? "text-bg-secondary" : "")
-					}
+					<li class="list-group-item list-group-item-action"
 						action
 						// onClick={() => {
 						// 	this.props.openBookV2(item.bookId);
