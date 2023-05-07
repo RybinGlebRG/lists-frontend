@@ -42,3 +42,32 @@ export async function getBookTypes(JWT, onUnauthorized){
 
     return bookTypes;   
 }
+
+export async function searchBooks(JWT,readListId, body, onUnauthorized){
+    let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${readListId}/books/search`,
+    {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Authorization': `Bearer ${JWT}`
+        },
+        body: JSON.stringify(body)
+    });
+    await commonApi.checkError(res, onUnauthorized);
+    let bookList = await res.json();
+    return bookList;
+}
+
+export async function getBookStatuses(JWT, onUnauthorized){
+    let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/bookStatuses`,
+    {
+        method: "GET",
+        headers: {
+            'Authorization': `Bearer ${JWT}`
+        }
+    });
+    await commonApi.checkError(res, onUnauthorized);
+    res = await res.json();
+
+    return res;   
+}

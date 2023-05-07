@@ -101,11 +101,11 @@ export default function Row(props){
     }
 
     let statusColor ;
-    if (bookStatus.statusName === "In Progress"){
+    if (bookStatus.statusName === "In progress"){
         statusColor = "text-primary"
     } else if (bookStatus.statusName === "Completed"){
         statusColor = "text-secondary"
-    }  else if (bookStatus.statusName === "Waiting"){
+    }  else if (bookStatus.statusName === "Expecting"){
         statusColor = "text-warning"
     } else {
         statusColor = "text-white"
