@@ -9,6 +9,7 @@ import {
 import Row from './row';
 import {switchListOrdering} from './booksSlice'
 import * as dateUtils from '../../utils/dateUtils'
+import * as bookApi from './bookApi'
 
 
 class ListPanel extends React.Component{
@@ -48,20 +49,20 @@ class ListPanel extends React.Component{
 			}
 
 
-		let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.listId}/books/search`,
-		{
-			method: "POST",
-			headers: {
-				'Authorization': `Bearer ${this.props.store.JWT}`,
-				'Content-Type': 'application/json;charset=utf-8',
-			},
-			body: JSON.stringify(body)
-        });
-		if (!res.ok){
-			let result=await res.json();
-            throw new Error('Error: '+result.errorMessage);
-        };
-		let bookList = await res.json();	
+		// let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.listId}/books/search`,
+		// {
+		// 	method: "POST",
+		// 	headers: {
+		// 		'Authorization': `Bearer ${this.props.store.JWT}`,
+		// 		'Content-Type': 'application/json;charset=utf-8',
+		// 	},
+		// 	body: JSON.stringify(body)
+        // });
+		// if (!res.ok){
+		// 	let result=await res.json();
+        //     throw new Error('Error: '+result.errorMessage);
+        // };
+		let bookList = await bookApi.searchBooks(this.props.store.JWT,this.props.store.listId,body,()=>{this.props.openSignIn()})	
 		return bookList;
 	
 	}
@@ -85,15 +86,6 @@ class ListPanel extends React.Component{
 	}
 
 	switchOrdering(){
-		// if (this.state.bookOrdering==="DESC"){
-		// 	this.setState({
-		// 		bookOrdering:"ASC"
-		// 	});
-		// } else {
-		// 	this.setState({
-		// 		bookOrdering:"DESC"
-		// 	});
-		// }
 		this.props.switchListOrdering();
 		this.props.setBookListReload(true);
 	}
@@ -102,7 +94,6 @@ class ListPanel extends React.Component{
 		if (this.props.store.isReload) {
 			this.clearList();
 			this.loadList();
-			// this.props.changeReloaded(false);
 			this.props.setBookListReload(false);
 		}
 		

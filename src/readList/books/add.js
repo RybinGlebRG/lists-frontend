@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Formik} from 'formik';
 import {openBookList, openSignIn} from '../../redux/actionCreators';
 import * as bookApi from './bookApi'
+import * as common from '../../common/common'
 
 class BookAdd extends React.Component{
 	constructor(props){
@@ -12,7 +13,8 @@ class BookAdd extends React.Component{
             authors:null,
             series: null,
             isLoaded: false,
-            bookTypes: null
+            bookTypes: null,
+            bookStatuses: null
         };
 
     }
@@ -48,11 +50,13 @@ class BookAdd extends React.Component{
         let series = await res.json()
 
         let bookTypes = await bookApi.getBookTypes(this.props.store.JWT,()=>{this.props.openSignIn()})
+        let bookStatuses = await bookApi.getBookStatuses(this.props.store.JWT,()=>{this.props.openSignIn()})
 
         let out = {
             authors: authors.items,
             series: series.items,
-            bookTypes: bookTypes.items
+            bookTypes: bookTypes.items,
+            bookStatuses: bookStatuses.items
         }
 
 
@@ -66,13 +70,14 @@ class BookAdd extends React.Component{
                 authors: result.authors,
                 series: result.series,
                 isLoaded: true,
-                bookTypes: result.bookTypes
+                bookTypes: result.bookTypes,
+                bookStatuses: result.bookStatuses
             });  
         })
         .catch(
             error => {
                 this.setState({
-                    error: error.error,
+                    error: error.message,
                     isLoaded: true
                 });
         });
@@ -144,7 +149,40 @@ class BookAdd extends React.Component{
 
         if (this.state.error){
             displayPanel=(
-                <div class="alert alert-danger" role="alert">{this.state.error}</div>
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col">                            
+                                <common.Header
+                                    title="Add Book"
+                                    buttons={[
+                                        (
+                                            <button 
+                                                type="button"
+                                                class="btn btn-secondary btn-sm"
+                                                onClick={()=>{
+                                                    this.props.openBookList();
+                                                }}
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
+                                                    <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
+                                                </svg>
+                                            </button>
+                                        )
+                                    ]}
+                                />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">                            
+                                <div class="alert alert-danger" role="alert">{this.state.error}</div>
+                            </div>
+                        </div>
+                
+
+                    </div>
+                </div>
             )
         } else if (!this.state.isLoaded){
             displayPanel=( 
@@ -171,12 +209,35 @@ class BookAdd extends React.Component{
                 bookTypes.push(<option value={this.state.bookTypes[i].id}>{this.state.bookTypes[i].name}</option>)
             }
 
+            let bookStatuses=[]
+            for (let i = 0; i < this.state.bookStatuses.length; i++){
+                bookStatuses.push(<option value={this.state.bookStatuses[i].statusId}>{this.state.bookStatuses[i].statusName}</option>)
+            }
+
             displayPanel=(
                 <div class="row">
                     <div class="col">
-                        <div class="row">
-                            <div class="col pb-2 mt-4 mb-2 border-bottom">
-                                <h3>Add Book</h3>
+                    <div class="row">
+                            <div class="col">                            
+                                <common.Header
+                                    title="Add Book"
+                                    buttons={[
+                                        (
+                                            <button 
+                                                type="button"
+                                                class="btn btn-secondary btn-sm"
+                                                onClick={()=>{
+                                                    this.props.openBookList();
+                                                }}
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
+                                                    <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
+                                                </svg>
+                                            </button>
+                                        )
+                                    ]}
+                                />
                             </div>
                         </div>
                         <div class="row">
@@ -255,7 +316,7 @@ class BookAdd extends React.Component{
                                                     {authorsItems}
                                                 </select>
                                             </div>
-                                            <div class="form-group" controlId="status">
+                                            {/* <div class="form-group" controlId="status">
                                                 <label>Status</label >
                                                 <select class="form-control" 
                                                     as="select"
@@ -267,6 +328,24 @@ class BookAdd extends React.Component{
                                                     <option value='' >Select status</option>
                                                     <option value="1">In progress</option>
                                                     <option value="2">Completed</option>
+                                                </select>
+                                                {touched.status && errors.status ? (
+                                                <label className="text-danger">
+                                                    {errors.status}
+                                                </label>
+                                                ): null}
+                                            </div> */}
+                                            <div class="form-group" controlId="status">
+                                                <label>Status</label >
+                                                <select class="form-control" 
+                                                    as="select"
+                                                    name="status"
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    value={values.status}      
+                                                >   
+                                                    <option value='' >Select status</option>
+                                                    {bookStatuses}
                                                 </select>
                                                 {touched.status && errors.status ? (
                                                 <label className="text-danger">

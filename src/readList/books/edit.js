@@ -4,6 +4,7 @@ import { Row, Col, ListGroup, Alert, Button, Form } from 'react-bootstrap';
 import { openBookV2, titleAddSetResult, saveBookEdit } from '../../redux/actionCreators'
 import { Formik} from 'formik';
 import * as dateUtils from '../../utils/dateUtils'
+import * as bookApi from './bookApi'
 
 
 class BookEdit extends React.Component{
@@ -12,7 +13,8 @@ class BookEdit extends React.Component{
 		this.state={
             authors:null,
             // series: null,
-            bookTypes: null
+            bookTypes: null,
+            bookStatuses: null
         };
 
     }
@@ -60,24 +62,27 @@ class BookEdit extends React.Component{
 
         // let series = await res.json()
 
-        let bookTypes = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/bookTypes`,
-		{
-			method: "GET",
-			headers: {
-				'Authorization': `Bearer ${this.props.store.JWT}`
-			}
-        });
-        if (!bookTypes.ok){
-            bookTypes = await bookTypes.json();
-            throw new Error('Error: '+bookTypes.error);
-        }
-        bookTypes = await bookTypes.json();
+        // let bookTypes = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/bookTypes`,
+		// {
+		// 	method: "GET",
+		// 	headers: {
+		// 		'Authorization': `Bearer ${this.props.store.JWT}`
+		// 	}
+        // });
+        // if (!bookTypes.ok){
+        //     bookTypes = await bookTypes.json();
+        //     throw new Error('Error: '+bookTypes.error);
+        // }
+        // bookTypes = await bookTypes.json();
+        let bookTypes = await bookApi.getBookTypes(this.props.store.JWT,()=>{this.props.openSignIn()})
+        let bookStatuses = await bookApi.getBookStatuses(this.props.store.JWT,()=>{this.props.openSignIn()})
 
         let out = {
             book,
             authors: authors.items,
             // series: series.items,
-            bookTypes: bookTypes.items
+            bookTypes: bookTypes.items,
+            bookStatuses: bookStatuses.items
         }
 
 
@@ -90,7 +95,8 @@ class BookEdit extends React.Component{
             this.setState({
                 authors: result.authors,
                 // series: result.series,
-                bookTypes: result.bookTypes
+                bookTypes: result.bookTypes,
+                bookStatuses: result.bookStatuses
             });
             this.props.saveBookEdit(true,null,result.book);  
         })
@@ -190,6 +196,11 @@ class BookEdit extends React.Component{
             let bookTypes=[]
             for (let i = 0; i < this.state.bookTypes.length; i++){
                 bookTypes.push(<option value={this.state.bookTypes[i].id}>{this.state.bookTypes[i].name}</option>)
+            }
+
+            let bookStatuses=[]
+            for (let i = 0; i < this.state.bookStatuses.length; i++){
+                bookStatuses.push(<option value={this.state.bookStatuses[i].statusId}>{this.state.bookStatuses[i].statusName}</option>)
             }
 
 
@@ -292,7 +303,7 @@ class BookEdit extends React.Component{
                                     {authorsItems}
                                 </select>
                             </div>
-                            <div class="form-group" controlId="status">
+                            {/* <div class="form-group" controlId="status">
                                 <label>Status</label >
                                 <select class="form-control" 
                                     as="select"
@@ -303,6 +314,23 @@ class BookEdit extends React.Component{
                                 >
                                     <option value="1">In progress</option>
                                     <option value="2">Completed</option>
+                                </select>
+                                {touched.status && errors.status ? (
+                                <label className="text-danger">
+                                    {errors.status}
+                                </label>
+                                ): null}
+                            </div> */}
+                            <div class="form-group" controlId="status">
+                                <label>Status</label >
+                                <select class="form-control" 
+                                    as="select"
+                                    name="status"
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    value={values.status}      
+                                >   
+                                    {bookStatuses}
                                 </select>
                                 {touched.status && errors.status ? (
                                 <label className="text-danger">
