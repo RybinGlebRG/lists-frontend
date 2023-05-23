@@ -13,7 +13,8 @@ export function preprocessValues(date){
 				(createDate.getUTCMonth()+1).toString().padStart(2,"0") + '-' +
 				createDate.getUTCDate().toString().padStart(2,"0") + 'T' +
 				createDate.getUTCHours().toString().padStart(2,"0") + ':' +
-				createDate.getUTCMinutes().toString().padStart(2,"0");
+				createDate.getUTCMinutes().toString().padStart(2,"0") + ":" +
+                createDate.getSeconds().toString().padStart(2,"0");
     return createDate;
 }
 
@@ -29,4 +30,15 @@ export function formatToDisplay(date){
                 +":"+createDate.getMinutes().toString().padStart(2,"0")
                 +":"+createDate.getSeconds().toString().padStart(2,"0");
     return createDate;
+}
+
+export function currentDate(){
+    let dt = new Date();
+    dt = dt.getUTCFullYear() + '-' +
+				(dt.getUTCMonth()+1).toString().padStart(2,"0") + '-' +
+				dt.getUTCDate().toString().padStart(2,"0") + 'T' +
+				dt.getUTCHours().toString().padStart(2,"0") + ':' +
+				dt.getUTCMinutes().toString().padStart(2,"0")+ ":" +
+                dt.getSeconds().toString().padStart(2,"0");
+    return dt;
 }
