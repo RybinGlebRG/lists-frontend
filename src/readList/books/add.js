@@ -4,6 +4,7 @@ import { Formik} from 'formik';
 import {openBookList, openSignIn} from '../../redux/actionCreators';
 import * as bookApi from './bookApi'
 import * as common from '../../common/common'
+import * as dateUtils from '../../utils/dateUtils'
 
 class BookAdd extends React.Component{
 	constructor(props){
@@ -214,6 +215,8 @@ class BookAdd extends React.Component{
                 bookStatuses.push(<option value={this.state.bookStatuses[i].statusId}>{this.state.bookStatuses[i].statusName}</option>)
             }
 
+            let createDate = dateUtils.currentDate();
+
             displayPanel=(
                 <div class="row">
                     <div class="col">
@@ -250,7 +253,8 @@ class BookAdd extends React.Component{
                                         // series: null,
                                         // order: null,
                                         lastChapter: null,
-                                        bookType: null
+                                        bookType: null,
+                                        createDate: createDate
                                     }}
                                     validate={values => {
                                         const errors = {};
@@ -409,6 +413,18 @@ class BookAdd extends React.Component{
                                                     {bookTypes}
                                                 </select>
                                             </div>
+
+                                            <div class="form-group" controlId="createDate">
+                                                <label>Create date UTC</label>
+                                                <input class="form-control" 
+                                                    type="datetime-local" 
+                                                    name="createDate"
+                                                    value={values.createDate}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                />
+                                            </div>        
+
                                             <button  class="btn btn-primary"
                                                 variant="primary" 
                                                 type="submit"
