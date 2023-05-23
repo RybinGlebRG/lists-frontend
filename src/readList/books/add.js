@@ -92,7 +92,8 @@ class BookAdd extends React.Component{
         let book = {
             readListId: this.props.store.readListId,
             title: values.title,
-            status: values.status,        
+            status: values.status, 
+            insertDate: values.createDate       
         }
 
         if (values.authors != null && values.author != ""){
