@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { createStore, combineReducers } from "redux";
+// import { createStore, combineReducers } from "redux";
 import lists from "./reducers/index.js";
 import seriesReducer from '../series/seriesSlice'
 import displayAreaReducer from '../displayAreaSlice'
 import booksReducer from '../readList/books/booksSlice.js'
+import gamesReducer from '../games/gamesSlice.js'
 
 
 // const rootReducer = combineReducers({
@@ -16,7 +17,8 @@ export default  configureStore({
       listsReducer: lists,
       seriesReducer: seriesReducer,
       displayAreaReducer: displayAreaReducer,
-      booksReducer: booksReducer
+      booksReducer: booksReducer,
+      gamesReducer: gamesReducer
     } 
 })
 

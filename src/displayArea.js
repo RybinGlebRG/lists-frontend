@@ -8,6 +8,7 @@ import { connect } from 'react-redux'
 import {SIGN_IN} from './panels.js'
 import * as categories from './displayAreaCategories'
 import Metrics from './metrics/metrics'
+import Games from './games/main';
 
 
 
@@ -35,6 +36,8 @@ class DisplayArea extends React.Component{
 			list = (<WatchList/>)
 		} else if (this.props.store.category === categories.SERIES_MAIN) {
 			list = (<SeriesMain/>)
+		} else if (this.props.store.category === categories.GAMES) {
+			list = (<Games/>)
 		} else {
 			list= (<Metrics/>)
 		}

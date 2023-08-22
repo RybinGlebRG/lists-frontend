@@ -4,7 +4,18 @@ export async function checkError(result, onUnauthorized){
             onUnauthorized()
         } else {
             result=await result.json();
-            throw new Error('Error: '+result.errorMessage);
+            let errorText=`${result.errorMessage}\\n
+            ${result.error}
+            `
+            throw new Error(errorText);
+        }
+    };
+}
+
+export async function checkUnauthorized(result, onUnauthorized){
+    if (!result.ok){
+        if (result.status===401 && onUnauthorized !== undefined){
+            onUnauthorized()
         }
     };
 }

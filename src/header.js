@@ -56,6 +56,17 @@ class Header extends React.Component{
                                     }}
                                     >Series</a>
                                     </li>
+
+                                    <li class="nav-item">
+                                    <a 
+                                        class={`nav-link ${this.props.store.listType === categories.GAMES? "active": null}`}  
+                                        href="#"
+                                        onClick={()=>{
+                                            this.props.openCategory(categories.GAMES);
+                                        }}
+                                    >Games</a>
+                                    </li>
+
                                     <li class="nav-item">
                                     <a 
                                         class="nav-link" 
