@@ -1,11 +1,11 @@
-import {
-    openSignIn,
-    // openSeriesItemShow
-} from '../redux/actionCreators'
+import {openSignIn} from '../redux/actionCreators'
 import { useSelector, useDispatch } from 'react-redux'
 import {useState, useEffect} from 'react';
 import { loadList } from './gamesApi';
 import Header from '../common/header'
+import { openGamesAdd } from './gamesSlice'
+import GamesListRow from './GamesListRow';
+import * as dateUtils from '../utils/dateUtils'
 
 
 export default function GamesList(){
@@ -15,8 +15,8 @@ export default function GamesList(){
     const [games,setGames] = useState(null);
     const [isNeedReload, setIsNeedReload] = useState(false);
     let store={
-        JWT: useSelector(state=>state.listsReducer.JWT),
-        user: useSelector(state=>state.listsReducer.user)
+        JWT: useSelector(state=>state.listsReducer.JWT)
+        // TODO: Add userId
     }
 
     if (isNeedReload){
@@ -76,6 +76,19 @@ export default function GamesList(){
                                         <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
                                     </svg>
                                 </button>
+                            ),
+                            (
+                                <button 
+                                    type="button"
+                                    class="btn btn-success btn-sm"
+                                        onClick={()=>{
+                                           dispatch(openGamesAdd());
+                                        }}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                                        <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
+                                    </svg>
+                                </button>
                             )
                         ]}
                     />
@@ -95,11 +108,25 @@ export default function GamesList(){
     } else if (error){
         display=( <div class="alert alert-danger" role="alert">{error}</div>);
     } else {
+        const rows=games.map(item=>{
+            return (
+                <li 
+                    class="list-group-item list-group-item-action"
+                >
+                    <GamesListRow 
+                        title={item.title}
+                        createDateUTC={dateUtils.formatToDisplay(item.createDateUTC)}
+                    />
+                </li>
+        )
+        })
 
         display=(
             <div class="row">
                 <div class="col">
-            
+                    <ul class="list-group">
+                        {rows}
+                    </ul>
                 </div>
             </div>
         )

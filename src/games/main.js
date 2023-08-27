@@ -1,4 +1,5 @@
 import GamesList from "./list"
+import GamesAdd from "./add"
 import * as forms from "./forms"
 import { useSelector } from 'react-redux'
 
@@ -14,9 +15,17 @@ export default function Games(){
         display=(
             <GamesList/>
         )
+    } else if (store.gamesForm === forms.ADD){
+        display=(
+            <GamesAdd/>
+        )
     }
 
     return(
-        <div>{display}</div>
+        <div class="row justify-content-center">
+            <div class="col col-md-10 pr-5">
+                {display}
+            </div>
+        </div>
     )
 }

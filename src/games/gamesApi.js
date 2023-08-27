@@ -11,10 +11,20 @@ export async function loadList(JWT, body, userId, onUnauthorized){
             body: JSON.stringify(body)
         });
         await commonApi.checkError(res, onUnauthorized);
-        let items = await res.json();
-        let out= {
-            items
-        }
+        let out = await res.json();
 
         return out;
+}
+
+export async function addGame(JWT, body, userId, onUnauthorized){
+    let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/users/${userId}/games`,
+		{
+			method: "POST",
+			headers: {
+				'Authorization': `Bearer ${JWT}`,
+                'Content-Type': 'application/json;charset=utf-8'
+			},
+            body: JSON.stringify(body)
+        });
+        await commonApi.checkError(res, onUnauthorized);
 }

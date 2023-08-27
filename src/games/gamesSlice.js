@@ -7,11 +7,17 @@ export const gamesSlice = createSlice({
         form: gamesForms.LIST
     },
     reducers:{
+        openGamesList: state=>{
+            state.form = gamesForms.LIST
+        },
+        openGamesAdd: state=>{
+            state.form = gamesForms.ADD
+        }
 
     }
 })
 
-// export const {openSeriesItem, openSeriesEdit, openChooseBooks} = seriesSlice.actions
+export const {openGamesList, openGamesAdd} = gamesSlice.actions
 // export const selectSeries = state => state.series
 
 export default gamesSlice.reducer
