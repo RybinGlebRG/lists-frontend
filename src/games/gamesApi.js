@@ -28,3 +28,14 @@ export async function addGame(JWT, body, userId, onUnauthorized){
         });
         await commonApi.checkError(res, onUnauthorized);
 }
+
+export async function deleteGame(JWT, gameId, onUnauthorized){
+    let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/games/${gameId}`,
+		{
+			method: "DELETE",
+			headers: {
+				'Authorization': `Bearer ${JWT}`
+			}
+        });
+        await commonApi.checkError(res, onUnauthorized);
+}

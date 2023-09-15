@@ -111,10 +111,11 @@ export default function GamesList(){
         const rows=games.map(item=>{
             return (
                 <li 
-                    class="list-group-item list-group-item-action"
+                    class="list-group-item p-0"
                 >
                     <GamesListRow 
                         title={item.title}
+                        gameId={item.gameId}
                         createDateUTC={dateUtils.formatToDisplay(item.createDateUTC)}
                     />
                 </li>
