@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import {useState, useEffect} from 'react';
 import { loadList } from './gamesApi';
 import Header from '../common/header'
-import { openGamesAdd } from './gamesSlice'
+import { openGamesAdd, setNeedReload } from './gamesSlice'
 import GamesListRow from './GamesListRow';
 import * as dateUtils from '../utils/dateUtils'
 
@@ -13,13 +13,13 @@ export default function GamesList(){
     const [error,setError] = useState(null);
     const [isLoaded,setIsLoaded] = useState(false);
     const [games,setGames] = useState(null);
-    const [isNeedReload, setIsNeedReload] = useState(false);
     let store={
-        JWT: useSelector(state=>state.listsReducer.JWT)
+        JWT: useSelector(state=>state.listsReducer.JWT),
+        isNeedReload: useSelector(state=>state.gamesReducer.isNeedListReload)
         // TODO: Add userId
     }
 
-    if (isNeedReload){
+    if (store.isNeedReload){
         setIsLoaded(false);
 
         let promises=[];
@@ -36,7 +36,7 @@ export default function GamesList(){
             setIsLoaded(true);
 		});
 
-        setIsNeedReload(false);
+        dispatch(setNeedReload({isNeedListReload: false}))
     }
 
     useEffect(()=>{
@@ -68,7 +68,7 @@ export default function GamesList(){
                                     type="button"
                                     class="btn btn-secondary btn-sm"
                                     onClick={()=>{
-                                        setIsNeedReload(true);
+                                        dispatch(setNeedReload({isNeedListReload: true}))
                                     }}
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">

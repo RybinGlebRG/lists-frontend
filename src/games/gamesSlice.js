@@ -4,7 +4,8 @@ import * as gamesForms from './forms.js'
 export const gamesSlice = createSlice({
     name: 'games',
     initialState: {
-        form: gamesForms.LIST
+        form: gamesForms.LIST,
+        isNeedListReload: false
     },
     reducers:{
         openGamesList: state=>{
@@ -12,12 +13,15 @@ export const gamesSlice = createSlice({
         },
         openGamesAdd: state=>{
             state.form = gamesForms.ADD
+        },
+        setNeedReload: (state,action)=>{
+            state.isNeedListReload = action.payload.isNeedListReload
         }
 
     }
 })
 
-export const {openGamesList, openGamesAdd} = gamesSlice.actions
+export const {openGamesList, openGamesAdd, setNeedReload} = gamesSlice.actions
 // export const selectSeries = state => state.series
 
 export default gamesSlice.reducer
