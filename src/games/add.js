@@ -12,8 +12,8 @@ export default function GamesAdd(){
     const dispatch = useDispatch();
     const [error,setError] = useState(null);
     let store={
-        JWT: useSelector(state=>state.listsReducer.JWT)
-        // TODO: Add userId
+        JWT: useSelector(state=>state.listsReducer.JWT),
+        userId: useSelector(state=>state.listsReducer.userId)
     }
 
     let header=(
@@ -74,7 +74,7 @@ export default function GamesAdd(){
                                 setSubmitting(true);
                                 
                                 let promises=[];
-                                promises.push(addGame(store.JWT, values, 1, ()=>{dispatch(openSignIn())}));
+                                promises.push(addGame(store.JWT, values, store.userId, ()=>{dispatch(openSignIn())}));
                         
                                 Promise.all(promises)
                                 .then(([addGame]) =>{
@@ -118,11 +118,11 @@ export default function GamesAdd(){
                                         ): null}
                                     </div>
                                 
-                                    <div class="form-group" controlId="createDate">
+                                    <div class="form-group" controlId="createDateUTC">
                                         <label>Create date UTC</label>
                                         <input class="form-control" 
                                             type="datetime-local" 
-                                            name="createDate"
+                                            name="createDateUTC"
                                             value={values.createDateUTC}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
