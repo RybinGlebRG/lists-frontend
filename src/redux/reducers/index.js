@@ -7,6 +7,7 @@ import * as seriesForms from '../../series/forms.js'
 
 export const initialState = {
     user: null,
+    userId: 1,
     listId: 2,
     panel: panels.SIGN_IN,
     watchListId: 4,

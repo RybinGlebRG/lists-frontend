@@ -48,21 +48,32 @@ export default function Row(props){
         let expand;
         if (isExpand){
             expand = (
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-lg" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8Z"/>
-                </svg>
+                <div class="row">
+                    <div class="col d-flex justify-content-center align-items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"/>
+                            <path fill-rule="evenodd" d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
+                        </svg>
+                    </div>
+                </div>
+                
             )
         } else {
             expand = (
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
-                </svg>
+                <div class="row">
+                    <div class="col d-flex justify-content-center align-items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                            <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </div>
+                </div>
             )
         }
 
 
         chain = (
-            <div class="row">
+            <div class="row ps-3">
                 <div class="col">
                     <div class="row mb-3 mt-3">
                         <div class="col-md-auto">
@@ -140,7 +151,7 @@ export default function Row(props){
                 <div class="row">
                     <div class="col">                    
                         <div 
-                            class="row justify-content-between"
+                            class="row justify-content-between p-3"
                             // onClick={()=>{
                             //     dispatch(openBook({bookId: bookId}));
                             //     dispatch(openBookV2(bookId));
@@ -168,19 +179,25 @@ export default function Row(props){
                         </div>
                     </div>
                     <div class="col d-flex justify-content-center align-items-center">
-                        <ul class="list-group list-group-horizontal list-group-flush w-100 offset-md-6 h-75">
+                        <ul class="list-group list-group-horizontal list-group-flush w-100 h-100 offset-md-10">
                             <li class="list-group-item list-group-item-action border-0 p-0">
+                                
                                 <button
                                     type="button"
-                                    class="btn btn-link w-100 h-100 border-start rounded-0"
+                                    class="btn btn-link w-100 h-100 rounded-0 p-0"
                                     onClick={()=>{
                                         dispatch(openBook({bookId: bookId}));
                                         dispatch(openBookV2(bookId));
                                     }}
                                 >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                    <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
-                                </svg>
+                                    <div class="row w-100 h-100 m-0">
+                                        <div class="col-md-auto p-0 border-start h-75 align-self-center"/>
+                                        <div class="col d-flex justify-content-center align-items-center p-0">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                                <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                                            </svg>
+                                        </div>
+                                    </div>                                    
                                 </button>
                             </li>
                         </ul>
