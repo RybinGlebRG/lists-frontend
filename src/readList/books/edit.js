@@ -20,7 +20,7 @@ class BookEdit extends React.Component{
     }
 
     async loadData(){
-        let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.listId}/books/${this.props.store.bookId}`,
+        let res = await fetch(window.location.origin+`/api/v0.2/readLists/${this.props.store.listId}/books/${this.props.store.bookId}`,
 		{
 			method: "GET",
 			headers: {
@@ -115,7 +115,8 @@ class BookEdit extends React.Component{
             title: values.title,
             status: values.status,
             lastChapter: values.lastChapter,
-            insertDateUTC: dt //this.props.store.book.insertDate
+            insertDateUTC: dt, //this.props.store.book.insertDate
+            note: values.note
         }
 
         if (values.author != ""){
@@ -240,7 +241,8 @@ class BookEdit extends React.Component{
                                 // order: this.props.store.book.series.length > 0 ? this.props.store.book.series[0].seriesOrder: null,
                                 lastChapter: this.props.store.book.lastChapter,
                                 bookType: this.props.store.book.bookType ? this.props.store.book.bookType.typeId: null,
-                                createDate: createDate
+                                createDate: createDate,
+                                note: this.props.store.book.note
                             }}
                             validate={values => {
                                 const errors = {};
@@ -404,6 +406,18 @@ class BookEdit extends React.Component{
                                     value={values.createDate}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
+                                />
+                            </div>
+
+                            <div class="form-group" controlId="note">
+                                <label>Note</label>
+                                <textarea
+                                    class="form-control" 
+                                    rows="3" 
+                                    name="note"
+                                    value={values.note}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}                                
                                 />
                             </div>
 
