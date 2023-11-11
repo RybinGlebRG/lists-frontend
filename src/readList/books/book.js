@@ -317,6 +317,16 @@ class Book extends React.Component{
                                         <p>{this.state.data.bookType ? this.state.data.bookType.typeName:"--"}</p>
                                     </div>                            
                                 </div> 
+                                <div class="row mt-2">
+                                    <div class="col">
+                                        <h5>Note</h5>
+                                    </div>
+                                </div>
+                                <div class="row border-bottom">
+                                    <div class="col ml-2">
+                                        <p>{this.state.data.note}</p>
+                                    </div>                            
+                                </div> 
 
                             </div> 
                         </div>              
