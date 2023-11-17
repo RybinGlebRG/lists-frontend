@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Formik} from 'formik';
-import {openBookList, openSignIn} from '../../redux/actionCreators';
+import {openSignIn} from '../../redux/actionCreators';
 import * as bookApi from './bookApi'
 import * as common from '../../common/common'
 import * as dateUtils from '../../utils/dateUtils'
+import {openBookList} from './booksSlice'
 
 class BookAdd extends React.Component{
 	constructor(props){

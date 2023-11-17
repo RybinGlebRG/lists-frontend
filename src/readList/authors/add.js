@@ -1,7 +1,8 @@
 import React from 'react';
-import {openSignIn, openAuthorList} from '../../redux/actionCreators';
+import {openSignIn} from '../../redux/actionCreators';
 import { connect } from 'react-redux';
 import { Formik} from 'formik';
+import {openAuthorList} from '../books/booksSlice'
 
 
 class AuthorAdd extends React.Component{

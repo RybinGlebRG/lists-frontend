@@ -4,16 +4,22 @@ import * as categories from './displayAreaCategories'
 export const displayAreaSlice = createSlice({
     name: 'displayArea',
     initialState: {
-        category: categories.READ_LIST
+        category: categories.SIGN_IN
     },
     reducers:{
         openCategory: (state,action)=>{
             state.category = action.payload
+        },
+        openSignIn: (state,action)=>{
+            state.category = categories.SIGN_IN
+        },
+        openSeriesList: (state,action)=>{
+            state.category = categories.SERIES_MAIN
         }
     }
 })
 
-export const {openCategory} = displayAreaSlice.actions
+export const {openCategory,openSignIn,openSeriesList} = displayAreaSlice.actions
 export const selectCategory = state => state.category
 
 export default displayAreaSlice.reducer
