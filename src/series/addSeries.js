@@ -14,7 +14,7 @@ class SeriesAdd extends React.Component {
 
 	async performSaveVals(series){
 		let res = await fetch(
-			window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.readListId}/series`,
+			window.location.origin+`/api/v0.2/readLists/${this.props.store.readListId}/series`,
 			{
 				method: "POST",
 				headers: {

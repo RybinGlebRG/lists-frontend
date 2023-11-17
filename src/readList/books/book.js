@@ -66,7 +66,7 @@ class Book extends React.Component{
     }
 
     // async loadData(){
-    //     let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.listId}/books/${this.props.store.bookId}`,
+    //     let res = await fetch(window.location.origin+`/api/v0.2/readLists/${this.props.store.listId}/books/${this.props.store.bookId}`,
 	// 	{
 	// 		method: "GET",
 	// 		headers: {
@@ -85,7 +85,7 @@ class Book extends React.Component{
 
     async performDelete(){
         let res = await fetch(
-            window.env.BACKEND_ADDR_V2+"/api/v0.2/books/"+this.props.store.bookId,
+            window.location.origin+"/api/v0.2/books/"+this.props.store.bookId,
             {
                 method: "DELETE",
                 headers: {

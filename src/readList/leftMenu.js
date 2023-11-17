@@ -1,9 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import {openSeriesList, openBookList, openAuthorList} from '../redux/actionCreators.js'
+import {openSeriesList} from '../redux/actionCreators.js'
 import Nav from 'react-bootstrap/Nav'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import {
+    openBookList, openAuthorList
+} from './books/booksSlice.js'
 
 class LeftMenu extends React.Component{
 
@@ -25,7 +28,7 @@ class LeftMenu extends React.Component{
                     <Nav.Link 
                         eventKey="1"
                         onSelect={()=>{
-                            this.props.openBookList()
+                            this.props.openBookList();
                         }}
                     >Book List</Nav.Link>
                 </Nav.Item>
@@ -58,5 +61,5 @@ class LeftMenu extends React.Component{
 
 export default connect(
 	null,
-	{ openSeriesList, openBookList,openAuthorList }
+	{ openSeriesList, openBookList,openAuthorList}
   )(LeftMenu)

@@ -27,7 +27,7 @@ class SeriesItem extends React.Component{
 	}
 
     // async loadData(){
-    //     let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.readListId}/series/${this.props.store.seriesId}`,
+    //     let res = await fetch(window.location.origin+`/api/v0.2/readLists/${this.props.store.readListId}/series/${this.props.store.seriesId}`,
 	// 	{
 	// 		method: "GET",
 	// 		headers: {
@@ -68,7 +68,7 @@ class SeriesItem extends React.Component{
 
     // async performDeleteSeries(){
     //     let res = await fetch(
-    //         window.env.BACKEND_ADDR_V2+"/api/v0.2/bookSeries/"+this.props.store.seriesId,
+    //         window.location.origin+"/api/v0.2/bookSeries/"+this.props.store.seriesId,
     //         {
     //             method: "DELETE",
     //             headers: {

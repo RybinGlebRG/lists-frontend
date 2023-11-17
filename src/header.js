@@ -3,6 +3,9 @@ import { connect } from 'react-redux'
 import {setListType, openTitlesList, openReadList, openSeriesList} from './redux/actionCreators';
 import {openCategory} from './displayAreaSlice'
 import * as categories from './displayAreaCategories'
+import {
+    openBookList
+} from './readList/books/booksSlice'
 
 class Header extends React.Component{
 
@@ -33,6 +36,7 @@ class Header extends React.Component{
                                         onClick={() => {
                                             this.props.openReadList();
                                             this.props.openCategory(categories.READ_LIST);
+                                            this.props.openBookList();
                                         }}
                                     >Read List</a>
                                     </li>
@@ -113,7 +117,8 @@ export default connect(
             openTitlesList,
             openReadList,
             openSeriesList,
-            openCategory
+            openCategory,
+            openBookList
         }
         
 	)(Header)
