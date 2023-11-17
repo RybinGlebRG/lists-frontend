@@ -34,7 +34,7 @@ class BookEdit extends React.Component{
         };
         let book = await res.json();
 
-        res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.listId}/authors`,
+        res = await fetch(window.location.origin+`/api/v0.2/readLists/${this.props.store.listId}/authors`,
 		{
 			method: "GET",
 			headers: {
@@ -48,7 +48,7 @@ class BookEdit extends React.Component{
 
         let authors = await res.json();
 
-        // res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.listId}/series`,
+        // res = await fetch(window.location.origin+`/api/v0.2/readLists/${this.props.store.listId}/series`,
 		// {
 		// 	method: "GET",
 		// 	headers: {
@@ -62,7 +62,7 @@ class BookEdit extends React.Component{
 
         // let series = await res.json()
 
-        // let bookTypes = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/bookTypes`,
+        // let bookTypes = await fetch(window.location.origin+`/api/v0.2/bookTypes`,
 		// {
 		// 	method: "GET",
 		// 	headers: {
@@ -134,7 +134,7 @@ class BookEdit extends React.Component{
 
 
         fetch(
-			window.env.BACKEND_ADDR_V2+`/api/v0.2/books/${this.props.store.bookId}`,
+			window.location.origin+`/api/v0.2/books/${this.props.store.bookId}`,
 			{
 				method: "PUT",
 				headers: {
@@ -455,7 +455,8 @@ const mapStatetoProps = (state) => {
 		store: {
 			JWT: state.listsReducer.JWT,
 			listId: state.listsReducer.listId,
-            bookId: state.listsReducer.book.bookId,
+            // bookId: state.listsReducer.book.bookId,
+            bookId: state.booksReducer.bookId,
             // title: state.book.title,
             // authorName: state.book.authorName,
             // authorId: state.book.authorId,

@@ -2,10 +2,7 @@ import React from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { connect } from 'react-redux';
 import {
-    openBookV2,
-    // seriesItemSetLoadingState,
     openSignIn,
-    // openSeriesEdit,
     seriesItemAddBook
 } from '../redux/actionCreators'
 import {
@@ -18,6 +15,7 @@ import  {
 import * as common from './common'
 import {openCategory} from '../displayAreaSlice'
 import * as categories from '../displayAreaCategories'
+import {openBook} from '../readList/books/booksSlice'
 
 class SeriesItemShow extends React.Component{
     constructor(props){
@@ -48,7 +46,7 @@ class SeriesItemShow extends React.Component{
 
     async performDeleteSeries(){
         let res = await fetch(
-            window.env.BACKEND_ADDR_V2+"/api/v0.2/bookSeries/"+this.props.store.seriesId,
+            window.location.origin+"/api/v0.2/bookSeries/"+this.props.store.seriesId,
             {
                 method: "DELETE",
                 headers: {
@@ -116,8 +114,7 @@ class SeriesItemShow extends React.Component{
                         <li class="list-group-item d-flex justify-content-between list-group-item-action"
                             action 
                             onClick={()=>{
-                                
-                                this.props.openBookV2(item.bookId);
+                                this.props.openBook({bookId: item.bookId});
                                 this.props.openCategory(categories.READ_LIST);
                             }}
                         >
@@ -237,11 +234,11 @@ const mapStatetoProps = (state) => {
 export default connect(
     mapStatetoProps,
     { 
-        openBookV2,
         openSignIn,
         openSeriesEdit,
         seriesItemAddBook,
         openChooseBooks,
-        openCategory
+        openCategory,
+        openBook
     }
 )(SeriesItemShow)

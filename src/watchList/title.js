@@ -18,7 +18,7 @@ class Title extends React.Component{
 			isLoaded:false,
 			error:null
 		});
-		fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/watchLists/${this.props.store.watchListId}/titles/${this.props.store.titleId}`,
+		fetch(window.location.origin+`/api/v0.2/watchLists/${this.props.store.watchListId}/titles/${this.props.store.titleId}`,
 		{
 			method: "GET",
 			headers: {
@@ -55,7 +55,7 @@ class Title extends React.Component{
 		const isDelete = window.confirm("Delete this title?")
 		if (isDelete){
 			fetch(
-				window.env.BACKEND_ADDR_V2+`/api/v0.2/titles/${titleId}`,
+				window.location.origin+`/api/v0.2/titles/${titleId}`,
 				{
 					method: "DELETE",
 					headers: {

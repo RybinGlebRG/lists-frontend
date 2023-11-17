@@ -40,7 +40,7 @@ class TitleAdd extends React.Component{
             }
         }
         fetch(
-			window.env.BACKEND_ADDR_V2+`/api/v0.2/watchLists/${this.props.store.watchListId}/titles`,
+			window.location.origin+`/api/v0.2/watchLists/${this.props.store.watchListId}/titles`,
 			{
 				method: "POST",
 				headers: {

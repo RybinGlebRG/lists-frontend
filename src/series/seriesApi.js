@@ -2,7 +2,7 @@ import * as commonApi from '../common/commonApi'
 
 
 export async function loadSeriesItem(JWT, readListId, seriesId, onUnauthorized){
-    let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${readListId}/series/${seriesId}`,
+    let res = await fetch(window.location.origin+`/api/v0.2/readLists/${readListId}/series/${seriesId}`,
 		{
 			method: "GET",
 			headers: {
@@ -19,7 +19,7 @@ export async function loadSeriesItem(JWT, readListId, seriesId, onUnauthorized){
 }
 
 export async function saveSeriesItem(JWT, seriesId, body, onUnauthorized){
-    let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/series/${seriesId}`,
+    let res = await fetch(window.location.origin+`/api/v0.2/series/${seriesId}`,
     {
         method: "PUT",
         headers: {
@@ -32,7 +32,7 @@ export async function saveSeriesItem(JWT, seriesId, body, onUnauthorized){
 }
 
 export async function loadSeriesList(JWT, listId, onUnauthorized){
-    let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${listId}/series`,
+    let res = await fetch(window.location.origin+`/api/v0.2/readLists/${listId}/series`,
     {
         method: "GET",
         headers: {

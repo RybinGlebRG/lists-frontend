@@ -15,7 +15,7 @@ class AuthorAdd extends React.Component{
 	}
 
     async addAuthorAsync(values){
-		let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.listId}/authors`,
+		let res = await fetch(window.location.origin+`/api/v0.2/readLists/${this.props.store.listId}/authors`,
 		{
 			method: "POST",
 			headers: {

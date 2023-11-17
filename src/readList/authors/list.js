@@ -16,7 +16,7 @@ class AuthorList extends React.Component {
 	}
 
 	async loadData(){
-		let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.listId}/authors`,
+		let res = await fetch(window.location.origin+`/api/v0.2/readLists/${this.props.store.listId}/authors`,
 		{
 			method: "GET",
 			headers: {

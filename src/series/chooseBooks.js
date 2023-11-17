@@ -20,7 +20,7 @@ async function loadBooks(JWT, listId, bookOrdering){
     }
 
 
-    let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${listId}/books/search`,
+    let res = await fetch(window.location.origin+`/api/v0.2/readLists/${listId}/books/search`,
     {
         method: "POST",
         headers: {

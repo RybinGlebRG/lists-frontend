@@ -21,7 +21,7 @@ class BookAdd extends React.Component{
     }
 
     async loadData(){
-        let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.readListId}/authors`,
+        let res = await fetch(window.location.origin+`/api/v0.2/readLists/${this.props.store.readListId}/authors`,
 		{
 			method: "GET",
 			headers: {
@@ -36,7 +36,7 @@ class BookAdd extends React.Component{
 
         let authors = await res.json();
 
-        res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.readListId}/series`,
+        res = await fetch(window.location.origin+`/api/v0.2/readLists/${this.props.store.readListId}/series`,
 		{
 			method: "GET",
 			headers: {
@@ -114,7 +114,7 @@ class BookAdd extends React.Component{
         }
 
         fetch(
-			window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.readListId}/books`,
+			window.location.origin+`/api/v0.2/readLists/${this.props.store.readListId}/books`,
 			{
 				method: "POST",
 				headers: {

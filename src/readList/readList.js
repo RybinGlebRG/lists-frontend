@@ -16,6 +16,7 @@ import SeriesAdd from '../series/addSeries.js'
 import { connect } from 'react-redux'
 import * as panels from '../panels.js'
 import {openSignIn, openBook, openBookList, openAddBook, openBookV2} from '../redux/actionCreators';
+import * as bookForms from './books/forms.js'
 
 
 class ReadList extends React.Component{
@@ -27,7 +28,7 @@ class ReadList extends React.Component{
     render(){
         const panel = -1;
 		let displayPanel;
-		if (this.props.store.panelType===panels.BOOK_LIST){
+		if (this.props.store.bookForm===bookForms.SHOW_LIST){
 			displayPanel= (
 			<div>
 				<ListPanel 
@@ -41,7 +42,7 @@ class ReadList extends React.Component{
 				/>
 			</div>
 			)
-		} else if (this.props.store.panelType===panels.ADD_BOOK){
+		} else if (this.props.store.bookForm===bookForms.SHOW_BOOK_ADD){
 			displayPanel=(<BookAdd/>)			
 		} else if (panel===4){
 			displayPanel=(
@@ -49,22 +50,18 @@ class ReadList extends React.Component{
 				user = {this.state.user}
 				/>
 			)
-		// } else if (this.props.store.panelType===panels.SERIES_LIST){
-        //     displayPanel=(<SeriesList/>)
-        } else if (this.props.store.panelType===panels.BOOK_V2){
+        } else if (this.props.store.bookForm===bookForms.SHOW_BOOK){
 			displayPanel=(<Book/>)
-		// } else if (this.props.store.panelType===panels.SERIES_ITEM){
-		// 	displayPanel=(<SeriesItem/>)
-		} else if (this.props.store.panelType===panels.UPDATE_BOOK){
+		// } else if (this.props.store.panelType===panels.UPDATE_BOOK){
+		// 	displayPanel=(<BookEdit/>)
+		} else if (this.props.store.bookForm===bookForms.SHOW_BOOK_UPDATE){
 			displayPanel=(<BookEdit/>)
-		} else if (this.props.store.panelType===panels.AUTHOR_LIST){
+		} else if (this.props.store.bookForm===bookForms.SHOW_AUTHOR_LIST){
 			displayPanel=(<AuthorList/>)
-		} else if (this.props.store.panelType===panels.AUTHOR){
+		} else if (this.props.store.bookForm===bookForms.SHOW_AUTHOR){
 			displayPanel=(<Author/>)
-		}else if (this.props.store.panelType===panels.AUTHOR_ADD){
+		}else if (this.props.store.bookForm===bookForms.SHOW_AUTHOR_ADD){
 			displayPanel=(<AuthorAdd/>)
-		// } else if (this.props.store.panelType===panels.SERIES_ADD){
-		// 	displayPanel=(<SeriesAdd/>)
 		}
 
 
@@ -93,7 +90,8 @@ const mapStatetoProps = (state) => {
 			JWT: state.listsReducer.JWT,
 			listId: state.listsReducer.listId,
 			bookId: state.listsReducer.book.bookId,
-			listType: state.listsReducer.listType
+			listType: state.listsReducer.listType,
+			bookForm: state.booksReducer.form
 		}
 	};
 }

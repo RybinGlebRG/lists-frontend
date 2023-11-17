@@ -18,7 +18,7 @@ class Author extends React.Component{
 	}
 
     async loadData(){
-		let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.listId}/authors/${this.props.store.authorId}`,
+		let res = await fetch(window.location.origin+`/api/v0.2/readLists/${this.props.store.listId}/authors/${this.props.store.authorId}`,
 		{
 			method: "GET",
 			headers: {
@@ -35,7 +35,7 @@ class Author extends React.Component{
 	}
 
     async deleteAuthorAsync(){
-		let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/authors/${this.props.store.authorId}`,
+		let res = await fetch(window.location.origin+`/api/v0.2/authors/${this.props.store.authorId}`,
 		{
 			method: "DELETE",
 			headers: {

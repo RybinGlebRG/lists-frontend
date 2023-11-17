@@ -2,7 +2,7 @@ import * as commonApi from '../../common/commonApi'
 
 
 export async function loadBook(JWT, listId, bookId, onUnauthorized){
-    let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${listId}/books/${bookId}`,
+    let res = await fetch(window.location.origin+`/api/v0.2/readLists/${listId}/books/${bookId}`,
     {
         method: "GET",
         headers: {
@@ -17,7 +17,7 @@ export async function loadBook(JWT, listId, bookId, onUnauthorized){
 }
 
 export async function postBooks(JWT, readListId, body, onUnauthorized){
-    let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${readListId}/books`,
+    let res = await fetch(window.location.origin+`/api/v0.2/readLists/${readListId}/books`,
     {
         method: "POST",
         headers: {
@@ -30,7 +30,7 @@ export async function postBooks(JWT, readListId, body, onUnauthorized){
 }
 
 export async function getBookTypes(JWT, onUnauthorized){
-    let bookTypes = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/bookTypes`,
+    let bookTypes = await fetch(window.location.origin+`/api/v0.2/bookTypes`,
     {
         method: "GET",
         headers: {
@@ -44,7 +44,7 @@ export async function getBookTypes(JWT, onUnauthorized){
 }
 
 export async function searchBooks(JWT,readListId, body, onUnauthorized){
-    let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${readListId}/books/search`,
+    let res = await fetch(window.location.origin+`/api/v0.2/readLists/${readListId}/books/search`,
     {
         method: "POST",
         headers: {
@@ -59,7 +59,7 @@ export async function searchBooks(JWT,readListId, body, onUnauthorized){
 }
 
 export async function getBookStatuses(JWT, onUnauthorized){
-    let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/bookStatuses`,
+    let res = await fetch(window.location.origin+`/api/v0.2/bookStatuses`,
     {
         method: "GET",
         headers: {

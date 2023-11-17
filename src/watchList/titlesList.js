@@ -19,7 +19,7 @@ class TitlesList extends React.Component{
 			isLoaded:false,
 			error:null
 		});
-		fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/watchLists/${this.props.store.watchListId}/titles`,
+		fetch(window.location.origin+`/api/v0.2/watchLists/${this.props.store.watchListId}/titles`,
 		{
 			method: "GET",
 			headers: {

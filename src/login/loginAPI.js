@@ -6,7 +6,7 @@ export async function getToken(username, password){
         "password": password
     }
     let res = await fetch(
-        window.env.BACKEND_ADDR_V2+`/api/v0.2/users/tokens`,
+        window.location.origin+`/api/v0.2/users/tokens`,
         {
             method: "POST",
             headers: {

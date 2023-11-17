@@ -49,7 +49,7 @@ class ListPanel extends React.Component{
 			}
 
 
-		// let res = await fetch(window.env.BACKEND_ADDR_V2+`/api/v0.2/readLists/${this.props.store.listId}/books/search`,
+		// let res = await fetch(window.location.origin+`/api/v0.2/readLists/${this.props.store.listId}/books/search`,
 		// {
 		// 	method: "POST",
 		// 	headers: {
