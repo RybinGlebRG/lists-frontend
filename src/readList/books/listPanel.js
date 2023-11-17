@@ -1,257 +1,210 @@
-import React from 'react';
-import { connect } from 'react-redux'
-import {
-    openSignIn,
-    bookSetLoadingState,
-	setBookListReload
-} from '../../redux/actionCreators'
+import React, {useState, useEffect} from 'react';
 import Row from './row';
 import {switchListOrdering, openBookAdd} from './booksSlice'
 import * as dateUtils from '../../utils/dateUtils'
 import * as bookApi from './bookApi'
+import {openSignIn} from '../../displayAreaSlice'
+import { useSelector, useDispatch } from 'react-redux'
 
-
-class ListPanel extends React.Component{
-	constructor(props){
-		super(props);
-		this.state={
-			switchPanelTo:null,
-			// bookOrdering: "DESC",
-			error: null,
-			isLoaded: false,
-			list: {}
-			// isShouldReload:false
-			
+async function loadData(listOrdering, JWT, listId, onUnauthorized){
+	let body={
+			sort:[{
+				field:"createDate",
+				ordering: listOrdering
+			}],
+			isChainBySeries: true
 		}
-	}
+	let bookList = await bookApi.searchBooks(JWT, listId, body, onUnauthorized)	
+	return bookList;
+}
 
-	componentDidMount(){
-		this.loadList()
-	}
-
-	clearList(){
-		this.setState({
-			list:{},
-			isLoaded:false,
-			error:null
-		})
-	}
-
-	async loadData(){
-		let body={
-				sort:[{
-					field:"createDate",
-					ordering: this.props.store.listOrdering
-				}],
-				isChainBySeries: true
-			}
-		let bookList = await bookApi.searchBooks(this.props.store.JWT,this.props.store.listId,body,()=>{this.props.openSignIn()})	
-		return bookList;
-	
-	}
-
-	loadList(){
-		this.loadData()
-		.then(res=>{
-			this.setState({
-				isLoaded:true,
-				error:null,
-				list: res.items
-			});
-		})
-		.catch(err=>{
-			this.setState({
-				isLoaded:true,
-				error:err.message,
-				list: null
-			});
-		});
-	}
-
-	switchOrdering(){
-		this.props.switchListOrdering();
-		this.props.setBookListReload(true);
-	}
-
-	getTableData(){
-		if (this.props.store.isReload) {
-			this.clearList();
-			this.loadList();
-			this.props.setBookListReload(false);
-		}
-		
-		if (this.state.error){
-			return <div class="alert alert-danger" role="alert">{this.state.error}</div>;
-		} else if (!this.state.isLoaded){
-			return(
-				<div class="d-flex justify-content-center">
-					<div class="spinner-border m-5" role="status">
-						<span class="sr-only"/>
-					</div>
-				</div>
-			)
-		} else {
+function getTableData(error, isLoaded, list){
+	if (error){
+		return <div class="alert alert-danger" role="alert">{error}</div>;
+	} else if (!isLoaded){
 		return(
-			<ul class="list-group">
-					{this.renderTableData()}
-			</ul>
-		);
-		}
-	}
-
-
-	getControls(){
-		let bookOrdering;
-
-		if (this.props.store.listOrdering==="DESC"){
-			bookOrdering = (
-				<button 
-						type="button"
-						class="btn btn-secondary btn-sm"
-							onClick={()=>{
-								this.switchOrdering();
-							}}
-					>
-						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-down" viewBox="0 0 16 16">
-							<path d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
-						</svg>
-				</button>
-			)
-		} else {
-			bookOrdering = (
-				<button 
-						type="button"
-						class="btn btn-secondary btn-sm"
-							onClick={()=>{
-								this.switchOrdering();
-							}}
-					>
-						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-down-alt" viewBox="0 0 16 16">
-							<path d="M3.5 3.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 12.293V3.5zm4 .5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1h-1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1h-3zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1h-5zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5z"/>
-						</svg>
-				</button>
-			)
-		}
-
-		let controls=(
-			<div class="row">
-				<div class="col">
-				<div class="row">
-					<div class="col pb-2 mt-4 mb-2 border-bottom">			
-						<div class="row">
-							<div class="col">
-								<h3>Book List</h3>
-							</div>
-							<div class="col-md-auto">
-									<button 
-										type="button"
-										class="btn btn-secondary btn-sm"
-											onClick={()=>{
-												this.props.setBookListReload(true);
-											}}
-									>
-										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
-											<path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
-											<path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
-										</svg>
-								</button>
-							</div>
-							<div class="col-md-auto">
-									<button 
-										type="button"
-										class="btn btn-success btn-sm"
-											onClick={()=>{
-												this.props.openBookAdd();
-											}}
-									>
-										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-											<path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
-										</svg>
-								  </button>
-								</div>
-						</div>
-						
-					</div>	
-				</div>
-				<div class="row">
-					<div class="col pb-2 mt-2 mb-2 border-bottom">
-						{bookOrdering}
-					</div>
-				</div>
-				<div class="row">
-					<div class="col">
-						{this.getTableData()}
-					</div>
-				</div>			
+			<div class="d-flex justify-content-center">
+				<div class="spinner-border m-5" role="status">
+					<span class="sr-only"/>
 				</div>
 			</div>
 		)
-
-		return controls;
+	} else {
+	return(
+		<div class="row">
+			<div class="col">
+				<ul class="list-group">
+					{list.map((item) =>{
+						return (
+							<li class="list-group-item p-0">
+								<Row 
+									title={item.title}
+									bookType={item.bookType}
+									bookStatus={item.bookStatus}
+									lastChapter={item.lastChapter}
+									createDate={dateUtils.formatToDisplay(item.insertDate)}
+									bookId={item.bookId}
+									chainBooks={item.chain}
+								/>
+							</li>
+						)
+					})}
+				</ul>
+			</div>
+		</div>	
+	);
 	}
+}
 
+function getControls(listOrdering, reload, switchOrdering, openBookAdd){
+	let bookOrdering;
 
-
-	renderTableData(){
-		return this.state.list.map((item) =>{
-			return (
-					<li class="list-group-item p-0">
-						<Row 
-							title={item.title}
-							bookType={item.bookType}
-							bookStatus={item.bookStatus}
-							lastChapter={item.lastChapter}
-							createDate={dateUtils.formatToDisplay(item.insertDate)}
-							bookId={item.bookId}
-							chainBooks={item.chain}
-						/>
-
-					</li>
-			)
-			 
-		}
-		
+	if (listOrdering==="DESC"){
+		bookOrdering = (
+			<button 
+					type="button"
+					class="btn btn-secondary btn-sm"
+						onClick={switchOrdering}
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-down" viewBox="0 0 16 16">
+						<path d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
+					</svg>
+			</button>
+		)
+	} else {
+		bookOrdering = (
+			<button 
+					type="button"
+					class="btn btn-secondary btn-sm"
+						onClick={switchOrdering}
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-down-alt" viewBox="0 0 16 16">
+						<path d="M3.5 3.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 12.293V3.5zm4 .5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1h-1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1h-3zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1h-5zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5z"/>
+					</svg>
+			</button>
 		)
 	}
 
-	
+	let controls=(
+		<div class="row">
+			<div class="col">
+			<div class="row">
+				<div class="col pb-2 mt-4 mb-2 border-bottom">			
+					<div class="row">
+						<div class="col">
+							<h3>Book List</h3>
+						</div>
+						<div class="col-md-auto">
+								<button 
+									type="button"
+									class="btn btn-secondary btn-sm"
+										onClick={reload}
+								>
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+										<path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+										<path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+									</svg>
+							</button>
+						</div>
+						<div class="col-md-auto">
+								<button 
+									type="button"
+									class="btn btn-success btn-sm"
+										onClick={openBookAdd}
+								>
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+										<path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
+									</svg>
+							  </button>
+							</div>
+					</div>
+					
+				</div>	
+			</div>
+			<div class="row">
+				<div class="col pb-2 mt-2 mb-2 border-bottom">
+					{bookOrdering}
+				</div>
+			</div>
+			</div>
+		</div>
+	)
 
-
-	
-	render(){
-		
-		return this.getControls();
-		
-	}
+	return controls;
 }
 
+export default function ListPanel(){
+	const dispatch = useDispatch();
+	const [error,setError] = useState(null);
+	const [isLoaded,setIsLoaded] = useState(false);
+	const [bookList,setBookList] = useState(null);
+	const [isReload,setIsReload] = useState(false);
+	let store={
+        JWT: useSelector(state=>state.listsReducer.JWT),
+		listId: useSelector(state=>state.listsReducer.listId),
+		listOrdering: useSelector(state=>state.booksReducer.listOrdering)
+    }
 
-// export default ListPanel;
+	useEffect(()=>{
+        let promises=[];
+        promises.push(loadData(store.listOrdering, store.JWT, store.listId, ()=> dispatch(openSignIn()) ));
 
-const mapStatetoProps = (state) => {   
-    return {
-        store: {
-            listId: state.listsReducer.listId,
-            seriesId: state.listsReducer.seriesItem.seriesId,
-            JWT: state.listsReducer.JWT,
-            list: state.listsReducer.seriesItem.list,
-            error: state.listsReducer.seriesItem.error,
-            isLoaded: state.listsReducer.seriesItem.isLoaded,
-            isAdd: state.listsReducer.seriesItem.isAdd,
-			isReload: state.listsReducer.bookList.isReload,
-			listOrdering: state.booksReducer.listOrdering
-        }
-    };
-}
+        Promise.all(promises)
+        .then(([bookList]) =>{
+            setBookList(bookList.items);
+            setError(null);
+            setIsLoaded(true);   
+        })
+		.catch(err=>{
+            setError(err.message);
+            setIsLoaded(true);
+		});
+    },[])
 
-export default connect(
-	mapStatetoProps,
-	{
-		openSignIn,
-		bookSetLoadingState,
-		setBookListReload,
-		switchListOrdering,
-		openBookAdd
+	if (isReload) {
+		setIsReload(false);
+		setBookList({});
+		setError(null);
+		setIsLoaded(false);
+		loadData(store.listOrdering, store.JWT, store.listId, ()=> dispatch(openSignIn()))
+		.then(res=>{	
+			setError(null);
+			setBookList(res.items);	
+			setIsLoaded(true);
+		})
+		.catch(err=>{
+			setError(err.message);
+			setBookList(null);
+			setIsLoaded(true);
+		});
 	}
-	
-)(ListPanel)
+
+	const tableData = getTableData(
+		error, 
+		isLoaded, 
+		bookList
+	)
+
+	const controls = getControls(
+		store.listOrdering,
+		()=>{
+			setIsReload(true);
+		},
+		()=>{
+			dispatch(switchListOrdering());
+			setIsReload(true);
+		},
+		()=>{
+			dispatch(openBookAdd());
+		}
+	);
+
+	return (
+		<div class="row">
+			<div class="col">
+				{controls}
+				{tableData}
+			</div>
+		</div>
+	);
+}
