@@ -13,8 +13,7 @@ docker manifest inspect "$REGISTRY_URL/$APP_NAME:$APP_VERSION" && \
 {
   echo "Image already exists" && \
   exit 1;
-}
-|| \
+} || \
 {
   npm install && \
   npm run build && \
