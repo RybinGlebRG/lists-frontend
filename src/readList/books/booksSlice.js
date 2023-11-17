@@ -1,13 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit'
 import * as booksForms from './forms.js'
 
+const iniState = {
+    form: booksForms.SHOW_LIST,
+    bookId: null,
+    listOrdering: "DESC"
+}
+
 export const booksSlice = createSlice({
     name: 'books',
-    initialState: {
-        form: booksForms.SHOW_LIST,
-        bookId: null,
-        listOrdering: "DESC"
-    },
+    initialState: iniState,
     reducers:{
         openBook: (state,action)=>{
             state.form = booksForms.SHOW_BOOK;
@@ -44,6 +46,7 @@ export const booksSlice = createSlice({
             state.bookId = null
             state.form = booksForms.SHOW_AUTHOR_ADD;     
         }
+        
     }
 })
 
@@ -55,7 +58,8 @@ export const {
     openBookAdd,
     openAuthorList,
     openAuthor,
-    openAuthorAdd
+    openAuthorAdd,
+    clearState
 } = booksSlice.actions
 export const selectBooksForm = state => state.form
 

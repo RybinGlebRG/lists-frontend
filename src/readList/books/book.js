@@ -1,10 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import Alert from 'react-bootstrap/Alert' 
-import Col from 'react-bootstrap/Col'
 import {
-    openSignIn,
-    bookSetLoadingState,
     openUpdateBook,
     openReadList,
     openSeriesItem
@@ -13,8 +9,8 @@ import * as bookApi from './bookApi'
 import {
 	openSeriesItem as openSeriesItemSlice
 } from '../../series/seriesSlice'
-import {openCategory} from '../../displayAreaSlice'
-import * as categories from '../../displayAreaCategories'
+import {openSeriesList, openSignIn} from '../../displayAreaSlice'
+import {clearState} from './booksSlice'
 
 const SeriesListBlock = (props)=>{
     const seriesList = props.seriesList;
@@ -64,24 +60,6 @@ class Book extends React.Component{
         };
     
     }
-
-    // async loadData(){
-    //     let res = await fetch(window.location.origin+`/api/v0.2/readLists/${this.props.store.listId}/books/${this.props.store.bookId}`,
-	// 	{
-	// 		method: "GET",
-	// 		headers: {
-	// 			'Authorization': `Bearer ${this.props.store.JWT}`
-	// 		}
-    //     });
-    //     if (!res.ok){
-    //         let result=await res.json();
-    //         throw new Error('Error: '+result.errorMessage);
-    //     };
-    //     let book = await res.json();
-
-    //     return book;       
-
-    // }
 
     async performDelete(){
         let res = await fetch(
@@ -270,7 +248,7 @@ class Book extends React.Component{
                                         onOpenSeriesItem={seriesId=>{
                                             this.props.openSeriesItemSlice();
                                             this.props.openSeriesItem(seriesId);
-                                            this.props.openCategory(categories.SERIES_MAIN);
+                                            this.props.openSeriesList();
                                         }}
                                     />
                                     </div>                     
@@ -368,7 +346,8 @@ export default connect(
             openReadList,
             openSeriesItem,
             openSeriesItemSlice,
-            openCategory
+            openSeriesList,
+            clearState
         }
         
 	)(Book)

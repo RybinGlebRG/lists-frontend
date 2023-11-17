@@ -1,8 +1,12 @@
 import React from 'react';
 import { Formik } from 'formik';
-import {openBookList, loginUser} from '../redux/actionCreators.js'
+import { loginUser} from '../redux/actionCreators.js'
 import { connect } from 'react-redux'
 import { getToken } from './loginAPI'
+import {setJWT, setUsername} from './loginSlice.js'
+import {openBookList} from '../readList/books/booksSlice.js'
+import {openCategory} from '../displayAreaSlice.js'
+import * as displayAreaCategories from '../displayAreaCategories.js'
 
 class LoginPanel extends React.Component{
     
@@ -14,9 +18,11 @@ class LoginPanel extends React.Component{
         getToken(in_vals.login, in_vals.password)
         .then(
             result=>{
-            this.props.loginUser(result.token, in_vals.login);
-            this.props.openBookList();
-            
+                this.props.setJWT(result.token);
+                this.props.setUsername(in_vals.login);
+                this.props.loginUser(result.token, in_vals.login);
+                this.props.openBookList();
+                this.props.openCategory(displayAreaCategories.READ_LIST);
             }
         )
         .catch(
@@ -129,8 +135,8 @@ class LoginPanel extends React.Component{
     }
 }
 
-// export default LoginPanel;
+
 export default connect(
 	null,
-	{ openBookList, loginUser }
+	{ openBookList, loginUser,setJWT,setUsername,openCategory }
   )(LoginPanel)

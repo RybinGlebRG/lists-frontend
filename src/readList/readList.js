@@ -4,19 +4,17 @@ import Col from 'react-bootstrap/Col'
 import ListPanel from './books/listPanel.js'
 import SettingsPanel from '../settingsPanel.js'
 import LeftMenu from './leftMenu.js' 
-import SeriesList from '../series/list.js'
-import SeriesItem from '../series/item.js'
 import Book from './books/book.js'
 import BookAdd from './books/add.js'
 import BookEdit from './books/edit.js'
 import AuthorList from './authors/list.js'
 import Author from './authors/view.js'
 import AuthorAdd from './authors/add.js'
-import SeriesAdd from '../series/addSeries.js'
 import { connect } from 'react-redux'
 import * as panels from '../panels.js'
-import {openSignIn, openBook, openBookList, openAddBook, openBookV2} from '../redux/actionCreators';
 import * as bookForms from './books/forms.js'
+import {openBookAdd, openBook} from './books/booksSlice.js'
+import {openSignIn} from '../displayAreaSlice.js'
 
 
 class ReadList extends React.Component{
@@ -29,19 +27,7 @@ class ReadList extends React.Component{
         const panel = -1;
 		let displayPanel;
 		if (this.props.store.bookForm===bookForms.SHOW_LIST){
-			displayPanel= (
-			<div>
-				<ListPanel 
-					listId = {this.props.store.listId}
-					openItemPanel={this.props.openBook}
-					 jwt={this.props.store.JWT}
-					changePanelToLogin={() =>{
-						this.props.openSignIn()
-					}}
-					openAddBook={this.props.openAddBook}
-				/>
-			</div>
-			)
+			displayPanel= (<ListPanel/>)
 		} else if (this.props.store.bookForm===bookForms.SHOW_BOOK_ADD){
 			displayPanel=(<BookAdd/>)			
 		} else if (panel===4){
@@ -52,8 +38,6 @@ class ReadList extends React.Component{
 			)
         } else if (this.props.store.bookForm===bookForms.SHOW_BOOK){
 			displayPanel=(<Book/>)
-		// } else if (this.props.store.panelType===panels.UPDATE_BOOK){
-		// 	displayPanel=(<BookEdit/>)
 		} else if (this.props.store.bookForm===bookForms.SHOW_BOOK_UPDATE){
 			displayPanel=(<BookEdit/>)
 		} else if (this.props.store.bookForm===bookForms.SHOW_AUTHOR_LIST){
@@ -86,8 +70,7 @@ class ReadList extends React.Component{
 const mapStatetoProps = (state) => {
 	return {
 		store: {
-			panelType: state.listsReducer.panel,
-			JWT: state.listsReducer.JWT,
+			JWT: state.loginReducer.JWT,
 			listId: state.listsReducer.listId,
 			bookId: state.listsReducer.book.bookId,
 			listType: state.listsReducer.listType,
@@ -101,8 +84,6 @@ export default connect(
     {
         openSignIn,
         openBook,
-        openBookList,
-        openAddBook,
-        openBookV2
+		openBookAdd
     }
 )(ReadList)

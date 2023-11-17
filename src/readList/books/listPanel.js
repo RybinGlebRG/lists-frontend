@@ -3,11 +3,10 @@ import { connect } from 'react-redux'
 import {
     openSignIn,
     bookSetLoadingState,
-    openBookV2,
 	setBookListReload
 } from '../../redux/actionCreators'
 import Row from './row';
-import {switchListOrdering} from './booksSlice'
+import {switchListOrdering, openBookAdd} from './booksSlice'
 import * as dateUtils from '../../utils/dateUtils'
 import * as bookApi from './bookApi'
 
@@ -17,7 +16,6 @@ class ListPanel extends React.Component{
 		super(props);
 		this.state={
 			switchPanelTo:null,
-			listId:this.props.listId,
 			// bookOrdering: "DESC",
 			error: null,
 			isLoaded: false,
@@ -47,21 +45,6 @@ class ListPanel extends React.Component{
 				}],
 				isChainBySeries: true
 			}
-
-
-		// let res = await fetch(window.location.origin+`/api/v0.2/readLists/${this.props.store.listId}/books/search`,
-		// {
-		// 	method: "POST",
-		// 	headers: {
-		// 		'Authorization': `Bearer ${this.props.store.JWT}`,
-		// 		'Content-Type': 'application/json;charset=utf-8',
-		// 	},
-		// 	body: JSON.stringify(body)
-        // });
-		// if (!res.ok){
-		// 	let result=await res.json();
-        //     throw new Error('Error: '+result.errorMessage);
-        // };
 		let bookList = await bookApi.searchBooks(this.props.store.JWT,this.props.store.listId,body,()=>{this.props.openSignIn()})	
 		return bookList;
 	
@@ -178,7 +161,7 @@ class ListPanel extends React.Component{
 										type="button"
 										class="btn btn-success btn-sm"
 											onClick={()=>{
-												this.props.openAddBook();
+												this.props.openBookAdd();
 											}}
 									>
 										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
@@ -212,12 +195,7 @@ class ListPanel extends React.Component{
 	renderTableData(){
 		return this.state.list.map((item) =>{
 			return (
-					<li class="list-group-item p-0"
-						
-						// onClick={() => {
-						// 	this.props.openBookV2(item.bookId);
-						// }} 
-					>
+					<li class="list-group-item p-0">
 						<Row 
 							title={item.title}
 							bookType={item.bookType}
@@ -271,9 +249,9 @@ export default connect(
 	{
 		openSignIn,
 		bookSetLoadingState,
-		openBookV2,
 		setBookListReload,
-		switchListOrdering
+		switchListOrdering,
+		openBookAdd
 	}
 	
 )(ListPanel)

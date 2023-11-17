@@ -5,6 +5,7 @@ import seriesReducer from '../series/seriesSlice'
 import displayAreaReducer from '../displayAreaSlice'
 import booksReducer from '../readList/books/booksSlice.js'
 import gamesReducer from '../games/gamesSlice.js'
+import loginReducer from '../login/loginSlice.js'
 
 
 // const rootReducer = combineReducers({
@@ -18,7 +19,8 @@ export default  configureStore({
       seriesReducer: seriesReducer,
       displayAreaReducer: displayAreaReducer,
       booksReducer: booksReducer,
-      gamesReducer: gamesReducer
+      gamesReducer: gamesReducer,
+      loginReducer: loginReducer
     } 
 })
 

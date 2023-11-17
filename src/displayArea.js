@@ -4,100 +4,65 @@ import WatchList from './watchList/watchList'
 import SeriesMain from './series/SeriesMain'
 import Header from './header.js'
 import LoginPanel from './login/login.js'
-import { connect } from 'react-redux'
-import {SIGN_IN} from './panels.js'
 import * as categories from './displayAreaCategories'
 import Metrics from './metrics/metrics'
 import Games from './games/main';
+import { useSelector } from 'react-redux'
 
 
 
 
-class DisplayArea extends React.Component{
-	constructor(props){
-		super(props);
-		this.state={}
-		// this.setUser=this.setUser.bind(this)
+export default function DisplayArea(){
+	const store={
+		category: useSelector(state=>state.displayAreaReducer.category),
+		panelType: useSelector(state=>state.listsReducer.panel),
+		listType: useSelector(state=>state.listsReducer.listType)
+    }
+
+	let list;
+	if (store.category === categories.READ_LIST){
+		list = (<ReadList/>)
+	} else if (store.category === categories.WATCH_LIST){
+		list = (<WatchList/>)
+	} else if (store.category === categories.SERIES_MAIN) {
+		list = (<SeriesMain/>)
+	} else if (store.category === categories.GAMES) {
+		list = (<Games/>)
+	} else if (store.category === categories.METRICS){
+		list= (<Metrics/>)
 	}
 
-	// setUser(user){
-	// 	this.setState({
-	// 		user:user
-	// 	})
-	// }
-
-
-	renderBody(){
-
-		let list;
-		if (this.props.store.category === categories.READ_LIST){
-			list = (<ReadList/>)
-		} else if (this.props.store.category === categories.WATCH_LIST){
-			list = (<WatchList/>)
-		} else if (this.props.store.category === categories.SERIES_MAIN) {
-			list = (<SeriesMain/>)
-		} else if (this.props.store.category === categories.GAMES) {
-			list = (<Games/>)
-		} else {
-			list= (<Metrics/>)
-		}
-
-		return (
-			<div class="row">
-				<div class="col">
-					<div class="row">
-						<div class="col">
-							<Header/>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col">
-							{list}
-						</div>	
-					</div>
-				</div>
-			</div>
-		)
-	}
-	
-	
-	render(){
-
-		let displayPanel;
-
-		if (this.props.store.panelType === SIGN_IN){
-			displayPanel=(
-				<LoginPanel/>
-			)
-		} else {
-			displayPanel=(
+	list = (
+		<div class="row">
+			<div class="col">
 				<div class="row">
 					<div class="col">
-						{this.renderBody()}
+						<div class="row">
+							<div class="col">
+								<Header/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								{list}
+							</div>	
+						</div>
 					</div>
 				</div>
-			)	
-		}
-
-		return (
-			<div class="container-fluid h-100">
-				{displayPanel}
 			</div>
-		)
-		
-	}
-}
+		</div>
+	)
 
-const mapStatetoProps = (state) => {
-	return {
-		store: {
-			panelType: state.listsReducer.panel,
-			listType: state.listsReducer.listType,
-			category: state.displayAreaReducer.category
-		}
-	};
-}
 
-export default connect(
-		mapStatetoProps
-	)(DisplayArea)
+
+	if (store.category === categories.SIGN_IN){
+		list = (<LoginPanel/>)
+	} 
+
+	return (
+		<div class="container-fluid h-100">
+			{list}
+		</div>
+	)
+
+}
