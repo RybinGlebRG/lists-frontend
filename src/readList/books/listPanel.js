@@ -41,7 +41,7 @@ const statusSVGMap = {
 	)
 }
 
-async function loadData(listOrdering, JWT, listId, onUnauthorized){
+async function loadData(listOrdering, bookStatuses, JWT, listId, onUnauthorized){
 	let body={
 			sort:[{
 				field:"createDate",
@@ -49,6 +49,20 @@ async function loadData(listOrdering, JWT, listId, onUnauthorized){
 			}],
 			isChainBySeries: true
 		}
+	if (bookStatuses != null){
+		body={
+			...body,
+			filters:[{
+				"field": "bookStatusIds",
+				"values": bookStatuses.map(item=>{
+					if (item.checked){
+						return item.statusId.toString()
+					}
+				})
+			}]
+		}
+	}
+
 	let bookList = await bookApi.searchBooks(JWT, listId, body, onUnauthorized)	
 	return bookList;
 }
@@ -196,7 +210,7 @@ function getTableData(error, isLoaded, list, dispatch){
 	}
 }
 
-function getControls(listOrdering, reload, switchOrdering, openBookAdd){
+function getControls(listOrdering, reload, switchOrdering, openBookAdd, bookStatuses){
 	let bookOrdering;
 
 	if (listOrdering==="DESC"){
@@ -223,6 +237,45 @@ function getControls(listOrdering, reload, switchOrdering, openBookAdd){
 					</svg>
 			</button>
 		)
+	}
+
+	let bookStatusesCheckboxes;
+	
+	if (bookStatuses != null){
+		bookStatusesCheckboxes = bookStatuses.map(item=>{
+			let input;
+			if (item.checked){
+				input = (
+					<input class="form-check-input" type="checkbox" value="" checked id="flexCheckDefault" onClick={()=>{
+						if (item.checked){
+							item.checked=false;
+						} else {
+							item.checked=true;
+						}
+						reload();
+					}}/>
+				)
+			} else {
+				input = (
+					<input class="form-check-input" type="checkbox" value=""  id="flexCheckDefault" onClick={()=>{
+						if (item.checked){
+							item.checked=false;
+						} else {
+							item.checked=true;
+						}
+						reload();
+					}}/>
+				)
+			}
+
+			let res = (
+				<div class="form-check form-check-inline">
+					<label class="form-check-label" for="flexCheckDefault">{item.statusName}</label>
+					{input}
+				</div>
+			)
+			return res;
+		})
 	}
 
 	let controls=(
@@ -262,8 +315,15 @@ function getControls(listOrdering, reload, switchOrdering, openBookAdd){
 				</div>	
 			</div>
 			<div class="row">
-				<div class="col pb-2 mt-2 mb-2 border-bottom">
-					{bookOrdering}
+				<div class="col pb-2 mt-2 mb-2 border-bottom">	
+					<div class="row row-cols-auto">
+						<div class="col ms-4">
+							{bookOrdering}
+						</div>
+						<div class="col ms-4">
+							{bookStatusesCheckboxes}
+						</div>
+					</div>
 				</div>
 			</div>
 			</div>
@@ -279,6 +339,8 @@ export default function ListPanel(){
 	const [isLoaded,setIsLoaded] = useState(false);
 	const [bookList,setBookList] = useState(null);
 	const [isReload,setIsReload] = useState(false);
+	// const [isExpectingSet,setIsExpectingSet] = useState(false);
+	const [bookStatuses,setBookStatuses] = useState(null);
 	let store={
         JWT: useSelector(state=>state.listsReducer.JWT),
 		listId: useSelector(state=>state.listsReducer.listId),
@@ -287,11 +349,20 @@ export default function ListPanel(){
 
 	useEffect(()=>{
         let promises=[];
-        promises.push(loadData(store.listOrdering, store.JWT, store.listId, ()=> dispatch(openSignIn()) ));
+        promises.push(loadData(store.listOrdering, bookStatuses, store.JWT, store.listId, ()=> dispatch(openSignIn()) ));
+		promises.push(bookApi.getBookStatuses(store.JWT,()=> dispatch(openSignIn())));
 
         Promise.all(promises)
-        .then(([bookList]) =>{
+        .then(([bookList, bookStatuses]) =>{
             setBookList(bookList.items);
+			bookStatuses = bookStatuses.items.map(item=>{
+				let res = {
+					...item,
+					checked: true
+				}
+				return res;
+			})
+			setBookStatuses(bookStatuses);
             setError(null);
             setIsLoaded(true);   
         })
@@ -306,7 +377,7 @@ export default function ListPanel(){
 		setBookList({});
 		setError(null);
 		setIsLoaded(false);
-		loadData(store.listOrdering, store.JWT, store.listId, ()=> dispatch(openSignIn()))
+		loadData(store.listOrdering, bookStatuses, store.JWT, store.listId, ()=> dispatch(openSignIn()))
 		.then(res=>{	
 			setError(null);
 			setBookList(res.items);	
@@ -337,7 +408,8 @@ export default function ListPanel(){
 		},
 		()=>{
 			dispatch(openBookAdd());
-		}
+		},
+		bookStatuses
 	);
 
 	return (

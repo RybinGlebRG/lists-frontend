@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lists-frontend-deployment
+  labels:
+    app: lists-frontend
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lists-frontend
+  template:
+    metadata:
+      labels:
+        app: lists-frontend
+    spec:
+      containers:
+      - name: lists-frontend0
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
