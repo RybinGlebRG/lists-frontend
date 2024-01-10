@@ -5,10 +5,12 @@ import {
     openSignIn, 
     seriesItemSetLoadingState,
     openSeriesList,
-    openBookV2,
     openSeriesItem,
     // seriesItemAddBook
 } from '../redux/actionCreators'
+import {
+    openBook
+} from '../readList/books/booksSlice.js'
 import SeriesItemShow from './itemShow' 
 import SeriesItemAdd from './SeriesItemAdd'
 import SeriesEdit from './editList'
@@ -138,7 +140,6 @@ export default connect(
         openSignIn, 
         seriesItemSetLoadingState,
         openSeriesList,
-        openBookV2,
         openSeriesItem,
         // seriesItemAddBook
     }

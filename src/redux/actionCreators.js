@@ -93,16 +93,6 @@ export function openAddBook(){
     }
 }
 
-export function openBookV2(bookId,bc_dif){
-    return {
-        type: actionTypes.OPEN_BOOK_V2,
-        bc_dif:bc_dif,
-        payload: {
-            bookId: bookId
-        }
-    }
-}
-
 export function bookSetLoadingState(error, isLoaded, title, authorName, authorId, statusName,lastChapter,seriesTitle, seriesOrder){
     return {
         type: actionTypes.BOOK_SET_LOADING_STATE,

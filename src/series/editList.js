@@ -8,6 +8,9 @@ import {
 	openSeriesItem,
     openChooseBooks
 } from './seriesSlice'
+import {
+    openBook
+} from '../readList/books/booksSlice'
 import * as common from './common'
 
 class SeriesEdit extends React.Component{
@@ -164,7 +167,7 @@ class SeriesEdit extends React.Component{
                             onDragEnter={(e) => this.dragEnter(e, index)}
                             onDragEnd={this.drop}
                             onClick={()=>{
-                                this.props.openBookV2(item.bookId);
+                                this.props.openBook({bookId: item.bookId});
                             }}
                         >
                             {item.title}
@@ -270,6 +273,7 @@ export default connect(
         // openSeriesItemShow,
         openSignIn,
         openSeriesItem,
-        openChooseBooks
+        openChooseBooks,
+        openBook
     }
 )(SeriesEdit)
