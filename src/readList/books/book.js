@@ -332,7 +332,7 @@ const mapStatetoProps = (state) => {
 		store: {
 			JWT: state.listsReducer.JWT,
 			listId: state.listsReducer.listId,
-            bookId: state.listsReducer.book.bookId,
+            bookId: state.booksReducer.bookId,
 		}
 	};
 }

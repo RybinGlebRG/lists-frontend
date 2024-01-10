@@ -80,8 +80,6 @@ class TitleEdit extends React.Component{
 		)
 		.then(
             res => {
-                // this.props.titleAddSetResult(true,null);
-                // this.props.openBookV2(this.props.store.bookId);
                 if (!res.ok){
 					throw new Error('Some network error');
 				};

@@ -6,9 +6,6 @@ import {openSignIn} from '../../displayAreaSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import ItemRow from '../../common/ItemRow'
 import {
-    openBookV2
-} from '../../redux/actionCreators'
-import {
     openBook,
     openBookUpdate
 } from './booksSlice'
@@ -114,7 +111,6 @@ function getTableData(error, isLoaded, list, dispatch){
 							{
 								"onClick": ()=>{
 									dispatch(openBook({bookId: item.bookId}));
-									dispatch(openBookV2(item.bookId));
 								},
 								"SVG": (
 									<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
@@ -162,7 +158,6 @@ function getTableData(error, isLoaded, list, dispatch){
 									{
 										"onClick": ()=>{
 											dispatch(openBook({bookId: item.bookId}));
-											dispatch(openBookV2(item.bookId));
 										},
 										"SVG": (
 											<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
