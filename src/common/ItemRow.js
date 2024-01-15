@@ -7,9 +7,12 @@ export default function ItemRow(props){
     const [isExpand,setExpand] = useState(false);
 
     // ------------------------------------
+    const propsTitle = props.title;
+    const propsStatusIcon = props.statusIcon;
     const propsData = props.data;
     const propsButtons = props.buttons;
     const propsChainData = props.chainData; 
+    const propsNote = props.note;
     // ------------------------------------
 
     let chain; 
@@ -110,27 +113,51 @@ export default function ItemRow(props){
         )
     })
 
+    let note;
+
+    if (props.note !== undefined){
+        note = (
+            <div class="col">       
+                <div class="row justify-content-between p-3 w-100 h-100">
+                    <div class="col border-start">
+                        <p><u>Note</u></p>
+                        <p>{propsNote}</p>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div class="row" >
             <div class="col">
+                <div class="row justify-content-between p-3">
+                    <div class="col-auto">
+                        {propsStatusIcon}
+                    </div>
+                    <div class="col ps-0 pt-1">
+                        <h6 class="font-weight-bold">{propsTitle}</h6>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col">                    
                         <div  class="row justify-content-between p-3">
                             {propsData}
                         </div>
                     </div>
-                    <div class="col d-flex justify-content-center align-items-center">
-                        <ul class="list-group list-group-horizontal list-group-flush w-100 h-100 offset-md-10">
-                            {buttons}
-                        </ul>
-                    </div>
+                    {note}
+                    
                 </div>
                 <div class="row">
                     <div class="col">
                         {chain}
                     </div>
                 </div>
-
+            </div>
+            <div class="col-6 d-flex justify-content-center align-items-center">
+                <ul class="list-group list-group-horizontal list-group-flush w-100 h-100 offset-md-10">
+                    {buttons}
+                </ul>
             </div>
         </div>
     )

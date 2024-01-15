@@ -110,17 +110,20 @@ export default function GamesList(){
         display=( <div class="alert alert-danger" role="alert">{error}</div>);
     } else {
         const rows=games.map(item=>{
-            const data = (
-                <div class="col">
+            let note;
+            if (item.note !== undefined){
+                note=(
                     <div class="row">
-                        <div class="col">
-                            <p class="font-weight-bold">{item.title}</p>
-                        </div>
-                    </div>							
+                        <div class="col">Note: {item.note}</div>
+                    </div>
+                )
+            }
+            const data = (
+                <div class="col">							
                     <div class="row">
                         <div class="col">Added: {dateUtils.formatToDisplay(item.createDateUTC)}</div>
                     </div>
-                    
+                    {note}
                 </div>
             )
             const buttons = [
@@ -164,8 +167,10 @@ export default function GamesList(){
                     class="list-group-item p-0"
                 >
                     <ItemRow
+                        title={item.title}
                         data={data}
                         buttons={buttons}
+                        note={item.note}
                     />
                 </li>
         )

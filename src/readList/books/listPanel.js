@@ -86,15 +86,7 @@ function getTableData(error, isLoaded, list, dispatch){
 					{list.map((item) =>{
 						const status = statusSVGMap[item.bookStatus.statusName];
 						const data = (
-							<div class="col">
-								<div class="row">
-									<div class="col-auto">
-										{status}
-									</div>
-									<div class="col ps-0">
-										<p class="font-weight-bold">{item.title} {item.bookType ? "("+item.bookType.typeName+")" : null}</p>
-									</div>
-								</div>							
+							<div class="col">						
 								{item.lastChapter ? (
 								<div class="row">
 									<div class="col">Last chapter: {item.lastChapter}</div>
@@ -103,7 +95,6 @@ function getTableData(error, isLoaded, list, dispatch){
 								<div class="row">
 									<div class="col">Added: {dateUtils.formatToDisplay(item.insertDate)}</div>
 								</div>
-								
 							</div>
 						)
 
@@ -191,9 +182,12 @@ function getTableData(error, isLoaded, list, dispatch){
 									chainBooks={item.chain}
 								/> */}
 								<ItemRow
+									title={`${item.title} ${item.bookType ? "("+item.bookType.typeName+")" : null}`}
+									statusIcon={statusSVGMap[item.bookStatus.statusName]}
 									data={data}
 									buttons={buttons}
 									chainData={chain}
+									note={item.note}
 								/>
 							</li>
 						)
