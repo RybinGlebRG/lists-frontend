@@ -61,7 +61,8 @@ export default function GamesAdd(){
                         <Formik 
                             initialValues={{ 						 
                                 title: null, 
-                                createDateUTC: createDateUTC
+                                createDateUTC: createDateUTC,
+                                note: null
                             }}
                             validate={values => {
                                 const errors = {};
@@ -127,7 +128,19 @@ export default function GamesAdd(){
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                         />
-                                    </div>        
+                                    </div>     
+
+                                    <div class="form-group" controlId="note">
+                                        <label>Note</label>
+                                        <textarea
+                                            class="form-control" 
+                                            rows="3" 
+                                            name="note"
+                                            value={values.note}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}                                
+                                        />
+                                    </div>   
 
                                     <button  class="btn btn-primary"
                                         variant="primary" 
