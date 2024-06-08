@@ -71,3 +71,16 @@ export async function getBookStatuses(JWT, onUnauthorized){
 
     return res;   
 }
+
+export async function deleteBook(JWT, bookId, onUnauthorized){
+    
+    let res = await fetch(`${window.location.origin}/api/v0.2/books/${bookId}`,
+        {
+            method: "DELETE",
+            headers: {
+                'Authorization': `Bearer ${JWT}`
+            }
+        }
+    );
+    await commonApi.checkError(res, onUnauthorized);
+}

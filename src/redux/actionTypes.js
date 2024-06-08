@@ -31,7 +31,7 @@ export const OPEN_BOOK = 'OPEN_BOOK';
 export const SAVE_BOOK_EDIT = 'SAVE_BOOK_EDIT';
 export const OPEN_ADD_BOOK = 'OPEN_ADD_BOOK';
 export const OPEN_BOOK_V2 = 'OPEN_BOOK_V2';
-export const OPEN_UPDATE_BOOK = 'OPEN_UPDATE_BOOK';
+// export const OPEN_UPDATE_BOOK = 'OPEN_UPDATE_BOOK';
 
 // Series
 export const OPEN_SERIES_ADD = 'OPEN_SERIES_ADD';
