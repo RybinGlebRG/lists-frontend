@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Button, Alert} from 'react-bootstrap'
+import { Row, Col, Alert} from 'react-bootstrap'
 import { connect } from 'react-redux'
 import {openTitle} from '../redux/actionCreators';
 import { Formik} from 'formik';

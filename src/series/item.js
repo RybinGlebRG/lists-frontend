@@ -1,5 +1,4 @@
 import React from 'react';
-import { Row, Col, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import {
     openSignIn, 
@@ -8,9 +7,6 @@ import {
     openSeriesItem,
     // seriesItemAddBook
 } from '../redux/actionCreators'
-import {
-    openBook
-} from '../readList/books/booksSlice.js'
 import SeriesItemShow from './itemShow' 
 import SeriesItemAdd from './SeriesItemAdd'
 import SeriesEdit from './editList'

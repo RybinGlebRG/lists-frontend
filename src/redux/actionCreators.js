@@ -158,11 +158,11 @@ export function openTitle(titleId){
 
 
 
-export function openUpdateBook(){
-    return {
-        type: actionTypes.OPEN_UPDATE_BOOK
-    }
-}
+// export function openUpdateBook(){
+//     return {
+//         type: actionTypes.OPEN_UPDATE_BOOK
+//     }
+// }
 
 export function setBookListReload(isReload){
     return {

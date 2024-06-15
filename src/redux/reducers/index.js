@@ -225,11 +225,11 @@ export default function lists(state = initialState, action){
                     titleId: action.payload.titleId
                 }
             }
-        case actionTypes.OPEN_UPDATE_BOOK:
-            return {
-                ...state,
-                panel: panels.UPDATE_BOOK
-            }
+        // case actionTypes.OPEN_UPDATE_BOOK:
+        //     return {
+        //         ...state,
+        //         panel: panels.UPDATE_BOOK
+        //     }
         case actionTypes.SET_BOOK_LIST_RELOAD:
             return {
                 ...state,
