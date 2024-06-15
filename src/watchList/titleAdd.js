@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, ListGroup, Alert, Button, Form } from 'react-bootstrap';
+import { Row, Col, Button, Form } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { Formik} from 'formik';
 import {titleAddSetResult, openTitlesList} from '../redux/actionCreators';

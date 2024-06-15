@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Row, Col, ListGroup, Alert } from 'react-bootstrap';
+import { Row, Col, ListGroup } from 'react-bootstrap';
 import {openAddTitle, openTitle} from '../redux/actionCreators';
 import ItemRow from '../common/ItemRow'
 import * as dateUtils from '../utils/dateUtils'
@@ -51,7 +51,7 @@ export default function TitlesList(){
             setError(err.message);
             setIsLoaded(true);
 		});
-    },[])
+    },[store.JWT, store.watchListId, dispatch])
 
 	let displayPanel;
 

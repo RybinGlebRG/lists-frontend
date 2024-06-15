@@ -15,6 +15,7 @@ export default function Book(){
     const dispatch = useDispatch();
 
     let store={
+        JWT: useSelector(state=>state.listsReducer.JWT),
         bookId: useSelector(state=>state.booksReducer.bookId),
         listId: useSelector(state=>state.listsReducer.listId),
     }

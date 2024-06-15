@@ -62,5 +62,6 @@ export const {
     clearState
 } = booksSlice.actions
 export const selectBooksForm = state => state.form
+export const selectBookId = state => state.bookId
 
 export default booksSlice.reducer
