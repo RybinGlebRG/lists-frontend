@@ -27,7 +27,7 @@ export default function ReadingRecordList(props){
                 <div class="col">
                     <div class="row mt-2">
                         <div class="col">
-                            <h5>ReadingRecords</h5>
+                            <h5>Reading records</h5>
                         </div>
                     </div>
                     <ul class="list-group list-group-flush">
