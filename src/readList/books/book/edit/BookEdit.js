@@ -1,18 +1,21 @@
 import { useSelector, useDispatch } from 'react-redux'
 import {useState, useEffect} from 'react';
-import useBook from './useBook';
-import useAuthorList from '../../authors/useAuthorsList';
-import { selectBookId } from '../booksSlice';
-import useBookTypes from './useBookTypes';
-import useBookStatuses from './useBookStatuses';
-import * as dateUtils from '../../../utils/dateUtils.js'
+import useBook from '../useBook.js';
+import useAuthorList from '../../../authors/useAuthorsList.js';
+import { selectBookId } from '../../booksSlice.js';
+import useBookTypes from '../useBookTypes.js';
+import useBookStatuses from '../useBookStatuses.js';
+import * as dateUtils from '../../../../utils/dateUtils.js'
 import { Formik} from 'formik';
-import * as booksApi from './bookApi'
-import {openSignIn} from '../../../displayAreaSlice'
+import * as booksApi from '../bookApi.js'
+import {openSignIn} from '../../../../displayAreaSlice.js'
 import {
     openBook,
     openBookList
-} from '../booksSlice'
+} from '../../booksSlice.js'
+import ReadingRecordList from './ReadingRecordList.js';
+import useReadingRecords from '../useReadingRecords';
+import * as readingRecordsApi from  '../../readingRecordsApi.js';
 
 
 export default function BookEdit(){
@@ -28,8 +31,24 @@ export default function BookEdit(){
     const [authorListError, authorListIsLoaded, authors] = useAuthorList({listId: store.listId});
     const [bookTypesError, bookTypesIsLoaded, bookTypes] = useBookTypes({listId: store.listId});
     const [bookStatusesError, bookStatusesIsLoaded, bookStatuses] = useBookStatuses({listId: store.listId});
+    const {readingRecordsError, readingRecordsIsLoaded, readingRecords } = useReadingRecords({bookId: store.bookId});
+
     const [saveError, setSaveError] = useState(null);
 	const [saveIsLoaded,setSaveIsLoaded] = useState(false);
+
+    async function saveValues({book, readingRecords}){
+        let res = await booksApi.postBook({JWT: store.JWT, bookId: store.bookId, body: book, onUnauthorized: ()=> dispatch(openSignIn())})
+        // for (let i = 0; i<readingRecords.length; i++){
+        //     let item = readingRecords[i];
+        //     let body = {
+        //         statusId: item.bookStatus.statusId,
+        //         startDate: item.startDate,
+        //         endDate: item.endDate
+        //     }
+        //     res = await readingRecordsApi.put({JWT: store.JWT, readingRecordId: item.recordId, body: body, onUnauthorized: ()=> dispatch(openSignIn())});
+        // }
+        
+    }
 
     function handleSaveValue(values){
         let dt = dateUtils.postprocessValues(values.createDate);
@@ -58,11 +77,12 @@ export default function BookEdit(){
         const body = JSON.stringify(book);
 
         setSaveIsLoaded(false);
-        booksApi.postBook({JWT: store.JWT, bookId: store.bookId, body: body, onUnauthorized: ()=> dispatch(openSignIn())})
+        // booksApi.postBook({JWT: store.JWT, bookId: store.bookId, body: body, onUnauthorized: ()=> dispatch(openSignIn())})
+        saveValues({book: book, readingRecords: values.readingRecords})
         .then(()=>{
             setSaveError(null)
             setSaveIsLoaded(true);
-            dispatch(openBook());
+            dispatch(openBook({bookId: store.bookId}));
         })
         .catch((error)=>{
             setSaveError(error.message)
@@ -140,7 +160,8 @@ export default function BookEdit(){
                             lastChapter: book.lastChapter,
                             bookType: book.bookType ? book.bookType.typeId: null,
                             createDate: createDate,
-                            note: book.note
+                            note: book.note,
+                            readingRecords: readingRecords.items
                         }}
                         validate={values => {
                             const errors = {};
@@ -272,7 +293,15 @@ export default function BookEdit(){
                             />
                         </div>
 
-                        <button  class="btn btn-primary"
+                        <div class="form-group" controlId="note">
+                                <label>Reading records</label>
+                                <ReadingRecordList
+                                    list={values.readingRecords}
+                                    handleChange={handleChange}
+                                />
+                            </div>
+
+                        <button  class="btn btn-primary mt-4"
                             // variant="primary" 
                             type="submit"
                             disabled={isSubmitting}
