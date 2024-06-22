@@ -17,26 +17,25 @@ async function loadData(listOrdering, bookStatuses, JWT, listId, onUnauthorized,
 			}],
 			isChainBySeries: true
 		}
+	let filters = [];
 	if (bookStatuses != null){
-		body={
-			...body,
-			filters:[{
-				"field": "bookStatusIds",
-				"values": bookStatuses.map(item=>{
-					if (item.checked){
-						return item.statusId.toString()
-					}
-				})
-			}]
-		}
+		filters.push({
+			"field": "bookStatusIds",
+			"values": bookStatuses
+				.filter(item => item.checked)
+				.map(item => item.statusId.toString())
+		});
 	}
-	if (title != null){
+	if (title != null && title.length > 0){
+		filters.push({
+			"field": "titles",
+			"values": [title]
+		});
+	}
+	if (filters.length > 0){
 		body={
 			...body,
-			filters:[{
-				"field": "titles",
-				"values": [title]
-			}]
+			filters: filters
 		}
 	}
 
