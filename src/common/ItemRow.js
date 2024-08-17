@@ -56,8 +56,8 @@ export default function ItemRow(props){
 
 
         chain = (
-            <div class="row ps-3">
-                <div class="col">
+            <div class="row ps-4 pe-4">
+                <div class="col border-top">
                     <div class="row mb-3 mt-3">
                         <div class="col-md-auto">
                             <button 
@@ -129,35 +129,40 @@ export default function ItemRow(props){
     }
 
     return (
-        <div class="row" >
+        <div class="row">
             <div class="col">
-                <div class="row justify-content-between p-3">
-                    <div class="col-auto">
-                        {propsStatusIcon}
-                    </div>
-                    <div class="col ps-0 pt-1">
-                        <h6 class="font-weight-bold">{propsTitle}</h6>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">                    
-                        <div  class="row justify-content-between p-3">
-                            {propsData}
+                <div class="row" >
+                    <div class="col">
+                        <div class="row justify-content-between p-3">
+                            <div class="col-auto">
+                                {propsStatusIcon}
+                            </div>
+                            <div class="col ps-0 pt-1">
+                                <h6 class="font-weight-bold">{propsTitle}</h6>
+                            </div>
                         </div>
+                        <div class="row">
+                            <div class="col">                    
+                                <div  class="row justify-content-between p-3">
+                                    {propsData}
+                                </div>
+                            </div>
+                            {note}
+                            
+                        </div>
+                        
                     </div>
-                    {note}
-                    
+                    <div class="col-6 d-flex justify-content-center align-items-center">
+                        <ul class="list-group list-group-horizontal list-group-flush w-100 h-100 offset-md-10">
+                            {buttons}
+                        </ul>
+                    </div>
                 </div>
-                <div class="row">
+                <div class="row mb-3">
                     <div class="col">
                         {chain}
                     </div>
                 </div>
-            </div>
-            <div class="col-6 d-flex justify-content-center align-items-center">
-                <ul class="list-group list-group-horizontal list-group-flush w-100 h-100 offset-md-10">
-                    {buttons}
-                </ul>
             </div>
         </div>
     )
