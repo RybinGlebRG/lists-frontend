@@ -13,8 +13,8 @@ export async function post({JWT, bookId, body, onUnauthorized}){
     await commonApi.checkError(res, onUnauthorized);
 }
 
-export async function put({JWT, readingRecordId, body, onUnauthorized}){
-    let res = await fetch(window.location.origin+`/api/v0.2/readingRecords/${readingRecordId}`,
+export async function put({JWT, bookId, readingRecordId, body, onUnauthorized}){
+    let res = await fetch(window.location.origin+`/api/v0.2/books/${bookId}/readingRecords/${readingRecordId}`,
     {
         method: "PUT",
         headers: {

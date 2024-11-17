@@ -48,7 +48,7 @@ export default function BookEdit(){
                 endDate: item.endDate
             }
             if (item.recordId != null){
-                res = await readingRecordsApi.put({JWT: store.JWT, readingRecordId: item.recordId, body: body, onUnauthorized: ()=> dispatch(openSignIn())});
+                res = await readingRecordsApi.put({JWT: store.JWT, bookId: store.bookId, readingRecordId: item.recordId, body: body, onUnauthorized: ()=> dispatch(openSignIn())});
             } else {
                 res = await readingRecordsApi.post({JWT: store.JWT, bookId: store.bookId, readingRecordId: item.recordId, body: body, onUnauthorized: ()=> dispatch(openSignIn())});
             }
