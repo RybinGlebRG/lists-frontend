@@ -6,7 +6,7 @@ import { selectBookId } from '../../booksSlice.js';
 import useBookTypes from '../useBookTypes.js';
 import useBookStatuses from '../useBookStatuses.js';
 import * as dateUtils from '../../../../utils/dateUtils.js'
-import { Formik} from 'formik';
+import { Formik, Field, FieldArray} from 'formik';
 import * as booksApi from '../bookApi.js'
 import {openSignIn} from '../../../../displayAreaSlice.js'
 import {
@@ -38,16 +38,51 @@ export default function BookEdit(){
 
     async function saveValues({book, readingRecords}){
         let res = await booksApi.postBook({JWT: store.JWT, bookId: store.bookId, body: book, onUnauthorized: ()=> dispatch(openSignIn())})
+        console.debug("HERE")
+        console.debug(readingRecords)
         // for (let i = 0; i<readingRecords.length; i++){
         //     let item = readingRecords[i];
         //     let body = {
-        //         statusId: item.bookStatus.statusId,
+        //         statusId: item.bookStatus != null && item.bookStatus.statusId != null ? item.bookStatus.statusId : 1,
         //         startDate: item.startDate,
         //         endDate: item.endDate
         //     }
-        //     res = await readingRecordsApi.put({JWT: store.JWT, readingRecordId: item.recordId, body: body, onUnauthorized: ()=> dispatch(openSignIn())});
+        //     if (item.recordId != null){
+        //         res = await readingRecordsApi.put({JWT: store.JWT, bookId: store.bookId, readingRecordId: item.recordId, body: body, onUnauthorized: ()=> dispatch(openSignIn())});
+        //     } else {
+        //         res = await readingRecordsApi.post({JWT: store.JWT, bookId: store.bookId, readingRecordId: item.recordId, body: body, onUnauthorized: ()=> dispatch(openSignIn())});
+        //     }
         // }
+        res = await submitRecords({updatedReadingRecords: readingRecords})
         
+    }
+
+    async function submitRecords({updatedReadingRecords}){
+        let res;
+        for (let i = 0; i < updatedReadingRecords.length; i++){
+            let item = updatedReadingRecords[i];
+            let body = {
+                statusId: item.bookStatus != null && item.bookStatus.statusId != null ? item.bookStatus.statusId : 1,
+                startDate: item.startDate,
+                endDate: item.endDate
+            }
+
+            if (item.recordId != null){
+                res = await readingRecordsApi.put({JWT: store.JWT, bookId: store.bookId, readingRecordId: item.recordId, body: body, onUnauthorized: ()=> dispatch(openSignIn())});
+            } else {
+                res = await readingRecordsApi.post({JWT: store.JWT, bookId: store.bookId, body: body, onUnauthorized: ()=> dispatch(openSignIn())});
+            }
+        }
+
+        let updatedRecordIds = updatedReadingRecords
+            .map(item => item.recordId)
+            .filter(item => item != null);
+        let recordsToDelete = readingRecords.items.filter(item => !updatedRecordIds.includes(item.recordId));
+
+        for (let i = 0; i < recordsToDelete.length; i++){
+            let item = recordsToDelete[i];
+            res = await readingRecordsApi.deleteOne({JWT: store.JWT, bookId: store.bookId, readingRecordId: item.recordId, onUnauthorized: ()=> dispatch(openSignIn())});
+        }
     }
 
     function handleSaveValue(values){
@@ -281,25 +316,96 @@ export default function BookEdit(){
                             />
                         </div>
 
-                        <div class="form-group" controlId="note">
-                            <label>Note</label>
-                            <textarea
-                                class="form-control" 
-                                rows="3" 
-                                name="note"
-                                value={values.note}
-                                onChange={handleChange}
-                                onBlur={handleBlur}                                
-                            />
-                        </div>
+                        <Field name="note">
+                            {({
+                                field
+                            })=>(
+                                <div class="form-group" controlId="note">
+                                    <label>Note</label>
+                                    <textarea
+                                        class="form-control" 
+                                        rows="3"
+                                        {...field}                             
+                                    />
+                                </div> 
+                            )}
 
-                        <div class="form-group" controlId="note">
-                                <label>Reading records</label>
+                        </Field>
+
+                        <FieldArray 
+                            name="readingRecords"
+                            render={arrayHelpers => (
+                                <ul class="list-group">
+                                    <label>Reading records</label>
+                                        { 
+                                            values.readingRecords && values.readingRecords.length > 0 ?
+                                            (
+                                                values.readingRecords.map((record, index) => (
+                                                <li 
+                                                    class="list-group-item p-0" 
+                                                    key={index}
+                                                >
+                                                    <div class="form-group" controlId="readingRecords">
+                                                        <div class="row">
+                                                            <Field name={`readingRecords.${index}.startDate`}>
+                                                                {({
+                                                                    field
+                                                                })=>(
+                                                                    <div class="col">
+                                                                        <input 
+                                                                            class="form-control" 
+                                                                            type="datetime-local" 
+                                                                            {...field}
+                                                                        />
+                                                                    </div>
+                                                                )}
+                                                            </Field>
+
+                                                            <Field name={`readingRecords.${index}.endDate`}>
+                                                                {({
+                                                                    field
+                                                                })=>(
+                                                                    <div class="col">
+                                                                        <input 
+                                                                            class="form-control" 
+                                                                            type="datetime-local" 
+                                                                            {...field}
+                                                                        />
+                                                                    </div>
+                                                                )}
+                                                            </Field>
+
+                                                            <div class="col">
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => arrayHelpers.remove(index)}
+                                                                >
+                                                                -
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                ))
+                                            )
+                                            : null
+                                        }
+
+                                        <button type="button" onClick={() => arrayHelpers.push({})}>
+                                            Add a record
+                                        </button>
+                                </ul>
+                            )}                        
+                        />
+
+
+                        {/* <div class="form-group" controlId="note">
+                                <label>Reading records REAL</label>
                                 <ReadingRecordList
                                     list={values.readingRecords}
                                     handleChange={handleChange}
                                 />
-                            </div>
+                            </div> */}
 
                         <button  class="btn btn-primary mt-4"
                             // variant="primary" 

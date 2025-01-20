@@ -8,7 +8,6 @@ export default function ReadingRecord({record, handleChange}){
                     name="readingRecordStart"
                     value={record.startDate}
                     onChange={handleChange}
-                    disabled
                 />
 			</div>
             <div class="col">
@@ -18,7 +17,6 @@ export default function ReadingRecord({record, handleChange}){
                     name="readingRecordEnd"
                     value={record.endDate}
                     onChange={handleChange}
-                    disabled
                 />
 			</div>
 		</div>
