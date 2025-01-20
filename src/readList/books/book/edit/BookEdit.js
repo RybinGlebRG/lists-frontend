@@ -40,20 +40,49 @@ export default function BookEdit(){
         let res = await booksApi.postBook({JWT: store.JWT, bookId: store.bookId, body: book, onUnauthorized: ()=> dispatch(openSignIn())})
         console.debug("HERE")
         console.debug(readingRecords)
-        for (let i = 0; i<readingRecords.length; i++){
-            let item = readingRecords[i];
+        // for (let i = 0; i<readingRecords.length; i++){
+        //     let item = readingRecords[i];
+        //     let body = {
+        //         statusId: item.bookStatus != null && item.bookStatus.statusId != null ? item.bookStatus.statusId : 1,
+        //         startDate: item.startDate,
+        //         endDate: item.endDate
+        //     }
+        //     if (item.recordId != null){
+        //         res = await readingRecordsApi.put({JWT: store.JWT, bookId: store.bookId, readingRecordId: item.recordId, body: body, onUnauthorized: ()=> dispatch(openSignIn())});
+        //     } else {
+        //         res = await readingRecordsApi.post({JWT: store.JWT, bookId: store.bookId, readingRecordId: item.recordId, body: body, onUnauthorized: ()=> dispatch(openSignIn())});
+        //     }
+        // }
+        res = await submitRecords({updatedReadingRecords: readingRecords})
+        
+    }
+
+    async function submitRecords({updatedReadingRecords}){
+        let res;
+        for (let i = 0; i < updatedReadingRecords.length; i++){
+            let item = updatedReadingRecords[i];
             let body = {
                 statusId: item.bookStatus != null && item.bookStatus.statusId != null ? item.bookStatus.statusId : 1,
                 startDate: item.startDate,
                 endDate: item.endDate
             }
+
             if (item.recordId != null){
                 res = await readingRecordsApi.put({JWT: store.JWT, bookId: store.bookId, readingRecordId: item.recordId, body: body, onUnauthorized: ()=> dispatch(openSignIn())});
             } else {
-                res = await readingRecordsApi.post({JWT: store.JWT, bookId: store.bookId, readingRecordId: item.recordId, body: body, onUnauthorized: ()=> dispatch(openSignIn())});
+                res = await readingRecordsApi.post({JWT: store.JWT, bookId: store.bookId, body: body, onUnauthorized: ()=> dispatch(openSignIn())});
             }
         }
-        
+
+        let updatedRecordIds = updatedReadingRecords
+            .map(item => item.recordId)
+            .filter(item => item != null);
+        let recordsToDelete = readingRecords.items.filter(item => !updatedRecordIds.includes(item.recordId));
+
+        for (let i = 0; i < recordsToDelete.length; i++){
+            let item = recordsToDelete[i];
+            res = await readingRecordsApi.deleteOne({JWT: store.JWT, bookId: store.bookId, readingRecordId: item.recordId, onUnauthorized: ()=> dispatch(openSignIn())});
+        }
     }
 
     function handleSaveValue(values){
