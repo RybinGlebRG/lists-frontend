@@ -375,6 +375,23 @@ export default function BookEdit(){
                                                                 )}
                                                             </Field>
 
+
+                                                            <Field name={`readingRecords.${index}.bookStatus.statusId`}>
+                                                                {({
+                                                                    field
+                                                                })=>(
+                                                                    <div class="col">
+                                                                        <select 
+                                                                            class="form-control" 
+                                                                            as="select"
+                                                                            {...field}   
+                                                                        >   
+                                                                            {bookStatusesArray}
+                                                                        </select>
+                                                                    </div>
+                                                                )}
+                                                            </Field>
+
                                                             <div class="col">
                                                                 <button
                                                                     type="button"

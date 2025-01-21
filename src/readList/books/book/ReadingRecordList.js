@@ -1,5 +1,6 @@
 import useReadingRecords from './useReadingRecords';
 import * as dateUtils from '../../../utils/dateUtils'
+import * as statuses from '../statuses.js';
 
 export default function ReadingRecordList(props){
     const bookId = props.bookId;
@@ -19,7 +20,17 @@ export default function ReadingRecordList(props){
     } else {
         let records = readingRecords.items.map(item => {
             return(
-                <li class="list-group-item">{dateUtils.formatToDisplay(item.startDate)} - {dateUtils.formatToDisplay(item.endDate)}</li> 
+                // <li class="list-group-item">{statuses.getStatusSVG({statusName: item.bookStatus.statusName})} {dateUtils.formatToDisplay(item.startDate)} - {dateUtils.formatToDisplay(item.endDate)}</li> 
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-auto">
+                            {statuses.getStatusSVG({statusName: item.bookStatus.statusName})}
+                        </div>
+                        <div class="col">
+                            {dateUtils.formatToDisplay(item.startDate)} - {item.endDate != null ? dateUtils.formatToDisplay(item.endDate) : "null"}
+                        </div>
+                    </div>
+                </li>
             )
         });
         res=(
