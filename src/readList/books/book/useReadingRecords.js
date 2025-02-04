@@ -60,7 +60,7 @@ export default function useReadingRecords({bookId}){
                 setReadingRecords(null);
                 setIsLoaded(true);
         });
-        setReadingRecordsToUpdate = null;
+        setReadingRecordsToUpdate(null);
     },[bookId]);
 
     useEffect(() => {
