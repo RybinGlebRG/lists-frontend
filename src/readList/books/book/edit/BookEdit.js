@@ -31,58 +31,13 @@ export default function BookEdit(){
     const [authorListError, authorListIsLoaded, authors] = useAuthorList({listId: store.listId});
     const [bookTypesError, bookTypesIsLoaded, bookTypes] = useBookTypes({listId: store.listId});
     const [bookStatusesError, bookStatusesIsLoaded, bookStatuses] = useBookStatuses({listId: store.listId});
-    const {readingRecordsError, readingRecordsIsLoaded, readingRecords } = useReadingRecords({bookId: store.bookId});
+    const {readingRecordsError, readingRecordsIsLoaded, readingRecords, setReadingRecordsToUpdate } = useReadingRecords({bookId: store.bookId});
 
     const [saveError, setSaveError] = useState(null);
 	const [saveIsLoaded,setSaveIsLoaded] = useState(false);
 
     async function saveValues({book, readingRecords}){
-        let res = await booksApi.postBook({JWT: store.JWT, bookId: store.bookId, body: book, onUnauthorized: ()=> dispatch(openSignIn())})
-        console.debug("HERE")
-        console.debug(readingRecords)
-        // for (let i = 0; i<readingRecords.length; i++){
-        //     let item = readingRecords[i];
-        //     let body = {
-        //         statusId: item.bookStatus != null && item.bookStatus.statusId != null ? item.bookStatus.statusId : 1,
-        //         startDate: item.startDate,
-        //         endDate: item.endDate
-        //     }
-        //     if (item.recordId != null){
-        //         res = await readingRecordsApi.put({JWT: store.JWT, bookId: store.bookId, readingRecordId: item.recordId, body: body, onUnauthorized: ()=> dispatch(openSignIn())});
-        //     } else {
-        //         res = await readingRecordsApi.post({JWT: store.JWT, bookId: store.bookId, readingRecordId: item.recordId, body: body, onUnauthorized: ()=> dispatch(openSignIn())});
-        //     }
-        // }
-        res = await submitRecords({updatedReadingRecords: readingRecords})
-        
-    }
-
-    async function submitRecords({updatedReadingRecords}){
-        let res;
-        for (let i = 0; i < updatedReadingRecords.length; i++){
-            let item = updatedReadingRecords[i];
-            let body = {
-                statusId: item.bookStatus != null && item.bookStatus.statusId != null ? item.bookStatus.statusId : 1,
-                startDate: item.startDate,
-                endDate: item.endDate
-            }
-
-            if (item.recordId != null){
-                res = await readingRecordsApi.put({JWT: store.JWT, bookId: store.bookId, readingRecordId: item.recordId, body: body, onUnauthorized: ()=> dispatch(openSignIn())});
-            } else {
-                res = await readingRecordsApi.post({JWT: store.JWT, bookId: store.bookId, body: body, onUnauthorized: ()=> dispatch(openSignIn())});
-            }
-        }
-
-        let updatedRecordIds = updatedReadingRecords
-            .map(item => item.recordId)
-            .filter(item => item != null);
-        let recordsToDelete = readingRecords.items.filter(item => !updatedRecordIds.includes(item.recordId));
-
-        for (let i = 0; i < recordsToDelete.length; i++){
-            let item = recordsToDelete[i];
-            res = await readingRecordsApi.deleteOne({JWT: store.JWT, bookId: store.bookId, readingRecordId: item.recordId, onUnauthorized: ()=> dispatch(openSignIn())});
-        }
+        let res = await booksApi.postBook({JWT: store.JWT, bookId: store.bookId, body: book, onUnauthorized: ()=> dispatch(openSignIn())}) 
     }
 
     function handleSaveValue(values){
@@ -109,7 +64,7 @@ export default function BookEdit(){
             book.bookTypeId = values.bookType;
         }
 
-        const body = JSON.stringify(book);
+        // const body = JSON.stringify(book);
 
         setSaveIsLoaded(false);
         // booksApi.postBook({JWT: store.JWT, bookId: store.bookId, body: body, onUnauthorized: ()=> dispatch(openSignIn())})
@@ -124,6 +79,8 @@ export default function BookEdit(){
             setSaveIsLoaded(true);
             alert(error.message);
         })
+
+        setReadingRecordsToUpdate(values.readingRecords);
     }
 
     let displayResult;
@@ -388,6 +345,21 @@ export default function BookEdit(){
                                                                         >   
                                                                             {bookStatusesArray}
                                                                         </select>
+                                                                    </div>
+                                                                )}
+                                                            </Field>
+
+                                                            <Field name={`readingRecords.${index}.lastChapter`}>
+                                                                {({
+                                                                    field
+                                                                })=>(
+                                                                    <div class="col">
+                                                                        <input 
+                                                                            class="form-control" 
+                                                                            type="number" 
+                                                                            placeholder="Last chapter"
+                                                                            {...field}
+                                                                        />
                                                                     </div>
                                                                 )}
                                                             </Field>

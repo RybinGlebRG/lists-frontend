@@ -1,6 +1,6 @@
 {
   "name": "lists-frontend",
-  "version": "0.50.3",
+  "version": "0.51.0",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.1",
