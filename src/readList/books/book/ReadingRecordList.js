@@ -26,8 +26,14 @@ export default function ReadingRecordList(props){
                         <div class="col-md-auto">
                             {statuses.getStatusSVG({statusName: item.bookStatus.statusName})}
                         </div>
-                        <div class="col">
+                        <div class="col-md-auto">
                             {dateUtils.formatToDisplay(item.startDate)} - {item.endDate != null ? dateUtils.formatToDisplay(item.endDate) : "null"}
+                        </div>
+                        <div class="col-md-auto">
+                            <div class="vr"></div>
+                        </div>
+                        <div class="col-md-auto">
+                            chapter: {item.lastChapter}
                         </div>
                     </div>
                 </li>
