@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Formik} from 'formik';
+import { Formik, Field} from 'formik';
 import {openSignIn} from '../../redux/actionCreators';
 import * as bookApi from './bookApi'
 import * as common from '../../common/common'
@@ -94,7 +94,8 @@ class BookAdd extends React.Component{
             readListId: this.props.store.readListId,
             title: values.title,
             status: values.status, 
-            insertDate: values.createDate       
+            insertDate: values.createDate,
+            URL: values.url       
         }
 
         if (values.authors != null && values.author != ""){
@@ -425,7 +426,34 @@ class BookAdd extends React.Component{
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
                                                 />
-                                            </div>        
+                                            </div>
+
+                                            <div class="form-group" controlId="url">
+                                                <label>URL</label>
+                                                <input class="form-control" 
+                                                    type="text" 
+                                                    placeholder="URL"
+                                                    name="url"
+                                                    value={values.createDate}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                />
+                                            </div>      
+
+                                            <Field name="url">
+                                                {({
+                                                    field
+                                                })=>(
+                                                    <div class="form-group" controlId="url">
+                                                        <label>URL</label>
+                                                        <input class="form-control" 
+                                                            type="text" 
+                                                            placeholder="URL"
+                                                            {...field}  
+                                                        />
+                                                    </div> 
+                                                )}
+                                            </Field>
 
                                             <button  class="btn btn-primary"
                                                 variant="primary" 
