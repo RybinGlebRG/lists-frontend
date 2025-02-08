@@ -4,12 +4,16 @@ import {openSignIn} from '../../../displayAreaSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import * as dateUtils from '../../../utils/dateUtils'
 
-export default function useBook({listId, bookId}){
+export default function useBook({listId, bookId, onUpdate}){
     const dispatch = useDispatch();
 	const [error,setError] = useState(null);
 	const [isLoaded,setIsLoaded] = useState(false);
 	const [data, setData] = useState(null);
     const [createDate, setCreateDate] = useState(null);
+
+    const [bookToUpdate, setBookToUpdate] = useState(null);
+    const [updateError, setUpdateError] = useState(null);
+    const [isUpdated, setIsUpdated] = useState(false);
 	
     let store={
         JWT: useSelector(state=>state.listsReducer.JWT)
@@ -32,11 +36,31 @@ export default function useBook({listId, bookId}){
         });
     },[listId, bookId]);
 
+    useEffect(() => {
+        if (bookToUpdate != null) {
+            setIsUpdated(false);
+            bookApi.postBook({JWT: store.JWT, bookId: bookId, body: bookToUpdate, onUnauthorized: ()=> dispatch(openSignIn())}) 
+            .then(result => {
+                setUpdateError(null);
+                setIsUpdated(true);
+                if (onUpdate != null) {
+                    onUpdate();
+                }
+            })
+            .catch(error => {
+                setUpdateError(error.message);
+                setIsUpdated(true);
+                alert(error.message);
+            })
+        }
+    }, [bookToUpdate]);
+
     const res= {
         error,
         isLoaded,
         book: data,
-        createDate
+        createDate,
+        setBookToUpdate
     }
 
     return res;

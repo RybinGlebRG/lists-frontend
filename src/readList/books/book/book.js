@@ -201,6 +201,16 @@ export default function Book(){
                                     <p>{book.note}</p>
                                 </div>                            
                             </div> 
+                            <div class="row mt-2">
+                                <div class="col">
+                                    <h5>URL</h5>
+                                </div>
+                            </div>
+                            <div class="row border-bottom">
+                                <div class="col ml-2">
+                                    <p>{book.URL}</p>
+                                </div>                            
+                            </div> 
                             <ReadingRecordList bookId={store.bookId}/>
 
                         </div> 

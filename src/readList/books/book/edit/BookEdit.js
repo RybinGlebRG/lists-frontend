@@ -27,7 +27,7 @@ export default function BookEdit(){
         listId: useSelector(state=>state.listsReducer.listId),
     }
 
-    const {error, isLoaded, book, createDate } = useBook({listId: store.listId, bookId: store.bookId});
+    const {error, isLoaded, book, createDate, setBookToUpdate} = useBook({listId: store.listId, bookId: store.bookId, onUpdate: () => dispatch(openBook({bookId: store.bookId}))});
     const [authorListError, authorListIsLoaded, authors] = useAuthorList({listId: store.listId});
     const [bookTypesError, bookTypesIsLoaded, bookTypes] = useBookTypes({listId: store.listId});
     const [bookStatusesError, bookStatusesIsLoaded, bookStatuses] = useBookStatuses({listId: store.listId});
@@ -48,38 +48,19 @@ export default function BookEdit(){
             status: values.status,
             lastChapter: values.lastChapter,
             insertDateUTC: dt, //this.props.store.book.insertDate
-            note: values.note
+            note: values.note,
+            URL: values.url
         }
 
         if (values.author != ""){
             book.authorId = values.author;
         }
 
-        // if (values.series != ""){
-        //     book.seriesId = values.series;
-        //     book.order = values.order;
-        // }
-
         if (values.bookType != null && values.bookType != ""){
             book.bookTypeId = values.bookType;
         }
 
-        // const body = JSON.stringify(book);
-
-        setSaveIsLoaded(false);
-        // booksApi.postBook({JWT: store.JWT, bookId: store.bookId, body: body, onUnauthorized: ()=> dispatch(openSignIn())})
-        saveValues({book: book, readingRecords: values.readingRecords})
-        .then(()=>{
-            setSaveError(null)
-            setSaveIsLoaded(true);
-            dispatch(openBook({bookId: store.bookId}));
-        })
-        .catch((error)=>{
-            setSaveError(error.message)
-            setSaveIsLoaded(true);
-            alert(error.message);
-        })
-
+        setBookToUpdate(book);
         setReadingRecordsToUpdate(values.readingRecords);
     }
 
@@ -153,7 +134,8 @@ export default function BookEdit(){
                             bookType: book.bookType ? book.bookType.typeId: null,
                             createDate: createDate,
                             note: book.note,
-                            readingRecords: readingRecords.items
+                            readingRecords: readingRecords.items,
+                            url: book.URL
                         }}
                         validate={values => {
                             const errors = {};
@@ -287,6 +269,21 @@ export default function BookEdit(){
                                 </div> 
                             )}
 
+                        </Field>
+
+                        <Field name="url">
+                            {({
+                                field
+                            })=>(
+                                <div class="form-group" controlId="url">
+                                    <label>URL</label>
+                                    <input class="form-control" 
+                                        type="text" 
+                                        placeholder="URL"
+                                        {...field}  
+                                    />
+                                </div> 
+                            )}
                         </Field>
 
                         <FieldArray 
