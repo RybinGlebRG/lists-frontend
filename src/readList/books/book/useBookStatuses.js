@@ -5,6 +5,9 @@ import { useSelector, useDispatch } from 'react-redux'
 
 export default function useBookStatuses({listId}){
     const dispatch = useDispatch();
+
+    const [stateListId] = useState(listId);
+
 	const [error, setError] = useState(null);
 	const [isLoaded, setIsLoaded] = useState(false);
 	const [bookStatuses, setBookStatuses] = useState(null);
@@ -26,7 +29,7 @@ export default function useBookStatuses({listId}){
                 setBookStatuses(null);
                 setIsLoaded(true);
         });
-    },[listId]);
+    },[stateListId]);
 
     const res= [
         error,

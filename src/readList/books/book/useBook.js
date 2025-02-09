@@ -6,6 +6,11 @@ import * as dateUtils from '../../../utils/dateUtils'
 
 export default function useBook({listId, bookId, onUpdate}){
     const dispatch = useDispatch();
+
+    const [stateListId] = useState(listId);
+    const [statebookId] = useState(bookId);
+    const [stateOnUpdate] = useState(onUpdate);
+
 	const [error,setError] = useState(null);
 	const [isLoaded,setIsLoaded] = useState(false);
 	const [data, setData] = useState(null);
@@ -20,7 +25,7 @@ export default function useBook({listId, bookId, onUpdate}){
     }
 
     useEffect(()=>{
-        bookApi.loadBook(store.JWT, listId, bookId, ()=> dispatch(openSignIn()))
+        bookApi.loadBook(store.JWT, stateListId, statebookId, ()=> dispatch(openSignIn()))
         .then(result =>{
             setError(null);
             setData(result);
@@ -34,17 +39,17 @@ export default function useBook({listId, bookId, onUpdate}){
                 setCreateDate(null);
                 setIsLoaded(true);
         });
-    },[listId, bookId]);
+    },[stateListId, statebookId]);
 
     useEffect(() => {
         if (bookToUpdate != null) {
             setIsUpdated(false);
-            bookApi.postBook({JWT: store.JWT, bookId: bookId, body: bookToUpdate, onUnauthorized: ()=> dispatch(openSignIn())}) 
+            bookApi.postBook({JWT: store.JWT, bookId: statebookId, body: bookToUpdate, onUnauthorized: ()=> dispatch(openSignIn())}) 
             .then(result => {
                 setUpdateError(null);
                 setIsUpdated(true);
-                if (onUpdate != null) {
-                    onUpdate();
+                if (stateOnUpdate != null) {
+                    stateOnUpdate();
                 }
             })
             .catch(error => {

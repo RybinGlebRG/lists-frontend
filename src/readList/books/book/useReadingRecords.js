@@ -35,6 +35,9 @@ async function submitRecords({updatedReadingRecords, originalReadingRecords, JWT
 
 export default function useReadingRecords({bookId}){
     const dispatch = useDispatch();
+
+    const [stateBookId] = useState(bookId);
+
 	const [error, setError] = useState(null);
 	const [isLoaded, setIsLoaded] = useState(false);
 	const [readingRecords, setReadingRecords] = useState(null);
@@ -48,7 +51,7 @@ export default function useReadingRecords({bookId}){
     }
 
     useEffect(()=>{
-        bookApi.getReadingRecords({JWT: store.JWT, bookId: bookId, onUnauthorized: ()=> dispatch(openSignIn())})
+        bookApi.getReadingRecords({JWT: store.JWT, bookId: stateBookId, onUnauthorized: ()=> dispatch(openSignIn())})
         .then(readingRecords =>{
             setError(null);
             setReadingRecords(readingRecords);
@@ -61,11 +64,11 @@ export default function useReadingRecords({bookId}){
                 setIsLoaded(true);
         });
         setReadingRecordsToUpdate(null);
-    },[bookId]);
+    },[stateBookId]);
 
     useEffect(() => {
         if (readingRecordsToUpdate != null) {
-            submitRecords({updatedReadingRecords: readingRecordsToUpdate, originalReadingRecords: readingRecords, JWT: store.JWT, bookId: bookId, onUnauthorized: ()=> dispatch(openSignIn())})
+            submitRecords({updatedReadingRecords: readingRecordsToUpdate, originalReadingRecords: readingRecords, JWT: store.JWT, bookId: stateBookId, onUnauthorized: ()=> dispatch(openSignIn())})
             .then(() => {
                 setUpdateError(null);
                 setIsUpdated(true);
