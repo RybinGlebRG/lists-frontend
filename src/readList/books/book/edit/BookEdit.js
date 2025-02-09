@@ -27,18 +27,12 @@ export default function BookEdit(){
         listId: useSelector(state=>state.listsReducer.listId),
     }
 
-    const {error, isLoaded, book, createDate, setBookToUpdate} = useBook({listId: store.listId, bookId: store.bookId, onUpdate: () => dispatch(openBook({bookId: store.bookId}))});
+    const {error, isLoaded, book, createDate, updateBook} = useBook();
     const [authorListError, authorListIsLoaded, authors] = useAuthorList({listId: store.listId});
     const [bookTypesError, bookTypesIsLoaded, bookTypes] = useBookTypes({listId: store.listId});
     const [bookStatusesError, bookStatusesIsLoaded, bookStatuses] = useBookStatuses({listId: store.listId});
-    const {readingRecordsError, readingRecordsIsLoaded, readingRecords, setReadingRecordsToUpdate } = useReadingRecords({bookId: store.bookId});
+    const {readingRecordsError, readingRecordsIsLoaded, readingRecords, submitReadingRecords } = useReadingRecords({bookId: store.bookId});
 
-    const [saveError, setSaveError] = useState(null);
-	const [saveIsLoaded,setSaveIsLoaded] = useState(false);
-
-    async function saveValues({book, readingRecords}){
-        let res = await booksApi.postBook({JWT: store.JWT, bookId: store.bookId, body: book, onUnauthorized: ()=> dispatch(openSignIn())}) 
-    }
 
     function handleSaveValue(values){
         let dt = dateUtils.postprocessValues(values.createDate);
@@ -60,8 +54,14 @@ export default function BookEdit(){
             book.bookTypeId = values.bookType;
         }
 
-        setBookToUpdate(book);
-        setReadingRecordsToUpdate(values.readingRecords);
+        updateBook({
+            body: book, 
+            onUpdate: () => dispatch(openBook({bookId: store.bookId}))
+        });
+
+        submitReadingRecords({
+            readingRecordsToUpdate: values.readingRecords
+        });
     }
 
     let displayResult;
@@ -197,34 +197,6 @@ export default function BookEdit(){
                                 <option value="" >--</option>
                                 {authorsItems}
                             </select>
-                        </div>
-                        <div class="form-group" controlId="status">
-                            <label>Status</label >
-                            <select class="form-control" 
-                                as="select"
-                                name="status"
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                value={values.status}      
-                            >   
-                                {bookStatusesArray}
-                            </select>
-                            {touched.status && errors.status ? (
-                            <label className="text-danger">
-                                {errors.status}
-                            </label>
-                            ): null}
-                        </div>
-                        <div class="form-group" controlId="lastChapter">
-                            <label>Last chapter</label>
-                            <input class="form-control" 
-                                type="number" 
-                                placeholder="Last chapter"
-                                name="lastChapter"
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                value={values.lastChapter}
-                            />
                         </div>
 
                         <div class="form-group" controlId="bookType">

@@ -33,25 +33,23 @@ async function submitRecords({updatedReadingRecords, originalReadingRecords, JWT
         }
     }
 
-export default function useReadingRecords({bookId}){
+export default function useReadingRecords(){
     const dispatch = useDispatch();
-
-    const [stateBookId] = useState(bookId);
 
 	const [error, setError] = useState(null);
 	const [isLoaded, setIsLoaded] = useState(false);
 	const [readingRecords, setReadingRecords] = useState(null);
 
-	const [readingRecordsToUpdate, setReadingRecordsToUpdate] = useState(null);
     const [updateError, setUpdateError] = useState(null);
 	const [isUpdated, setIsUpdated] = useState(false);
 	
     let store={
-        JWT: useSelector(state=>state.listsReducer.JWT)
+        JWT: useSelector(state=>state.listsReducer.JWT),
+        bookId: useSelector(state=>state.booksReducer.bookId)
     }
 
     useEffect(()=>{
-        bookApi.getReadingRecords({JWT: store.JWT, bookId: stateBookId, onUnauthorized: ()=> dispatch(openSignIn())})
+        bookApi.getReadingRecords({JWT: store.JWT, bookId: store.bookId, onUnauthorized: ()=> dispatch(openSignIn())})
         .then(readingRecords =>{
             setError(null);
             setReadingRecords(readingRecords);
@@ -63,12 +61,10 @@ export default function useReadingRecords({bookId}){
                 setReadingRecords(null);
                 setIsLoaded(true);
         });
-        setReadingRecordsToUpdate(null);
-    },[stateBookId]);
+    },[store.bookId]);
 
-    useEffect(() => {
-        if (readingRecordsToUpdate != null) {
-            submitRecords({updatedReadingRecords: readingRecordsToUpdate, originalReadingRecords: readingRecords, JWT: store.JWT, bookId: stateBookId, onUnauthorized: ()=> dispatch(openSignIn())})
+    let submitReadingRecords = ({readingRecordsToUpdate}) => {
+        submitRecords({updatedReadingRecords: readingRecordsToUpdate, originalReadingRecords: readingRecords, JWT: store.JWT, bookId: store.bookId, onUnauthorized: ()=> dispatch(openSignIn())})
             .then(() => {
                 setUpdateError(null);
                 setIsUpdated(true);
@@ -77,14 +73,13 @@ export default function useReadingRecords({bookId}){
                 setUpdateError(error.message);
                 setIsUpdated(true);
             });
-        }
-    }, [readingRecordsToUpdate]);
+    }
 
     const res= {
         error,
         isLoaded,
         readingRecords,
-        setReadingRecordsToUpdate
+        submitReadingRecords
     }
 
     return res;

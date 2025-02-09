@@ -426,19 +426,7 @@ class BookAdd extends React.Component{
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
                                                 />
-                                            </div>
-
-                                            <div class="form-group" controlId="url">
-                                                <label>URL</label>
-                                                <input class="form-control" 
-                                                    type="text" 
-                                                    placeholder="URL"
-                                                    name="url"
-                                                    value={values.createDate}
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                />
-                                            </div>      
+                                            </div> 
 
                                             <Field name="url">
                                                 {({

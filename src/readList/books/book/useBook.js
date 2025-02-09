@@ -4,28 +4,25 @@ import {openSignIn} from '../../../displayAreaSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import * as dateUtils from '../../../utils/dateUtils'
 
-export default function useBook({listId, bookId, onUpdate}){
+export default function useBook(){
     const dispatch = useDispatch();
-
-    const [stateListId] = useState(listId);
-    const [statebookId] = useState(bookId);
-    const [stateOnUpdate] = useState(onUpdate);
 
 	const [error,setError] = useState(null);
 	const [isLoaded,setIsLoaded] = useState(false);
 	const [data, setData] = useState(null);
     const [createDate, setCreateDate] = useState(null);
 
-    const [bookToUpdate, setBookToUpdate] = useState(null);
     const [updateError, setUpdateError] = useState(null);
     const [isUpdated, setIsUpdated] = useState(false);
 	
     let store={
-        JWT: useSelector(state=>state.listsReducer.JWT)
+        JWT: useSelector(state=>state.listsReducer.JWT),
+        bookId: useSelector(state=>state.booksReducer.bookId),
+        listId: useSelector(state=>state.listsReducer.listId)
     }
 
     useEffect(()=>{
-        bookApi.loadBook(store.JWT, stateListId, statebookId, ()=> dispatch(openSignIn()))
+        bookApi.loadBook(store.JWT, store.listId, store.bookId, ()=> dispatch(openSignIn()))
         .then(result =>{
             setError(null);
             setData(result);
@@ -39,33 +36,31 @@ export default function useBook({listId, bookId, onUpdate}){
                 setCreateDate(null);
                 setIsLoaded(true);
         });
-    },[stateListId, statebookId]);
+    },[store.listId, store.bookId]);
 
-    useEffect(() => {
-        if (bookToUpdate != null) {
-            setIsUpdated(false);
-            bookApi.postBook({JWT: store.JWT, bookId: statebookId, body: bookToUpdate, onUnauthorized: ()=> dispatch(openSignIn())}) 
-            .then(result => {
-                setUpdateError(null);
-                setIsUpdated(true);
-                if (stateOnUpdate != null) {
-                    stateOnUpdate();
-                }
-            })
-            .catch(error => {
-                setUpdateError(error.message);
-                setIsUpdated(true);
-                alert(error.message);
-            })
-        }
-    }, [bookToUpdate]);
+    let updateBook = ({body, onUpdate}) => {
+        setIsUpdated(false);
+        bookApi.postBook({JWT: store.JWT, bookId: store.bookId, body: body, onUnauthorized: ()=> dispatch(openSignIn())}) 
+        .then(result => {
+            setUpdateError(null);
+            setIsUpdated(true);
+            if (onUpdate != null) {
+                onUpdate();
+            }
+        })
+        .catch(error => {
+            setUpdateError(error.message);
+            setIsUpdated(true);
+            alert(error.message);
+        })
+    }
 
     const res= {
         error,
         isLoaded,
         book: data,
         createDate,
-        setBookToUpdate
+        updateBook
     }
 
     return res;
