@@ -6,6 +6,9 @@ import { useSelector, useDispatch } from 'react-redux'
 
 export default function useAuthorList({listId}){
     const dispatch = useDispatch();
+
+    const [stateListId] = useState(listId);
+
 	const [error, setError] = useState(null);
 	const [isLoaded, setIsLoaded] = useState(false);
 	const [authors, setAuthors] = useState(null);
@@ -15,7 +18,7 @@ export default function useAuthorList({listId}){
     }
 
     useEffect(()=>{
-        authorsApi.getAuthors(store.JWT, listId, ()=> dispatch(openSignIn()))
+        authorsApi.getAuthors(store.JWT, stateListId, ()=> dispatch(openSignIn()))
         .then(authors =>{
             setError(null);
             setAuthors(authors.items);
@@ -27,7 +30,7 @@ export default function useAuthorList({listId}){
                 setAuthors(null);
                 setIsLoaded(true);
         });
-    },[listId]);
+    },[stateListId]);
 
     const res= [
         error,

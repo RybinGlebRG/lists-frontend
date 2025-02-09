@@ -5,6 +5,9 @@ import { useSelector, useDispatch } from 'react-redux'
 
 export default function useBookTypes({listId}){
     const dispatch = useDispatch();
+
+    const [stateListId] = useState(listId);
+
 	const [error, setError] = useState(null);
 	const [isLoaded, setIsLoaded] = useState(false);
 	const [bookTypes, setBookTypes] = useState(null);
@@ -26,7 +29,7 @@ export default function useBookTypes({listId}){
                 setBookTypes(null);
                 setIsLoaded(true);
         });
-    },[listId]);
+    },[stateListId]);
 
     const res= [
         error,
