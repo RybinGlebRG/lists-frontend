@@ -7,6 +7,7 @@ import BookEdit from './books/book/edit/BookEdit.js'
 import AuthorList from './authors/list.js'
 import Author from './authors/view.js'
 import AuthorAdd from './authors/add.js'
+import TagsList from '../tags/TagsList.js';
 import * as bookForms from './books/forms.js'
 import { useSelector } from 'react-redux'
 
@@ -29,8 +30,10 @@ export default function ReadList(){
 		displayPanel=(<AuthorList/>)
 	} else if (store.bookForm===bookForms.SHOW_AUTHOR){
 		displayPanel=(<Author/>)
-	}else if (store.bookForm===bookForms.SHOW_AUTHOR_ADD){
+	} else if (store.bookForm===bookForms.SHOW_AUTHOR_ADD){
 		displayPanel=(<AuthorAdd/>)
+	} else if (store.bookForm===bookForms.TAGS){
+		displayPanel=(<TagsList/>)
 	}
 
 	let leftMenu = (<LeftMenu/>);
