@@ -40,7 +40,7 @@ export default function ReadingRecordList(props){
             )
         });
         res=(
-            <div class="row">
+            <div class="row border-bottom">
                 <div class="col">
                     <div class="row mt-2">
                         <div class="col">

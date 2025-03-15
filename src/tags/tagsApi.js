@@ -19,9 +19,10 @@ export async function addTag(JWT, userId, body, onUnauthorized) {
     {
         method: "POST",
         headers: {
+            'Content-Type': 'application/json;charset=utf-8',
             'Authorization': `Bearer ${JWT}`
         },
         body: JSON.stringify(body)
     });
-    commonApi.checkError(res, onUnauthorized);     
+    await commonApi.checkError(res, onUnauthorized);     
 }

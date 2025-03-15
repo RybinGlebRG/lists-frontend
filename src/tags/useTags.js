@@ -21,7 +21,7 @@ export default function useTags() {
             tagsApi.getTags(store.JWT, store.userId, ()=> dispatch(openSignIn()))
             .then(result =>{
                 setError(null);
-                setData(result);
+                setData(result.items);
                 setIsLoaded(true);
                 setIsReload(false);
             })
@@ -47,12 +47,12 @@ export default function useTags() {
         });
     }
 
-    const res= {
+    const res= [
         error,
         isLoaded,
-        data: data,
+        data,
         addTag
-    }
+    ]
 
     return res;
 }

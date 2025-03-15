@@ -1,9 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
-import * as tagsForms from './tagsForms'
 
 const iniState = {
-    tags: [],
-    form: tagsForms.LIST
+    tags: []
 }
 
 export const tagsSlice = createSlice({
@@ -11,7 +9,7 @@ export const tagsSlice = createSlice({
     initialState: iniState,
     reducers:{
         openTagsList: (state) => {
-            state.form = tagsForms.LIST;
+            // state.form = tagsForms.LIST;
         } 
     }
 })

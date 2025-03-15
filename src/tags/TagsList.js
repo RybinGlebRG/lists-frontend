@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import {useState, useEffect} from 'react';
 import useTags from './useTags';
 import Header from '../common/header'
+import {openTagsAdd} from '../readList/books/booksSlice'
 
 export default function TagsList() {
     const dispatch = useDispatch();
@@ -11,7 +12,7 @@ export default function TagsList() {
         userId: useSelector(state=>state.listsReducer.userId)
     }
 
-    const {error, isLoaded, data, addTag} = useTags();
+    const [error, isLoaded, data, addTag] = useTags();
 
     let result;
 
@@ -44,7 +45,21 @@ export default function TagsList() {
                     <div class="col">
                         <Header
                             title="Tags"
-                            buttons={[]}
+                            buttons={[
+                                (
+                                    <button 
+                                        type="button"
+                                        class="btn btn-secondary btn-sm"
+                                        onClick={()=>{
+                                            dispatch(openTagsAdd());
+                                        }}
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                                            <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
+                                        </svg>
+                                    </button>
+                                )
+                            ]}
                         />
                     </div>
                 </div>
