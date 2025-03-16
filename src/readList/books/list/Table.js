@@ -48,8 +48,21 @@ export default function Table(props){
 			<div class="col">
 				<ul class="list-group">
 					{list.map((item) =>{
+
+						let tagsItems = item.tags.map(tag => (
+							<div class="col-md-auto pe-0">
+								<span class="badge text-bg-secondary">{tag.name}</span>
+							</div>
+						))
+
+						const tags = (
+							<div class="row justify-content-left ps-3">
+								{tagsItems}
+							</div>
+						)
+
 						const data = (
-							<div class="col">						
+							<div class="col">					
 								{item.lastChapter ? (
 								<div class="row">
 									<div class="col">Last chapter: {item.lastChapter}</div>
@@ -158,6 +171,7 @@ export default function Table(props){
 									buttons={buttons}
 									chainData={chain}
 									note={item.note}
+									tags={tags}
 								/>
 							</li>
 						)

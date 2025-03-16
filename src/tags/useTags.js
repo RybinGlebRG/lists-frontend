@@ -47,11 +47,27 @@ export default function useTags() {
         });
     }
 
+    let deleteTag = ({tagId, onExecute}) => {
+        setIsLoaded(false);
+        tagsApi.deleteTag(store.JWT, store.userId, tagId, ()=> dispatch(openSignIn()))
+        .then(() =>{
+            setError(null);
+            setIsReload(true);
+            if (onExecute != null) {
+                onExecute();
+            }
+        })
+        .catch(error => {
+            setError(error.message);
+        });
+    }
+
     const res= [
         error,
         isLoaded,
         data,
-        addTag
+        addTag,
+        deleteTag
     ]
 
     return res;

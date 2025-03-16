@@ -26,3 +26,14 @@ export async function addTag(JWT, userId, body, onUnauthorized) {
     });
     await commonApi.checkError(res, onUnauthorized);     
 }
+
+export async function deleteTag(JWT, userId, tagId, onUnauthorized) {
+    let res = await fetch(window.location.origin+`/api/v1/users/${userId}/tags/${tagId}`,
+    {
+        method: "DELETE",
+        headers: {
+            'Authorization': `Bearer ${JWT}`
+        }
+    });
+    await commonApi.checkError(res, onUnauthorized);     
+}
