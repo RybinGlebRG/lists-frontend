@@ -3,7 +3,9 @@ import Nav from 'react-bootstrap/Nav'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import {
-    openBookList, openAuthorList
+    openBookList, 
+    openAuthorList,
+    openTags
 } from './books/booksSlice.js'
 import { useDispatch } from 'react-redux'
 
@@ -38,6 +40,14 @@ export default function LeftMenu(){
                         dispatch(openAuthorList());
                     }}
                 >Author List</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+                <Nav.Link 
+                    eventKey="4"
+                    onSelect={()=>{
+                        dispatch(openTags());
+                    }}
+                >Tags</Nav.Link>
             </Nav.Item>
         </Nav>
         </Col>

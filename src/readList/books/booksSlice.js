@@ -45,8 +45,15 @@ export const booksSlice = createSlice({
         openAuthorAdd: (state)=>{
             state.bookId = null
             state.form = booksForms.SHOW_AUTHOR_ADD;     
+        },
+        openTags: (state)=>{
+            state.bookId = null
+            state.form = booksForms.TAGS;     
+        },
+        openTagsAdd: (state)=>{
+            state.bookId = null
+            state.form = booksForms.TAGS_ADD;     
         }
-        
     }
 })
 
@@ -59,7 +66,9 @@ export const {
     openAuthorList,
     openAuthor,
     openAuthorAdd,
-    clearState
+    clearState,
+    openTags,
+    openTagsAdd
 } = booksSlice.actions
 export const selectBooksForm = state => state.form
 export const selectBookId = state => state.bookId

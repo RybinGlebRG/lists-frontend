@@ -16,6 +16,13 @@ import {
 import ReadingRecordList from './ReadingRecordList.js';
 import useReadingRecords from '../useReadingRecords';
 import * as readingRecordsApi from  '../../readingRecordsApi.js';
+import useTags from '../../../../tags/useTags.js';
+
+function validateTag(value) {
+    if (!value){
+        return 'Tag name must be set';
+    }
+}
 
 
 export default function BookEdit(){
@@ -32,10 +39,16 @@ export default function BookEdit(){
     const [bookTypesError, bookTypesIsLoaded, bookTypes] = useBookTypes({listId: store.listId});
     const [bookStatusesError, bookStatusesIsLoaded, bookStatuses] = useBookStatuses({listId: store.listId});
     const {readingRecordsError, readingRecordsIsLoaded, readingRecords, submitReadingRecords } = useReadingRecords({bookId: store.bookId});
+    const [tagsError, tagsIsLoaded, tags] = useTags();
 
 
     function handleSaveValue(values){
         let dt = dateUtils.postprocessValues(values.createDate);
+
+        let tagIds = values.tags.map(item => {
+            return item.tagId
+        })
+
         let book = {
             readListId: store.listId,
             title: values.title,
@@ -43,7 +56,8 @@ export default function BookEdit(){
             lastChapter: values.lastChapter,
             insertDateUTC: dt, //this.props.store.book.insertDate
             note: values.note,
-            URL: values.url
+            URL: values.url,
+            tagIds: tagIds
         }
 
         if (values.author != ""){
@@ -66,9 +80,9 @@ export default function BookEdit(){
 
     let displayResult;
 
-    if (error || authorListError || bookTypesError || bookStatusesError){
+    if (error || authorListError || bookTypesError || bookStatusesError || tagsError){
         displayResult=( <div class="alert alert-danger" role="alert">{error + authorListError + bookTypesError + bookStatusesError}</div>);
-    } else if (!isLoaded || !authorListIsLoaded || !bookTypesIsLoaded || !bookStatusesIsLoaded){
+    } else if (!isLoaded || !authorListIsLoaded || !bookTypesIsLoaded || !bookStatusesIsLoaded || !tagsIsLoaded){
         displayResult=( 
             <div class="d-flex justify-content-center">
                 <div class="spinner-border m-5" role="status">
@@ -99,6 +113,11 @@ export default function BookEdit(){
         let bookStatusesArray=[]
         for (let i = 0; i < bookStatuses.length; i++){
             bookStatusesArray.push(<option value={bookStatuses[i].statusId}>{bookStatuses[i].statusName}</option>)
+        }
+
+        let tagsArray=[]
+        for (let i = 0; i < tags.length; i++){
+            tagsArray.push(<option value={tags[i].tagId}>{tags[i].name}</option>)
         }
 
         displayResult=(
@@ -135,7 +154,8 @@ export default function BookEdit(){
                             createDate: createDate,
                             note: book.note,
                             readingRecords: readingRecords.items,
-                            url: book.URL
+                            url: book.URL,
+                            tags: book.tags
                         }}
                         validate={values => {
                             const errors = {};
@@ -275,7 +295,8 @@ export default function BookEdit(){
                                                         <div class="row">
                                                             <Field name={`readingRecords.${index}.startDate`}>
                                                                 {({
-                                                                    field
+                                                                    field,
+                                                                    meta
                                                                 })=>(
                                                                     <div class="col">
                                                                         <input 
@@ -355,6 +376,81 @@ export default function BookEdit(){
                                 </ul>
                             )}                        
                         />
+
+                        <div class="row mt-4">
+                            <div class="col-md-auto">
+                                <FieldArray 
+                                    name="tags"
+                                    render={arrayHelpers => (
+                                        <ul class="list-group list-group-flush">
+                                            <label>Tags</label>
+                                                { 
+                                                    values.tags && values.tags.length > 0 ?
+                                                    (
+                                                        values.tags.map((tag, index) => (
+                                                                <li 
+                                                                    class="list-group-item" 
+                                                                    key={index}
+                                                                >
+                                                                    <div class="form-group" controlId="tags">
+                                                                        <div class="row">
+                                                                            <Field 
+                                                                                name={`tags.${index}.tagId`}
+                                                                                validate={validateTag}
+                                                                            >
+                                                                                {({
+                                                                                    field,
+                                                                                    meta
+                                                                                })=>(
+                                                                                    <div class="col-md-auto">
+                                                                                        <select 
+                                                                                            class="form-control" 
+                                                                                            as="select"
+                                                                                            {...field}   
+                                                                                        >   
+                                                                                            <option value='' >Select tag</option>
+                                                                                            {tagsArray}
+                                                                                        </select>
+                                                                                        { meta.error ? (
+                                                                                            <label className="text-danger">
+                                                                                                {meta.error}
+                                                                                            </label>
+                                                                                        ): null}
+                                                                                    </div>
+                                                                                )}
+                                                                            </Field>
+
+                                                                            <div class="col">
+                                                                                <button
+                                                                                    type="button"
+                                                                                    class="btn btn-danger"
+                                                                                    onClick={() => arrayHelpers.remove(index)}
+                                                                                >
+                                                                                -
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                        ))
+                                                    )
+                                                    : null
+                                                }
+
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <button 
+                                                            type="button" 
+                                                            class="btn btn-success mt-2"
+                                                            onClick={() => arrayHelpers.push({})}
+                                                        >+</button>
+                                                    </div>
+                                                </div>
+                                        </ul>
+                                    )}                        
+                                />
+                            </div>
+                        </div>
 
 
                         {/* <div class="form-group" controlId="note">

@@ -13,6 +13,7 @@ export default function ItemRow(props){
     const propsButtons = props.buttons;
     const propsChainData = props.chainData; 
     const propsNote = props.note;
+    const propsTags = props.tags;
     // ------------------------------------
 
     let chain; 
@@ -140,6 +141,11 @@ export default function ItemRow(props){
                             <div class="col ps-0 pt-1">
                                 <h6 class="font-weight-bold">{propsTitle}</h6>
                             </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                {propsTags}    
+                            </div>    
                         </div>
                         <div class="row">
                             <div class="col">                    

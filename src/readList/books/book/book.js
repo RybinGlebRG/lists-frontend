@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import SeriesListBlock from './SeriesListBlock'
 
 import ReadingRecordList from './ReadingRecordList';
+import TagsList from './TagsList';
 
 
 export default function Book(){
@@ -212,6 +213,13 @@ export default function Book(){
                                 </div>                            
                             </div> 
                             <ReadingRecordList bookId={store.bookId}/>
+
+                            <div class="row mt-2">
+                                <div class="col">
+                                    <h5>Tags</h5>
+                                </div>
+                            </div>
+                            <TagsList tags={book.tags}/>  
 
                         </div> 
                     </div>              

@@ -5,3 +5,5 @@ export const SHOW_BOOK_ADD = "SHOW_BOOK_ADD";
 export const SHOW_AUTHOR_LIST = "SHOW_AUTHOR_LIST";
 export const SHOW_AUTHOR = "SHOW_AUTHOR";
 export const SHOW_AUTHOR_ADD = "SHOW_AUTHOR_ADD";
+export const TAGS = "TAGS";
+export const TAGS_ADD = "TAGS_ADD";
