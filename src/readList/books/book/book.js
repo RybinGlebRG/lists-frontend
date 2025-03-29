@@ -212,7 +212,9 @@ export default function Book(){
                                     <p>{book.URL}</p>
                                 </div>                            
                             </div> 
-                            <ReadingRecordList bookId={store.bookId}/>
+                            <ReadingRecordList 
+                                readingRecords={book.readingRecords}
+                            />
 
                             <div class="row mt-2">
                                 <div class="col">
