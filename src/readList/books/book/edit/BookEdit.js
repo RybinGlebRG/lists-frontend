@@ -38,7 +38,7 @@ export default function BookEdit(){
     const [authorListError, authorListIsLoaded, authors] = useAuthorList({listId: store.listId});
     const [bookTypesError, bookTypesIsLoaded, bookTypes] = useBookTypes({listId: store.listId});
     const [bookStatusesError, bookStatusesIsLoaded, bookStatuses] = useBookStatuses({listId: store.listId});
-    const {readingRecordsError, readingRecordsIsLoaded, readingRecords, submitReadingRecords } = useReadingRecords({bookId: store.bookId});
+    // const {readingRecordsError, readingRecordsIsLoaded, readingRecords, submitReadingRecords } = useReadingRecords({bookId: store.bookId});
     const [tagsError, tagsIsLoaded, tags] = useTags();
 
 
@@ -49,6 +49,17 @@ export default function BookEdit(){
             return item.tagId
         })
 
+        let readingRecords = values.readingRecords.map(item => {
+            let res = {
+                readingRecordId: item.recordId,
+                statusId: item.bookStatus != null && item.bookStatus.statusId != null ? item.bookStatus.statusId : 1,
+                startDate: item.startDate,
+                endDate: item.endDate,
+                lastChapter: item.lastChapter
+            }
+            return res;
+        });
+
         let book = {
             readListId: store.listId,
             title: values.title,
@@ -57,7 +68,8 @@ export default function BookEdit(){
             insertDateUTC: dt, //this.props.store.book.insertDate
             note: values.note,
             URL: values.url,
-            tagIds: tagIds
+            tagIds: tagIds,
+            readingRecords: readingRecords
         }
 
         if (values.author != ""){
@@ -73,9 +85,9 @@ export default function BookEdit(){
             onUpdate: () => dispatch(openBook({bookId: store.bookId}))
         });
 
-        submitReadingRecords({
-            readingRecordsToUpdate: values.readingRecords
-        });
+        // submitReadingRecords({
+        //     readingRecordsToUpdate: values.readingRecords
+        // });
     }
 
     let displayResult;
@@ -153,7 +165,7 @@ export default function BookEdit(){
                             bookType: book.bookType ? book.bookType.typeId: null,
                             createDate: createDate,
                             note: book.note,
-                            readingRecords: readingRecords.items,
+                            readingRecords: book.readingRecords,
                             url: book.URL,
                             tags: book.tags
                         }}
