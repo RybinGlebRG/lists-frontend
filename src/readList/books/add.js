@@ -13,7 +13,7 @@ class BookAdd extends React.Component{
 		this.state={
 			error: null,
             authors:null,
-            series: null,
+            // series: null,
             isLoaded: false,
             bookTypes: null,
             bookStatuses: null
@@ -37,26 +37,26 @@ class BookAdd extends React.Component{
 
         let authors = await res.json();
 
-        res = await fetch(window.location.origin+`/api/v0.2/readLists/${this.props.store.readListId}/series`,
-		{
-			method: "GET",
-			headers: {
-				'Authorization': `Bearer ${this.props.store.JWT}`
-			}
-        });
-        if (!res.ok){
-            result=await res.json();
-            throw new Error('Error: '+result.error);
-        };
+        // res = await fetch(window.location.origin+`/api/v0.2/readLists/${this.props.store.readListId}/series`,
+		// {
+		// 	method: "GET",
+		// 	headers: {
+		// 		'Authorization': `Bearer ${this.props.store.JWT}`
+		// 	}
+        // });
+        // if (!res.ok){
+        //     result=await res.json();
+        //     throw new Error('Error: '+result.error);
+        // };
 
-        let series = await res.json()
+        // let series = await res.json()
 
         let bookTypes = await bookApi.getBookTypes(this.props.store.JWT,()=>{this.props.openSignIn()})
         let bookStatuses = await bookApi.getBookStatuses(this.props.store.JWT,()=>{this.props.openSignIn()})
 
         let out = {
             authors: authors.items,
-            series: series.items,
+            // series: series.items,
             bookTypes: bookTypes.items,
             bookStatuses: bookStatuses.items
         }
@@ -70,7 +70,7 @@ class BookAdd extends React.Component{
         .then(result =>{
             this.setState({
                 authors: result.authors,
-                series: result.series,
+                // series: result.series,
                 isLoaded: true,
                 bookTypes: result.bookTypes,
                 bookStatuses: result.bookStatuses
@@ -203,10 +203,10 @@ class BookAdd extends React.Component{
                 authorsItems.push(<option value={this.state.authors[i].authorId}>{this.state.authors[i].name}</option>)
             }
     
-            let seriesItems=[]
-            for (let i = 0; i < this.state.series.length; i++){
-                seriesItems.push(<option value={this.state.series[i].seriesId}>{this.state.series[i].title}</option>)
-            }
+            // let seriesItems=[]
+            // for (let i = 0; i < this.state.series.length; i++){
+            //     seriesItems.push(<option value={this.state.series[i].seriesId}>{this.state.series[i].title}</option>)
+            // }
 
             let bookTypes=[]
             for (let i = 0; i < this.state.bookTypes.length; i++){
