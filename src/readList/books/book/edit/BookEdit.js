@@ -154,335 +154,353 @@ export default function BookEdit(){
                 </div>
                 <div class="row">
                     <div class="col">
-                    <Formik
-                        initialValues={{ 
-                            title: book.title, 
-                            author: book.authors.length > 0 ? book.authors[0].authorId: null,
-                            status: book.bookStatus.statusId,
-                            // series: this.props.store.book.series.length > 0 ?this.props.store.book.series[0].seriesId: null,
-                            // order: this.props.store.book.series.length > 0 ? this.props.store.book.series[0].seriesOrder: null,
-                            lastChapter: book.lastChapter,
-                            bookType: book.bookType ? book.bookType.typeId: null,
-                            createDate: createDate,
-                            note: book.note,
-                            readingRecords: book.readingRecords,
-                            url: book.URL,
-                            tags: book.tags
-                        }}
-                        validate={values => {
-                            const errors = {};
-                            if (!values.title) {
-                                errors.title = 'Title must be set';
-                            }
-                            // if ((values.series && !values.order) || (values.order && !values.series)) {
-                            //     errors.series = 'Series and Order must be set together';
-                            //     errors.order = 'Series and Order must be set together';
-                            // }
-                            if (!values.status){
-                                errors.status = 'Status must be set';
-                            }
-        
-                            return errors;
-                        }}
-                        onSubmit={(values, {setSubmitting, resetForm}) => {
-                            setSubmitting(true);
-                            handleSaveValue(values);
-                            setSubmitting(false);
-                        }}
-                    >
-                    {({values,
-                  errors,
-                  touched,
-                  handleChange,
-                  handleBlur,
-                  handleSubmit,
-                  isSubmitting }) => (
-                    <form
-                    onSubmit={handleSubmit}
-                    >
-                        {console.log(values)}
-                        <div class="form-group" controlId="title">
-                            <label>Title</label>
-                            <input class="form-control" 
-                                type="text" 
-                                placeholder="Title"
-                                name="title"
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                value={values.title}
-                            />
-                            {touched.title && errors.title ? (
-                            <label className="text-danger">
-                                {errors.title}
-                            </label>
-                            ): null}
-                         </div>
-                        <div class="form-group" controlId="author">
-                            <label>Author</label >
-                            <select class="form-control" 
-                                as="select"
-                                name="author"
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                value={values.author}      
-                            >   
-                                <option value="" >--</option>
-                                {authorsItems}
-                            </select>
-                        </div>
+                        <Formik
+                            initialValues={{ 
+                                title: book.title, 
+                                author: book.authors.length > 0 ? book.authors[0].authorId: null,
+                                status: book.bookStatus.statusId,
+                                // series: this.props.store.book.series.length > 0 ?this.props.store.book.series[0].seriesId: null,
+                                // order: this.props.store.book.series.length > 0 ? this.props.store.book.series[0].seriesOrder: null,
+                                lastChapter: book.lastChapter,
+                                bookType: book.bookType ? book.bookType.typeId: null,
+                                createDate: createDate,
+                                note: book.note,
+                                readingRecords: book.readingRecords,
+                                url: book.URL,
+                                tags: book.tags
+                            }}
+                            validate={values => {
+                                const errors = {};
+                                // if (!values.title) {
+                                //     errors.title = 'Title must be set';
+                                // }
+                                // if ((values.series && !values.order) || (values.order && !values.series)) {
+                                //     errors.series = 'Series and Order must be set together';
+                                //     errors.order = 'Series and Order must be set together';
+                                // }
+                                // if (!values.status){
+                                //     errors.status = 'Status must be set';
+                                // }
+            
+                                return errors;
+                            }}
+                            onSubmit={(values, actions) => {
+                                actions.setSubmitting(true);
+                                console.log("HERE");
+                                handleSaveValue(values);
+                                actions.setSubmitting(false);
+                            }}
+                        >
+                        {({
+                            values,
+                            errors,
+                            touched,
+                            handleChange,
+                            handleBlur,
+                            handleSubmit,
+                            isSubmitting 
+                        }) => (
+                            <form
+                                onSubmit={handleSubmit}
+                                // onSubmit={() => console.log("HERE1")}
+                            >
+                                {console.log(values)}
 
-                        <div class="form-group" controlId="bookType">
-                            <label>Book Type</label >
-                            <select class="form-control" 
-                                as="select"
-                                name="bookType"
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                value={values.bookType}      
-                            >   
-                                <option value='' >--</option>
-                                {/* <option value="1">Book</option>
-                                <option value="2">Light Novel</option>
-                                <option value="3">Webtoon</option> */}
-                                {bookTypesArray}
-                            </select>
-                        </div>
-
-                        <div class="form-group" controlId="createDate">
-                            <label>Create date UTC</label>
-                            <input class="form-control" 
-                                type="datetime-local" 
-                                name="createDate"
-                                value={values.createDate}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                            />
-                        </div>
-
-                        <Field name="note">
-                            {({
-                                field
-                            })=>(
-                                <div class="form-group" controlId="note">
-                                    <label>Note</label>
-                                    <textarea
-                                        class="form-control" 
-                                        rows="3"
-                                        {...field}                             
-                                    />
-                                </div> 
-                            )}
-
-                        </Field>
-
-                        <Field name="url">
-                            {({
-                                field
-                            })=>(
-                                <div class="form-group" controlId="url">
-                                    <label>URL</label>
-                                    <input class="form-control" 
-                                        type="text" 
-                                        placeholder="URL"
-                                        {...field}  
-                                    />
-                                </div> 
-                            )}
-                        </Field>
-
-                        <FieldArray 
-                            name="readingRecords"
-                            render={arrayHelpers => (
-                                <ul class="list-group">
-                                    <label>Reading records</label>
-                                        { 
-                                            values.readingRecords && values.readingRecords.length > 0 ?
-                                            (
-                                                values.readingRecords.map((record, index) => (
-                                                <li 
-                                                    class="list-group-item p-0" 
-                                                    key={index}
-                                                >
-                                                    <div class="form-group" controlId="readingRecords">
-                                                        <div class="row">
-                                                            <Field name={`readingRecords.${index}.startDate`}>
-                                                                {({
-                                                                    field,
-                                                                    meta
-                                                                })=>(
-                                                                    <div class="col">
-                                                                        <input 
-                                                                            class="form-control" 
-                                                                            type="datetime-local" 
-                                                                            {...field}
-                                                                        />
-                                                                    </div>
-                                                                )}
-                                                            </Field>
-
-                                                            <Field name={`readingRecords.${index}.endDate`}>
-                                                                {({
-                                                                    field
-                                                                })=>(
-                                                                    <div class="col">
-                                                                        <input 
-                                                                            class="form-control" 
-                                                                            type="datetime-local" 
-                                                                            {...field}
-                                                                        />
-                                                                    </div>
-                                                                )}
-                                                            </Field>
-
-
-                                                            <Field name={`readingRecords.${index}.bookStatus.statusId`}>
-                                                                {({
-                                                                    field
-                                                                })=>(
-                                                                    <div class="col">
-                                                                        <select 
-                                                                            class="form-control" 
-                                                                            as="select"
-                                                                            {...field}   
-                                                                        >   
-                                                                            {bookStatusesArray}
-                                                                        </select>
-                                                                    </div>
-                                                                )}
-                                                            </Field>
-
-                                                            <Field name={`readingRecords.${index}.lastChapter`}>
-                                                                {({
-                                                                    field
-                                                                })=>(
-                                                                    <div class="col">
-                                                                        <input 
-                                                                            class="form-control" 
-                                                                            type="number" 
-                                                                            placeholder="Last chapter"
-                                                                            {...field}
-                                                                        />
-                                                                    </div>
-                                                                )}
-                                                            </Field>
-
-                                                            <div class="col">
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() => arrayHelpers.remove(index)}
-                                                                >
-                                                                -
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                ))
-                                            )
-                                            : null
+                                <Field 
+                                    name="title"
+                                    validate={value => {
+                                        let errorMessage;
+                                        if (!value) {
+                                            errorMessage = 'Title must be set';
                                         }
+                                        return errorMessage;
+                                    }}
+                                >
+                                    {({
+                                        field,
+                                        meta
+                                    })=>(                                        
+                                        <div class="mb-3">
+                                            <label for="titleInput" class="form-label">Title</label>
+                                            <input 
+                                                id="titleInput"
+                                                class="form-control" 
+                                                type="text" 
+                                                placeholder="Title"
+                                                {...field}
+                                            />
+                                            {meta.touched && meta.error && (
+                                                <label className="text-danger">{meta.error}</label>
+                                            )}
+                                        </div>
+                                    )}
+                                </Field>    
 
-                                        <button type="button" onClick={() => arrayHelpers.push({})}>
-                                            Add a record
-                                        </button>
-                                </ul>
-                            )}                        
-                        />
 
-                        <div class="row mt-4">
-                            <div class="col-md-auto">
+                                <div class="form-group" controlId="author">
+                                    <label>Author</label >
+                                    <select class="form-control" 
+                                        as="select"
+                                        name="author"
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        value={values.author}      
+                                    >   
+                                        <option value="" >--</option>
+                                        {authorsItems}
+                                    </select>
+                                </div>
+
+                                <div class="form-group" controlId="bookType">
+                                    <label>Book Type</label >
+                                    <select class="form-control" 
+                                        as="select"
+                                        name="bookType"
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        value={values.bookType}      
+                                    >   
+                                        <option value='' >--</option>
+                                        {/* <option value="1">Book</option>
+                                        <option value="2">Light Novel</option>
+                                        <option value="3">Webtoon</option> */}
+                                        {bookTypesArray}
+                                    </select>
+                                </div>
+
+                                <div class="form-group" controlId="createDate">
+                                    <label>Create date UTC</label>
+                                    <input class="form-control" 
+                                        type="datetime-local" 
+                                        name="createDate"
+                                        value={values.createDate}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                    />
+                                </div>
+
+                                <Field name="note">
+                                    {({
+                                        field
+                                    })=>(
+                                        <div class="form-group" controlId="note">
+                                            <label>Note</label>
+                                            <textarea
+                                                class="form-control" 
+                                                rows="3"
+                                                {...field}                             
+                                            />
+                                        </div> 
+                                    )}
+
+                                </Field>
+
+                                <Field name="url">
+                                    {({
+                                        field
+                                    })=>(
+                                        <div class="form-group" controlId="url">
+                                            <label>URL</label>
+                                            <input class="form-control" 
+                                                type="text" 
+                                                placeholder="URL"
+                                                {...field}  
+                                            />
+                                        </div> 
+                                    )}
+                                </Field>
+
                                 <FieldArray 
-                                    name="tags"
+                                    name="readingRecords"
                                     render={arrayHelpers => (
-                                        <ul class="list-group list-group-flush">
-                                            <label>Tags</label>
+                                        <ul class="list-group">
+                                            <label>Reading records</label>
                                                 { 
-                                                    values.tags && values.tags.length > 0 ?
+                                                    values.readingRecords && values.readingRecords.length > 0 ?
                                                     (
-                                                        values.tags.map((tag, index) => (
-                                                                <li 
-                                                                    class="list-group-item" 
-                                                                    key={index}
-                                                                >
-                                                                    <div class="form-group" controlId="tags">
-                                                                        <div class="row">
-                                                                            <Field 
-                                                                                name={`tags.${index}.tagId`}
-                                                                                validate={validateTag}
-                                                                            >
-                                                                                {({
-                                                                                    field,
-                                                                                    meta
-                                                                                })=>(
-                                                                                    <div class="col-md-auto">
-                                                                                        <select 
-                                                                                            class="form-control" 
-                                                                                            as="select"
-                                                                                            {...field}   
-                                                                                        >   
-                                                                                            <option value='' >Select tag</option>
-                                                                                            {tagsArray}
-                                                                                        </select>
-                                                                                        { meta.error ? (
-                                                                                            <label className="text-danger">
-                                                                                                {meta.error}
-                                                                                            </label>
-                                                                                        ): null}
-                                                                                    </div>
-                                                                                )}
-                                                                            </Field>
-
+                                                        values.readingRecords.map((record, index) => (
+                                                        <li 
+                                                            class="list-group-item p-0" 
+                                                            key={index}
+                                                        >
+                                                            <div class="form-group" controlId="readingRecords">
+                                                                <div class="row">
+                                                                    <Field name={`readingRecords.${index}.startDate`}>
+                                                                        {({
+                                                                            field,
+                                                                            meta
+                                                                        })=>(
                                                                             <div class="col">
-                                                                                <button
-                                                                                    type="button"
-                                                                                    class="btn btn-danger"
-                                                                                    onClick={() => arrayHelpers.remove(index)}
-                                                                                >
-                                                                                -
-                                                                                </button>
+                                                                                <input 
+                                                                                    class="form-control" 
+                                                                                    type="datetime-local" 
+                                                                                    {...field}
+                                                                                />
                                                                             </div>
-                                                                        </div>
+                                                                        )}
+                                                                    </Field>
+
+                                                                    <Field name={`readingRecords.${index}.endDate`}>
+                                                                        {({
+                                                                            field
+                                                                        })=>(
+                                                                            <div class="col">
+                                                                                <input 
+                                                                                    class="form-control" 
+                                                                                    type="datetime-local" 
+                                                                                    {...field}
+                                                                                />
+                                                                            </div>
+                                                                        )}
+                                                                    </Field>
+
+
+                                                                    <Field name={`readingRecords.${index}.bookStatus.statusId`}>
+                                                                        {({
+                                                                            field
+                                                                        })=>(
+                                                                            <div class="col">
+                                                                                <select 
+                                                                                    class="form-control" 
+                                                                                    as="select"
+                                                                                    {...field}   
+                                                                                >   
+                                                                                    {bookStatusesArray}
+                                                                                </select>
+                                                                            </div>
+                                                                        )}
+                                                                    </Field>
+
+                                                                    <Field name={`readingRecords.${index}.lastChapter`}>
+                                                                        {({
+                                                                            field
+                                                                        })=>(
+                                                                            <div class="col">
+                                                                                <input 
+                                                                                    class="form-control" 
+                                                                                    type="number" 
+                                                                                    placeholder="Last chapter"
+                                                                                    {...field}
+                                                                                />
+                                                                            </div>
+                                                                        )}
+                                                                    </Field>
+
+                                                                    <div class="col">
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => arrayHelpers.remove(index)}
+                                                                        >
+                                                                        -
+                                                                        </button>
                                                                     </div>
-                                                                </li>
+                                                                </div>
+                                                            </div>
+                                                        </li>
                                                         ))
                                                     )
                                                     : null
                                                 }
 
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <button 
-                                                            type="button" 
-                                                            class="btn btn-success mt-2"
-                                                            onClick={() => arrayHelpers.push({})}
-                                                        >+</button>
-                                                    </div>
-                                                </div>
+                                                <button type="button" onClick={() => arrayHelpers.push({})}>
+                                                    Add a record
+                                                </button>
                                         </ul>
                                     )}                        
                                 />
-                            </div>
-                        </div>
+
+                                <div class="row mt-4">
+                                    <div class="col-md-auto">
+                                        <FieldArray 
+                                            name="tags"
+                                            render={arrayHelpers => (
+                                                <ul class="list-group list-group-flush">
+                                                    <label>Tags</label>
+                                                        { 
+                                                            values.tags && values.tags.length > 0 ?
+                                                            (
+                                                                values.tags.map((tag, index) => (
+                                                                        <li 
+                                                                            class="list-group-item" 
+                                                                            key={index}
+                                                                        >
+                                                                            <div class="form-group" controlId="tags">
+                                                                                <div class="row">
+                                                                                    <Field 
+                                                                                        name={`tags.${index}.tagId`}
+                                                                                        validate={validateTag}
+                                                                                    >
+                                                                                        {({
+                                                                                            field,
+                                                                                            meta
+                                                                                        })=>(
+                                                                                            <div class="col-md-auto">
+                                                                                                <select 
+                                                                                                    class="form-control" 
+                                                                                                    as="select"
+                                                                                                    {...field}   
+                                                                                                >   
+                                                                                                    <option value='' >Select tag</option>
+                                                                                                    {tagsArray}
+                                                                                                </select>
+                                                                                                { meta.error ? (
+                                                                                                    <label className="text-danger">
+                                                                                                        {meta.error}
+                                                                                                    </label>
+                                                                                                ): null}
+                                                                                            </div>
+                                                                                        )}
+                                                                                    </Field>
+
+                                                                                    <div class="col">
+                                                                                        <button
+                                                                                            type="button"
+                                                                                            class="btn btn-danger"
+                                                                                            onClick={() => arrayHelpers.remove(index)}
+                                                                                        >
+                                                                                        -
+                                                                                        </button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </li>
+                                                                ))
+                                                            )
+                                                            : null
+                                                        }
+
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <button 
+                                                                    type="button" 
+                                                                    class="btn btn-success mt-2"
+                                                                    onClick={() => arrayHelpers.push({})}
+                                                                >+</button>
+                                                            </div>
+                                                        </div>
+                                                </ul>
+                                            )}                        
+                                        />
+                                    </div>
+                                </div>
 
 
-                        {/* <div class="form-group" controlId="note">
-                                <label>Reading records REAL</label>
-                                <ReadingRecordList
-                                    list={values.readingRecords}
-                                    handleChange={handleChange}
-                                />
-                            </div> */}
+                                {/* <div class="form-group" controlId="note">
+                                        <label>Reading records REAL</label>
+                                        <ReadingRecordList
+                                            list={values.readingRecords}
+                                            handleChange={handleChange}
+                                        />
+                                    </div> */}
 
-                        <button  class="btn btn-primary mt-4"
-                            // variant="primary" 
-                            type="submit"
-                            disabled={isSubmitting}
-                        >
-                            Submit
-                        </button>
-                        </form>
-                    )}
-                    </Formik>
+                                <button  
+                                    class="btn btn-primary mt-4"
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                >Submit</button>
+                            </form>
+                        )}
+                        </Formik>
                     </div>
                 </div>
             </div>
