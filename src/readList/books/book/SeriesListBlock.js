@@ -8,7 +8,7 @@ export default function SeriesListBlock(props){
     const seriesList = props.seriesList;
 
     let display;
-    if (seriesList.length > 0){
+    if (seriesList && seriesList.length > 0){
         display = seriesList.map(item=>{
             return (
                 <div class="row">
@@ -31,6 +31,7 @@ export default function SeriesListBlock(props){
             )
         })
     } else {
+        display = (
         <div class="row">
             <div 
                 class="col ml-2"
@@ -38,6 +39,7 @@ export default function SeriesListBlock(props){
                 <p>--</p>
             </div> 
         </div>
+        )
     }
     return (
         <div>

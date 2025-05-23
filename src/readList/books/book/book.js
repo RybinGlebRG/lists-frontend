@@ -105,7 +105,7 @@ export default function Book(){
                             <div class="row border-bottom">
                                 <div class="col ml-2">
                                     {/* <p>{this.state.data.book.author ? this.state.data.book.author.name : "N/A"}</p> */}
-                                    <p>{book.authors.length > 0 ? book.authors[0].name : "N/A"}</p>
+                                    <p>{book.textAuthors.length > 0 ? book.textAuthors[0].name : "--"}</p>
                                 </div>                            
                             </div>
                             <div class="row mt-2">
@@ -126,41 +126,11 @@ export default function Book(){
                             </div>
                             <div class="row border-bottom">
                              <div class="col ml-2">
-                                {/* {
-                                    this.state.data.seriesList.length > 0 ? (
-                                        <div class="col ml-2">
-                                            <a 
-                                                href="#"
-                                                role="button"
-                                                onClick={() => {
-                                                    this.props.openSeriesItem(this.state.data.seriesList[0].seriesId);
-                                                }}
-                                            ><p>{this.state.data.series[0].title}</p></a>
-                                        </div>
-                                    ) : (
-                                        <div 
-                                            class="col ml-2"
-                                        >
-                                            <p>--</p>
-                                        </div> 
-                                    )
-                                }       */}
                                 <SeriesListBlock
                                     seriesList={book.seriesList}
                                 />
                                 </div>                     
                             </div> 
-                            {/* <div class="row  mt-2">
-                                <div class="col">
-                                    <h5>Order</h5>
-                                </div>
-                            </div> */}
-                            {/* <div class="row border-bottom">
-                                <div class="col ml-2">
-                                    <p>{this.state.data.series.length > 0 ? this.state.data.series[0].seriesOrder: "N/A"}</p>
-                                
-                                </div>                            
-                            </div>  */}
                             <div class="row  mt-2">
                                 <div class="col">
                                     <h5>Last chapter</h5>
@@ -168,7 +138,7 @@ export default function Book(){
                             </div>
                             <div class="row border-bottom">
                                 <div class="col ml-2">
-                                    <p>{book.lastChapter ? book.lastChapter:"N/A"}</p>
+                                    <p>{book.lastChapter ? book.lastChapter:"--"}</p>
                                 </div>                            
                             </div> 
                             <div class="row  mt-2">
@@ -199,7 +169,7 @@ export default function Book(){
                             </div>
                             <div class="row border-bottom">
                                 <div class="col ml-2">
-                                    <p>{book.note}</p>
+                                    <p>{book.note ? book.note : "--"}</p>
                                 </div>                            
                             </div> 
                             <div class="row mt-2">
@@ -209,7 +179,7 @@ export default function Book(){
                             </div>
                             <div class="row border-bottom">
                                 <div class="col ml-2">
-                                    <p>{book.URL}</p>
+                                    <p>{book.URL ? book.URL : "--"}</p>
                                 </div>                            
                             </div> 
                             <ReadingRecordList 

@@ -157,7 +157,7 @@ export default function BookEdit(){
                         <Formik
                             initialValues={{ 
                                 title: book.title, 
-                                author: book.authors.length > 0 ? book.authors[0].authorId: null,
+                                author: book.textAuthors.length > 0 ? book.textAuthors[0].authorId: null,
                                 status: book.bookStatus.statusId,
                                 // series: this.props.store.book.series.length > 0 ?this.props.store.book.series[0].seriesId: null,
                                 // order: this.props.store.book.series.length > 0 ? this.props.store.book.series[0].seriesOrder: null,
