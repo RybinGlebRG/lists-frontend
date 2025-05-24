@@ -30,10 +30,27 @@ export default function useAuthorList(){
         });
     },[]);
 
+    let addAuthor = ({body, onExecute}) => {
+        authorsApi.addAuthor(store.JWT, store.userId, body, ()=> dispatch(openSignIn()))
+        .then(authors =>{
+            setError(null);
+            setIsLoaded(true);
+            if (onExecute) {
+                onExecute();
+            }
+        })
+        .catch(
+            error => {
+                setError(error.message);
+                setIsLoaded(true);
+        });
+    }
+
     const res= [
         error,
         isLoaded,
-        authors
+        authors,
+        addAuthor
     ]
 
     return res;

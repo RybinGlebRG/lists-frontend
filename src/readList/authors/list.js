@@ -1,8 +1,9 @@
 import ListGroup from 'react-bootstrap/ListGroup';
-import {openAuthor, openAuthorAdd} from '../../redux/actionCreators';
 import Header from '../../common/header'
 import { useSelector, useDispatch } from 'react-redux'
 import useAuthorList from './useAuthorsList';
+import {openAuthor, openAuthorAdd} from '../books/booksSlice'
+import { setAuthorId } from './authorsSlice';
 
 export default function AuthorList() {
 	const dispatch = useDispatch();
@@ -34,7 +35,8 @@ export default function AuthorList() {
 							<li class="list-group-item d-flex justify-content-between list-group-item-action" 
 								action 
 								onClick={() => {
-									dispatch(openAuthor(item.authorId));
+									dispatch(setAuthorId({authorId: item.authorId}));
+									dispatch(openAuthor());
 								}}						
 							>
 								{item.name}

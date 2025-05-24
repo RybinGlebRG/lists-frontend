@@ -186,7 +186,6 @@ export default function BookEdit(){
                             }}
                             onSubmit={(values, actions) => {
                                 actions.setSubmitting(true);
-                                console.log("HERE");
                                 handleSaveValue(values);
                                 actions.setSubmitting(false);
                             }}
