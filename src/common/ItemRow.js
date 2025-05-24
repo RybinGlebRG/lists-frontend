@@ -14,6 +14,8 @@ export default function ItemRow(props){
     const propsChainData = props.chainData; 
     const propsNote = props.note;
     const propsTags = props.tags;
+    const propsAuthors = props.authors;
+    const propsUpdated = props.updated;
     // ------------------------------------
 
     let chain; 
@@ -115,18 +117,26 @@ export default function ItemRow(props){
     })
 
     let note;
-
-    if (props.note !== undefined){
-        note = (
-            <div class="col">       
-                <div class="row justify-content-between p-3 w-100 h-100">
-                    <div class="col border-start">
-                        <p><u>Note</u></p>
-                        <p>{propsNote}</p>
-                    </div>
+    let content = "--";
+    if (props.note) {
+        content = propsNote;
+    }
+    note = (
+        <div class="col">       
+            <div class="row justify-content-between p-3 w-100 h-100">
+                <div class="col">
+                    <p><u>Note</u></p>
+                    <p>{content}</p>
                 </div>
             </div>
-        )
+        </div>
+    )
+    
+
+    let authors = "";
+    if (propsAuthors && propsAuthors.length > 0) {
+        let names = propsAuthors.map(item => item.name);
+        authors = `[${names.join(", ")}]`;
     }
 
     return (
@@ -134,12 +144,19 @@ export default function ItemRow(props){
             <div class="col">
                 <div class="row" >
                     <div class="col">
-                        <div class="row justify-content-between p-3">
+                        <div class="row justify-content-left p-3">
                             <div class="col-auto">
                                 {propsStatusIcon}
                             </div>
                             <div class="col ps-0 pt-1">
-                                <h6 class="font-weight-bold">{propsTitle}</h6>
+                                <div class="row">
+                                    <div class="col-md-auto border-end">
+                                        <h6 class="font-weight-bold">{`${authors} ${propsTitle}`}</h6>
+                                    </div>
+                                    <div class="col-md-auto">
+                                        {`Updated: ${propsUpdated}`}
+                                    </div>
+                                </div>                
                             </div>
                         </div>
                         <div class="row">
@@ -148,13 +165,12 @@ export default function ItemRow(props){
                             </div>    
                         </div>
                         <div class="row">
-                            <div class="col">                    
+                            {note}
+                            <div class="col border-start">                    
                                 <div  class="row justify-content-between p-3">
                                     {propsData}
                                 </div>
                             </div>
-                            {note}
-                            
                         </div>
                         
                     </div>
