@@ -68,9 +68,6 @@ export default function Table(props){
 									<div class="col">Last chapter: {item.lastChapter}</div>
 								</div>
 								): null}
-								<div class="row">
-									<div class="col">Added: {dateUtils.formatToDisplay(item.insertDate)}</div>
-								</div>
 							</div>
 						)
 
@@ -162,6 +159,8 @@ export default function Table(props){
 								status = statuses.getStatusSVG({statusName: "_fallback"});
 							}
 
+						let updated = dateUtils.formatToDisplay(item.lastUpdateDate);	
+
 						return (
 							<li class="list-group-item p-0">
 								<ItemRow
@@ -172,6 +171,8 @@ export default function Table(props){
 									chainData={chain}
 									note={item.note}
 									tags={tags}
+									authors={item.textAuthors}
+									updated={updated}
 								/>
 							</li>
 						)
