@@ -1,138 +1,109 @@
 import React from 'react';
 import {openSignIn} from '../../redux/actionCreators';
 import { connect } from 'react-redux';
-import { Formik} from 'formik';
+import { Formik, Field} from 'formik';
 import {openAuthorList} from '../books/booksSlice'
+import { useSelector, useDispatch } from 'react-redux'
 
+import useAuthorList from './useAuthorsList';
 
-class AuthorAdd extends React.Component{
-    constructor(props){
-		super(props);
-		this.state={
-			isLoaded:false,
-			data:null,
-			error:null
-		};
-	}
+export default function AuthorAdd() {
 
-    async addAuthorAsync(values){
-		let res = await fetch(window.location.origin+`/api/v0.2/readLists/${this.props.store.listId}/authors`,
-		{
-			method: "POST",
-			headers: {
-                'Content-Type': 'application/json;charset=utf-8',
-				'Authorization': 'Bearer '+this.props.store.JWT
-			},
-            body: JSON.stringify(values)
-		});
-		if (!res.ok){
-            throw new Error('Some network error');
-        };	
+    const dispatch = useDispatch();
 
-        return res;
-	}
+    const [error, isLoaded, authors, addAuthor] = useAuthorList();
 
-    addAuthor(values){
-        this.addAuthorAsync(values)
-        .then(res=>{
-			this.props.openAuthorList();
-		})
-        .catch(err=>{
-			this.setState({
-				isLoaded:true,
-				error:err.message
-			});
-		});
-    }
+    let result;
 
-
-
-    render(){
-        let displayPanel;
-        let alert;
-        if (this.state.error){
-            displayPanel=(
-                <div class="alert alert-danger" role="alert">{this.state.error}</div>
-            )
-        } else {
-            displayPanel=(
-                        <Formik
-                            initialValues={{ 
-                                name: null
-                            }}
-                            validate={values => {
-                                const errors = {};
-                                if (!values.name) {
-                                    errors.name = 'Name must be set';
-                                }
-                                return errors;
-                            }}
-                            onSubmit={(values, {setSubmitting, resetForm}) => {
-                                setSubmitting(true);
-                                this.addAuthor(values);
-                                setSubmitting(false);
-                            }}
-                        >
-                        {({values,
-                      errors,
-                      touched,
-                      handleChange,
-                      handleBlur,
-                      handleSubmit,
-                      isSubmitting }) => (
-                        <form
-                        onSubmit={handleSubmit}
-                        >
-                            {console.log(values)}
-                            <div class="form-group" controlId="name">
-                                <label>Name</label>
-                                <input class="form-control" 
+	if (error){
+        result=( <div class="alert alert-danger" role="alert">{error}</div>);
+    } else if (!isLoaded){
+        result=( 
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border m-5" role="status">
+                    <span class="sr-only"/>
+                </div>
+            </div>
+        );
+    } else {
+        result=(
+            <Formik
+                initialValues={{ 
+                    name: null
+                }}
+                validate={values => {
+                    const errors = {};
+                    if (!values.name) {
+                        errors.name = 'Name must be set';
+                    }
+                    return errors;
+                }}
+                onSubmit={(values, {setSubmitting, resetForm}) => {
+                    setSubmitting(true);
+                    addAuthor({
+                        body: values, 
+                        onExecute: () => dispatch(openAuthorList())
+                    });
+                    setSubmitting(false);
+                }}
+            >
+            {({
+                values,
+                errors,
+                touched,
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                isSubmitting 
+            }) => (
+                <form
+                    onSubmit={handleSubmit}
+                >
+                    {console.log(values)}
+                    <Field 
+                        name="name"
+                        validate={value => {
+                            let errorMessage;
+                            if (!value) {
+                                errorMessage = 'Name must be set';
+                            }
+                            return errorMessage;
+                        }}
+                    >
+                        {({
+                            field,
+                            meta
+                        })=>(                                        
+                            <div class="mb-3">
+                                <label for="nameInput" class="form-label">Name</label>
+                                <input 
+                                    id="nameInput"
+                                    class="form-control" 
                                     type="text" 
                                     placeholder="Name"
-                                    name="name"
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    value={values.name}
+                                    {...field}
                                 />
-                                {touched.name && errors.name ? (
-                                <label className="text-danger">
-                                    {errors.name}
-                                </label>
-                                ): null}
+                                {meta.error  && (
+                                    <label className="text-danger">{meta.error}</label>
+                                )}
                             </div>
-                            <button  class="btn btn-primary"
-                                // variant="primary" 
-                                type="submit"
-                                disabled={isSubmitting}
-                            >
-                                Submit
-                            </button>
-                            </form>
                         )}
-                        </Formik>
-            )
-        }
-        return(
-            <div>
-            {displayPanel}
-            </div>
+                    </Field>  
+
+                    <button  
+                        class="btn btn-primary"
+                        type="submit"
+                        disabled={isSubmitting}
+                    >Submit</button>
+                </form>
+            )}
+            </Formik>
         )
     }
 
-    
-
-
+    return (
+        <div>
+          {result}
+        </div>
+    )
 }
-
-const mapStatetoProps = (state) => {
-	return {
-		store: {
-			JWT: state.listsReducer.JWT,
-			listId: state.listsReducer.listId
-		}
-	};
-}
-export default connect(
-	mapStatetoProps,
-	{ openSignIn,openAuthorList}
-  )(AuthorAdd)

@@ -5,7 +5,7 @@ import Book from './books/book/book.js'
 import BookAdd from './books/add.js'
 import BookEdit from './books/book/edit/BookEdit.js'
 import AuthorList from './authors/list.js'
-import Author from './authors/view.js'
+import Author from './authors/Author.js'
 import AuthorAdd from './authors/add.js'
 import TagsList from '../tags/TagsList.js';
 import TagsAdd from '../tags/TagsAdd.js';

@@ -1,24 +1,22 @@
 import {useState, useEffect} from 'react';
-import * as bookApi from '../books/book/bookApi'
 import * as authorsApi from './authorsApi'
 import {openSignIn} from '../../displayAreaSlice'
 import { useSelector, useDispatch } from 'react-redux'
 
-export default function useAuthorList({listId}){
+export default function useAuthorList(){
     const dispatch = useDispatch();
-
-    const [stateListId] = useState(listId);
 
 	const [error, setError] = useState(null);
 	const [isLoaded, setIsLoaded] = useState(false);
 	const [authors, setAuthors] = useState(null);
 	
     let store={
-        JWT: useSelector(state=>state.listsReducer.JWT)
+        JWT: useSelector(state=>state.listsReducer.JWT),
+        userId: useSelector(state=>state.listsReducer.userId)
     }
 
     useEffect(()=>{
-        authorsApi.getAuthors(store.JWT, stateListId, ()=> dispatch(openSignIn()))
+        authorsApi.getAuthors(store.JWT, store.userId, ()=> dispatch(openSignIn()))
         .then(authors =>{
             setError(null);
             setAuthors(authors.items);
@@ -30,12 +28,29 @@ export default function useAuthorList({listId}){
                 setAuthors(null);
                 setIsLoaded(true);
         });
-    },[stateListId]);
+    },[]);
+
+    let addAuthor = ({body, onExecute}) => {
+        authorsApi.addAuthor(store.JWT, store.userId, body, ()=> dispatch(openSignIn()))
+        .then(authors =>{
+            setError(null);
+            setIsLoaded(true);
+            if (onExecute) {
+                onExecute();
+            }
+        })
+        .catch(
+            error => {
+                setError(error.message);
+                setIsLoaded(true);
+        });
+    }
 
     const res= [
         error,
         isLoaded,
-        authors
+        authors,
+        addAuthor
     ]
 
     return res;
