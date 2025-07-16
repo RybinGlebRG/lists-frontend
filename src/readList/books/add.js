@@ -22,7 +22,7 @@ class BookAdd extends React.Component{
     }
 
     async loadData(){
-        let res = await fetch(window.location.origin+`/api/v0.2/readLists/${this.props.store.readListId}/authors`,
+        let res = await fetch(window.location.origin+`/api/v1/users/${this.props.store.userId}/authors`,
 		{
 			method: "GET",
 			headers: {
@@ -477,7 +477,8 @@ const mapStatetoProps = (state) => {
 	return {
 		store: {
 			JWT: state.listsReducer.JWT,
-			readListId: state.listsReducer.listId
+			readListId: state.listsReducer.listId,
+			userId: state.listsReducer.userId
 		}
 	};
 }
