@@ -6,7 +6,7 @@ import BookAdd from './books/add.js'
 import BookEdit from './books/edit.js'
 import AuthorList from './authors/list.js'
 import Author from './authors/view.js'
-import AuthorAdd from './authors/add.js'
+import AuthorAdd from './authors/add'
 import * as bookForms from './books/forms.js'
 import { useSelector } from 'react-redux'
 

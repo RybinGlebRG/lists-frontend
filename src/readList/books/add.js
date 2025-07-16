@@ -6,6 +6,7 @@ import * as bookApi from './bookApi'
 import * as common from '../../common/common'
 import * as dateUtils from '../../utils/dateUtils'
 import {openBookList} from './booksSlice'
+import * as authorsApi from '../authors/authorsApiV1'
 
 class BookAdd extends React.Component{
 	constructor(props){
@@ -22,22 +23,16 @@ class BookAdd extends React.Component{
     }
 
     async loadData(){
-        let res = await fetch(window.location.origin+`/api/v0.2/readLists/${this.props.store.readListId}/authors`,
-		{
-			method: "GET",
-			headers: {
-				'Authorization': `Bearer ${this.props.store.JWT}`
-			}
-        });
-        let result;
-        if (!res.ok){
-            result=await res.json();
-            throw new Error('Error: '+result.error);
-        };
+        // let authors = authorsApi.getAuthors(this.props.store.JWT, this.props.store.readListId, ()=>{this.props.openSignIn()});
 
-        let authors = await res.json();
+        const authorGetParams = {
+            JWT: this.props.store.JWT,
+            userId: this.props.store.userId,
+            onUnauthorized: ()=>{this.props.openSignIn()}
+        }
+        let authors = await authorsApi.getAuthors(authorGetParams);
 
-        res = await fetch(window.location.origin+`/api/v0.2/readLists/${this.props.store.readListId}/series`,
+        let res = await fetch(window.location.origin+`/api/v0.2/readLists/${this.props.store.readListId}/series`,
 		{
 			method: "GET",
 			headers: {
@@ -45,7 +40,7 @@ class BookAdd extends React.Component{
 			}
         });
         if (!res.ok){
-            result=await res.json();
+            let result=await res.json();
             throw new Error('Error: '+result.error);
         };
 
@@ -461,7 +456,8 @@ const mapStatetoProps = (state) => {
 	return {
 		store: {
 			JWT: state.listsReducer.JWT,
-			readListId: state.listsReducer.listId
+			readListId: state.listsReducer.listId,
+            userId: state.listsReducer.userId
 		}
 	};
 }
