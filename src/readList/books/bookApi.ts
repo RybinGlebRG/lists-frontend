@@ -43,8 +43,8 @@ export async function getBookTypes(JWT, onUnauthorized){
     return bookTypes;   
 }
 
-export async function searchBooks(JWT,readListId, body, onUnauthorized){
-    let res = await fetch(window.location.origin+`/api/v0.2/readLists/${readListId}/books/search`,
+export async function searchBooks(JWT,userId, body, onUnauthorized){
+    let res = await fetch(window.location.origin+`/api/v1/users/${userId}/books/search`,
     {
         method: "POST",
         headers: {
