@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import * as bookApi from '../bookApi'
+import * as bookApi from '../api/bookApi'
 import {openSignIn} from '../../../displayAreaSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -8,6 +8,9 @@ import {
     switchListOrdering, 
     openBookAdd
 } from '../booksSlice'
+import Filter from '../api/Filter';
+import SortField from '../api/SortField';
+import SearchBooksRequest from '../api/SearchBooksRequest'
 
 interface SearchBody {
 	sort: [
@@ -20,38 +23,38 @@ interface SearchBody {
 	filters: any[] | null
 }
 
-async function loadData(listOrdering: string, bookStatuses: any[], JWT: string, userId: number, onUnauthorized, title: string){
-	let body: SearchBody ={
-			sort:[{
-				field:"createDate",
-				ordering: listOrdering
-			}],
-			isChainBySeries: true,
-			filters: null
-		}
-	let filters: any[] = [];
+async function loadData(listOrdering: string, bookStatuses: any[], JWT: string, userId: number, onUnauthorized: () => void, title: string){
+
+	// Add filters
+	let filters: Filter[] = [];
 	if (bookStatuses != null){
-		filters.push({
-			"field": "bookStatusIds",
-			"values": bookStatuses
+		filters.push(new Filter(
+			"bookStatusIds",
+			bookStatuses
 				.filter(item => item.checked)
 				.map(item => item.statusId.toString())
-		});
+		));
 	}
 	if (title != null && title.length > 0){
-		filters.push({
-			"field": "titles",
-			"values": [title]
-		});
+		filters.push(new Filter(
+			"titles",
+			[title]
+		));
 	}
-	if (filters.length > 0){
-		body={
-			...body,
-			filters: filters
-		}
-	}
+	
+	// Add sorting
+	const sortFields: SortField[] = [];
+	sortFields.push(new SortField("createDate", listOrdering));
 
-	let bookList = await bookApi.searchBooks(JWT, userId, body, onUnauthorized)	
+
+	const searchBooksRequest = new SearchBooksRequest(
+		userId,
+		sortFields,
+		true,
+		filters,
+		JWT
+	);
+	let bookList = await bookApi.searchBooks(searchBooksRequest, onUnauthorized)	
 	return bookList;
 }
 

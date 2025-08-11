@@ -6,7 +6,7 @@ import {
 } from '../redux/actionCreators'
 import { Formik} from 'formik';
 import {getAuthors} from '../readList/authors/authorsApi'
-import {postBooks, getBookTypes} from '../readList/books/bookApi'
+import {postBooks, getBookTypes} from '../readList/books/api/bookApi'
 import  {loadSeriesItem} from './seriesApi'
 import {
     openSeriesItem

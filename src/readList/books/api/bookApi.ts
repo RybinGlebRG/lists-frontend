@@ -1,12 +1,13 @@
-import * as commonApi from '../../common/commonApi'
+import * as commonApi from '../../../common/commonApi'
+import GetBookRequest from './GetBookRequest';
+import SearchBooksRequest from './SearchBooksRequest';
 
-
-export async function loadBook(JWT, listId, bookId, onUnauthorized){
-    let res = await fetch(window.location.origin+`/api/v0.2/readLists/${listId}/books/${bookId}`,
+export async function loadBook(getBookRequest: GetBookRequest, onUnauthorized: () => void){
+    let res = await fetch(window.location.origin+`/api/v1/users/${getBookRequest.userId}/books/${getBookRequest.bookId}`,
     {
         method: "GET",
         headers: {
-            'Authorization': `Bearer ${JWT}`
+            'Authorization': `Bearer ${getBookRequest.JWT}`
         }
     });
     await commonApi.checkError(res, onUnauthorized);
@@ -43,15 +44,15 @@ export async function getBookTypes(JWT, onUnauthorized){
     return bookTypes;   
 }
 
-export async function searchBooks(JWT,userId, body, onUnauthorized){
-    let res = await fetch(window.location.origin+`/api/v1/users/${userId}/books/search`,
+export async function searchBooks(searchBooksRequest: SearchBooksRequest, onUnauthorized: () => void){
+    let res = await fetch(window.location.origin+`/api/v1/users/${searchBooksRequest.userId}/books/search`,
     {
         method: "POST",
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
-            'Authorization': `Bearer ${JWT}`
+            'Authorization': `Bearer ${searchBooksRequest.JWT}`
         },
-        body: JSON.stringify(body)
+        body: searchBooksRequest.toJsonBody()
     });
     await commonApi.checkError(res, onUnauthorized);
     let bookList = await res.json();

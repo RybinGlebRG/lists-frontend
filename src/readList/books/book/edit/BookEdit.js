@@ -1,20 +1,20 @@
 import { useSelector, useDispatch } from 'react-redux'
 import {useState, useEffect} from 'react';
-import useBook from '../useBook.js';
+import useBook from '../useBook';
 import useAuthorList from '../../../authors/useAuthorsList.js';
 import { selectBookId } from '../../booksSlice.js';
-import useBookTypes from '../useBookTypes.js';
-import useBookStatuses from '../useBookStatuses.js';
+import useBookTypes from '../../book/useBookTypes.js';
+import useBookStatuses from '../../book/useBookStatuses.js';
 import * as dateUtils from '../../../../utils/dateUtils.js'
 import { Formik, Field, FieldArray} from 'formik';
-import * as booksApi from '../bookApi.js'
+import * as booksApi from '../../book/api/bookApi.js'
 import {openSignIn} from '../../../../displayAreaSlice.js'
 import {
     openBook,
     openBookList
 } from '../../booksSlice.js'
 import ReadingRecordList from './ReadingRecordList.js';
-import useReadingRecords from '../useReadingRecords';
+import useReadingRecords from '../../book/useReadingRecords.js';
 import * as readingRecordsApi from  '../../readingRecordsApi.js';
 import useTags from '../../../../tags/useTags.js';
 
