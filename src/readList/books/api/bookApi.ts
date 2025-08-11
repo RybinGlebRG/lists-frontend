@@ -3,13 +3,7 @@ import GetBookRequest from './GetBookRequest';
 import SearchBooksRequest from './SearchBooksRequest';
 
 export async function loadBook(getBookRequest: GetBookRequest, onUnauthorized: () => void){
-    let res = await fetch(window.location.origin+`/api/v1/users/${getBookRequest.userId}/books/${getBookRequest.bookId}`,
-    {
-        method: "GET",
-        headers: {
-            'Authorization': `Bearer ${getBookRequest.JWT}`
-        }
-    });
+    let res = await getBookRequest.execute();
     await commonApi.checkError(res, onUnauthorized);
     let book = await res.json();
 
