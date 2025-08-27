@@ -6,6 +6,7 @@ import * as bookApi from './api/bookApi'
 import * as common from '../../common/common'
 import * as dateUtils from '../../utils/dateUtils'
 import {openBookList} from './booksSlice'
+import PostBooksRequest from './api/PostBooksRequest';
 
 class BookAdd extends React.Component{
 	constructor(props){
@@ -90,16 +91,18 @@ class BookAdd extends React.Component{
 	}
 
 	saveValues(values){
-        let book = {
-            readListId: this.props.store.readListId,
-            title: values.title,
-            status: values.status, 
-            insertDate: values.createDate,
-            URL: values.url       
-        }
+
+        let postBooksRequest = PostBooksRequest.builder(
+            this.props.store.JWT,
+            this.props.store.userId,
+            values.title,
+            values.status
+        )
+            .insertDate(values.createDate)
+            .URL(values.url);
 
         if (values.authors != null && values.author != ""){
-            book.authorId = values.author;
+            postBooksRequest.authorId(values.author)
         }
 
         // if (values.series != null && values.series != ""){
@@ -108,39 +111,24 @@ class BookAdd extends React.Component{
         // }
 
         if (values.lastChapter != null && values.lastChapter != ""){
-            book.lastChapter = values.lastChapter;
+            postBooksRequest.lastChapter(values.lastChapter);
         }
 
         if (values.bookType != null && values.bookType != ""){
-            book.bookTypeId = values.bookType;
+            postBooksRequest.bookTypeId(values.bookType);
         }
 
-        fetch(
-			window.location.origin+`/api/v0.2/readLists/${this.props.store.readListId}/books`,
-			{
-				method: "POST",
-				headers: {
-					'Content-Type': 'application/json;charset=utf-8',
-					'Authorization': `Bearer ${this.props.store.JWT}`
-				},
-				body: JSON.stringify(book)
-			}
-		)
-		.then(
-            res => {
-                // this.props.titleAddSetResult(true,null);
-                if (!res.ok){
-					throw new Error('Some network error');
-				};
-                this.props.openBookList();
-            }
+        bookApi.postBooks(
+            postBooksRequest.build(),
+            ()=>{this.props.openSignIn()}
         )
-        .catch(
-            err => {
-                this.setState({
-					error:err.error
+        .then(res => {
+            this.props.openBookList();
+        })
+        .catch(error => {
+            this.setState({
+					error: error.message
 				});
-                // this.props.titleAddSetResult(false,error);
         });
     }
 

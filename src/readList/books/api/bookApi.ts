@@ -1,5 +1,7 @@
 import * as commonApi from '../../../common/commonApi'
 import GetBookRequest from './GetBookRequest';
+import PostBookRequest from './PostBookRequest';
+import PostBooksRequest from './PostBooksRequest';
 import SearchBooksRequest from './SearchBooksRequest';
 
 export async function loadBook(getBookRequest: GetBookRequest, onUnauthorized: () => void){
@@ -11,15 +13,15 @@ export async function loadBook(getBookRequest: GetBookRequest, onUnauthorized: (
 
 }
 
-export async function postBooks(JWT, readListId, body, onUnauthorized){
-    let res = await fetch(window.location.origin+`/api/v0.2/readLists/${readListId}/books`,
+export async function postBooks(postBooksRequest: PostBooksRequest, onUnauthorized: () => void){
+    let res = await fetch(window.location.origin+`/api/v1/users/${postBooksRequest.userId}/books`,
     {
         method: "POST",
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
-            'Authorization': `Bearer ${JWT}`
+            'Authorization': `Bearer ${postBooksRequest.JWT}`
         },
-        body: JSON.stringify(body)
+        body: postBooksRequest.toJsonBody()
     });
     await commonApi.checkError(res, onUnauthorized);
 }
@@ -80,15 +82,15 @@ export async function deleteBook(JWT, bookId, onUnauthorized){
     await commonApi.checkError(res, onUnauthorized);
 }
 
-export async function postBook({JWT, bookId, body, onUnauthorized}){
-    let res = await fetch(window.location.origin+`/api/v0.2/books/${bookId}`,
+export async function postBook(postBookRequest: PostBookRequest, onUnauthorized: () => void){
+    let res = await fetch(window.location.origin+`/api/v1/users/${postBookRequest.userId}/books/${postBookRequest.bookId}`,
     {
         method: "PUT",
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
-            'Authorization': `Bearer ${JWT}`
+            'Authorization': `Bearer ${postBookRequest.JWT}`
         },
-        body: JSON.stringify(body)
+        body: postBookRequest.toJsonBody()
     });
     await commonApi.checkError(res, onUnauthorized);
 }

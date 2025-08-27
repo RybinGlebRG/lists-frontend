@@ -3,20 +3,21 @@ import {useState, useEffect} from 'react';
 import useBook from '../useBook';
 import useAuthorList from '../../../authors/useAuthorsList.js';
 import { selectBookId } from '../../booksSlice.js';
-import useBookTypes from '../../book/useBookTypes.js';
-import useBookStatuses from '../../book/useBookStatuses.js';
+import useBookTypes from '../useBookTypes.js';
+import useBookStatuses from '../useBookStatuses.js';
 import * as dateUtils from '../../../../utils/dateUtils.js'
 import { Formik, Field, FieldArray} from 'formik';
-import * as booksApi from '../../book/api/bookApi.js'
+import * as booksApi from '../api/bookApi.js'
 import {openSignIn} from '../../../../displayAreaSlice.js'
 import {
     openBook,
     openBookList
 } from '../../booksSlice.js'
 import ReadingRecordList from './ReadingRecordList.js';
-import useReadingRecords from '../../book/useReadingRecords.js';
+import useReadingRecords from '../useReadingRecords.js';
 import * as readingRecordsApi from  '../../readingRecordsApi.js';
 import useTags from '../../../../tags/useTags.js';
+import PostBookRequest from '../../api/PostBookRequest';
 
 function validateTag(value) {
     if (!value){
@@ -29,13 +30,14 @@ export default function BookEdit(){
     const dispatch = useDispatch();
 
     let store={
-        JWT: useSelector(state=>state.listsReducer.JWT),
-        bookId: useSelector(state=>state.booksReducer.bookId),
-        listId: useSelector(state=>state.listsReducer.listId),
+        JWT: useSelector((state: any) => state.listsReducer.JWT),
+        bookId: useSelector((state: any) => state.booksReducer.bookId),
+        listId: useSelector((state: any) => state.listsReducer.listId),
+        userId: useSelector((state: any) => state.listsReducer.userId),
     }
 
     const {error, isLoaded, book, createDate, updateBook} = useBook();
-    const [authorListError, authorListIsLoaded, authors] = useAuthorList({listId: store.listId});
+    const [authorListError, authorListIsLoaded, authors] = useAuthorList();
     const [bookTypesError, bookTypesIsLoaded, bookTypes] = useBookTypes({listId: store.listId});
     const [bookStatusesError, bookStatusesIsLoaded, bookStatuses] = useBookStatuses({listId: store.listId});
     // const {readingRecordsError, readingRecordsIsLoaded, readingRecords, submitReadingRecords } = useReadingRecords({bookId: store.bookId});
@@ -60,30 +62,38 @@ export default function BookEdit(){
             return res;
         });
 
-        let book = {
-            readListId: store.listId,
-            title: values.title,
-            status: values.status,
-            lastChapter: values.lastChapter,
-            insertDateUTC: dt, //this.props.store.book.insertDate
-            note: values.note,
-            URL: values.url,
-            tagIds: tagIds,
-            readingRecords: readingRecords
-        }
-
+        let authorId = null;
         if (values.author != ""){
-            book.authorId = values.author;
+            authorId = values.author;
         }
 
+        let bookTypeId = null;
         if (values.bookType != null && values.bookType != ""){
-            book.bookTypeId = values.bookType;
+            bookTypeId = values.bookType;
         }
 
-        updateBook({
-            body: book, 
-            onUpdate: () => dispatch(openBook({bookId: store.bookId}))
-        });
+        let postBookRequest = new PostBookRequest(
+            store.userId,
+            store.JWT,
+            store.bookId,
+            values.title,
+            authorId,
+            values.status,
+            values.seriesId,
+            null,
+            values.lastChapter,
+            bookTypeId,
+            dt,
+            values.note,
+            values.url,
+            readingRecords,
+            tagIds
+        );
+
+        updateBook(
+            postBookRequest,
+            () => dispatch(openBook({bookId: store.bookId}))
+        );
 
         // submitReadingRecords({
         //     readingRecordsToUpdate: values.readingRecords
@@ -93,12 +103,12 @@ export default function BookEdit(){
     let displayResult;
 
     if (error || authorListError || bookTypesError || bookStatusesError || tagsError){
-        displayResult=( <div class="alert alert-danger" role="alert">{error + authorListError + bookTypesError + bookStatusesError}</div>);
+        displayResult=( <div className="alert alert-danger" role="alert">{error + authorListError + bookTypesError + bookStatusesError}</div>);
     } else if (!isLoaded || !authorListIsLoaded || !bookTypesIsLoaded || !bookStatusesIsLoaded || !tagsIsLoaded){
         displayResult=( 
-            <div class="d-flex justify-content-center">
-                <div class="spinner-border m-5" role="status">
-                    <span class="sr-only"/>
+            <div className="d-flex justify-content-center">
+                <div className="spinner-border m-5" role="status">
+                    <span className="sr-only"/>
                 </div>
             </div>
         );
@@ -106,7 +116,7 @@ export default function BookEdit(){
         
         let createDate = dateUtils.preprocessValues(book.insertDate)
 
-        let authorsItems=[]
+        let authorsItems: any[] = []
         for (let i = 0; i <authors.length; i++){
             // authorsItems.push(<option key={i} value={i}>{i}</option>)
             authorsItems.push(<option value={authors[i].authorId}>{authors[i].name}</option>)
@@ -133,27 +143,27 @@ export default function BookEdit(){
         }
 
         displayResult=(
-            <div class="row">
-            <div class="col">
-                <div class="row">
-                    <div class="col pb-2 mt-4 mb-2 border-bottom">
+            <div className="row">
+            <div className="col">
+                <div className="row">
+                    <div className="col pb-2 mt-4 mb-2 border-bottom">
                             <h3>{book.title}</h3>
                     </div>
-                    <div class="col-md-auto">
+                    <div className="col-md-auto">
                         <button
                             type="button"
-                            class="btn btn-secondary btn-sm"
+                            className="btn btn-secondary btn-sm"
                             onClick={()=>dispatch(openBookList())}
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-lg" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
                                 <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
                             </svg>
                         </button>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col">
+                <div className="row">
+                    <div className="col">
                         <Formik
                             initialValues={{ 
                                 title: book.title, 
@@ -219,11 +229,11 @@ export default function BookEdit(){
                                         field,
                                         meta
                                     })=>(                                        
-                                        <div class="mb-3">
-                                            <label for="titleInput" class="form-label">Title</label>
+                                        <div className="mb-3">
+                                            <label for="titleInput" className="form-label">Title</label>
                                             <input 
                                                 id="titleInput"
-                                                class="form-control" 
+                                                className="form-control" 
                                                 type="text" 
                                                 placeholder="Title"
                                                 {...field}
@@ -236,9 +246,9 @@ export default function BookEdit(){
                                 </Field>    
 
 
-                                <div class="form-group" controlId="author">
+                                <div className="form-group" controlId="author">
                                     <label>Author</label >
-                                    <select class="form-control" 
+                                    <select className="form-control" 
                                         as="select"
                                         name="author"
                                         onChange={handleChange}
@@ -250,9 +260,9 @@ export default function BookEdit(){
                                     </select>
                                 </div>
 
-                                <div class="form-group" controlId="bookType">
+                                <div className="form-group" controlId="bookType">
                                     <label>Book Type</label >
-                                    <select class="form-control" 
+                                    <select className="form-control" 
                                         as="select"
                                         name="bookType"
                                         onChange={handleChange}
@@ -267,9 +277,9 @@ export default function BookEdit(){
                                     </select>
                                 </div>
 
-                                <div class="form-group" controlId="createDate">
+                                <div className="form-group" controlId="createDate">
                                     <label>Create date UTC</label>
-                                    <input class="form-control" 
+                                    <input className="form-control" 
                                         type="datetime-local" 
                                         name="createDate"
                                         value={values.createDate}
@@ -282,10 +292,10 @@ export default function BookEdit(){
                                     {({
                                         field
                                     })=>(
-                                        <div class="form-group" controlId="note">
+                                        <div className="form-group" controlId="note">
                                             <label>Note</label>
                                             <textarea
-                                                class="form-control" 
+                                                className="form-control" 
                                                 rows="3"
                                                 {...field}                             
                                             />
@@ -298,9 +308,9 @@ export default function BookEdit(){
                                     {({
                                         field
                                     })=>(
-                                        <div class="form-group" controlId="url">
+                                        <div className="form-group" controlId="url">
                                             <label>URL</label>
-                                            <input class="form-control" 
+                                            <input className="form-control" 
                                                 type="text" 
                                                 placeholder="URL"
                                                 {...field}  
@@ -312,26 +322,26 @@ export default function BookEdit(){
                                 <FieldArray 
                                     name="readingRecords"
                                     render={arrayHelpers => (
-                                        <ul class="list-group">
+                                        <ul className="list-group">
                                             <label>Reading records</label>
                                                 { 
                                                     values.readingRecords && values.readingRecords.length > 0 ?
                                                     (
                                                         values.readingRecords.map((record, index) => (
                                                         <li 
-                                                            class="list-group-item p-0" 
+                                                            className="list-group-item p-0" 
                                                             key={index}
                                                         >
-                                                            <div class="form-group" controlId="readingRecords">
-                                                                <div class="row">
+                                                            <div className="form-group" controlId="readingRecords">
+                                                                <div className="row">
                                                                     <Field name={`readingRecords.${index}.startDate`}>
                                                                         {({
                                                                             field,
                                                                             meta
                                                                         })=>(
-                                                                            <div class="col">
+                                                                            <div className="col">
                                                                                 <input 
-                                                                                    class="form-control" 
+                                                                                    className="form-control" 
                                                                                     type="datetime-local" 
                                                                                     {...field}
                                                                                 />
@@ -343,9 +353,9 @@ export default function BookEdit(){
                                                                         {({
                                                                             field
                                                                         })=>(
-                                                                            <div class="col">
+                                                                            <div className="col">
                                                                                 <input 
-                                                                                    class="form-control" 
+                                                                                    className="form-control" 
                                                                                     type="datetime-local" 
                                                                                     {...field}
                                                                                 />
@@ -358,9 +368,9 @@ export default function BookEdit(){
                                                                         {({
                                                                             field
                                                                         })=>(
-                                                                            <div class="col">
+                                                                            <div className="col">
                                                                                 <select 
-                                                                                    class="form-control" 
+                                                                                    className="form-control" 
                                                                                     as="select"
                                                                                     {...field}   
                                                                                 >   
@@ -374,9 +384,9 @@ export default function BookEdit(){
                                                                         {({
                                                                             field
                                                                         })=>(
-                                                                            <div class="col">
+                                                                            <div className="col">
                                                                                 <input 
-                                                                                    class="form-control" 
+                                                                                    className="form-control" 
                                                                                     type="number" 
                                                                                     placeholder="Last chapter"
                                                                                     {...field}
@@ -385,7 +395,7 @@ export default function BookEdit(){
                                                                         )}
                                                                     </Field>
 
-                                                                    <div class="col">
+                                                                    <div className="col">
                                                                         <button
                                                                             type="button"
                                                                             onClick={() => arrayHelpers.remove(index)}
@@ -408,23 +418,23 @@ export default function BookEdit(){
                                     )}                        
                                 />
 
-                                <div class="row mt-4">
-                                    <div class="col-md-auto">
+                                <div className="row mt-4">
+                                    <div className="col-md-auto">
                                         <FieldArray 
                                             name="tags"
                                             render={arrayHelpers => (
-                                                <ul class="list-group list-group-flush">
+                                                <ul className="list-group list-group-flush">
                                                     <label>Tags</label>
                                                         { 
                                                             values.tags && values.tags.length > 0 ?
                                                             (
                                                                 values.tags.map((tag, index) => (
                                                                         <li 
-                                                                            class="list-group-item" 
+                                                                            className="list-group-item" 
                                                                             key={index}
                                                                         >
-                                                                            <div class="form-group" controlId="tags">
-                                                                                <div class="row">
+                                                                            <div className="form-group" controlId="tags">
+                                                                                <div className="row">
                                                                                     <Field 
                                                                                         name={`tags.${index}.tagId`}
                                                                                         validate={validateTag}
@@ -433,9 +443,9 @@ export default function BookEdit(){
                                                                                             field,
                                                                                             meta
                                                                                         })=>(
-                                                                                            <div class="col-md-auto">
+                                                                                            <div className="col-md-auto">
                                                                                                 <select 
-                                                                                                    class="form-control" 
+                                                                                                    className="form-control" 
                                                                                                     as="select"
                                                                                                     {...field}   
                                                                                                 >   
@@ -451,10 +461,10 @@ export default function BookEdit(){
                                                                                         )}
                                                                                     </Field>
 
-                                                                                    <div class="col">
+                                                                                    <div className="col">
                                                                                         <button
                                                                                             type="button"
-                                                                                            class="btn btn-danger"
+                                                                                            className="btn btn-danger"
                                                                                             onClick={() => arrayHelpers.remove(index)}
                                                                                         >
                                                                                         -
@@ -468,11 +478,11 @@ export default function BookEdit(){
                                                             : null
                                                         }
 
-                                                        <div class="row">
-                                                            <div class="col">
+                                                        <div className="row">
+                                                            <div className="col">
                                                                 <button 
                                                                     type="button" 
-                                                                    class="btn btn-success mt-2"
+                                                                    className="btn btn-success mt-2"
                                                                     onClick={() => arrayHelpers.push({})}
                                                                 >+</button>
                                                             </div>
@@ -493,7 +503,7 @@ export default function BookEdit(){
                                     </div> */}
 
                                 <button  
-                                    class="btn btn-primary mt-4"
+                                    className="btn btn-primary mt-4"
                                     type="submit"
                                     disabled={isSubmitting}
                                 >Submit</button>
@@ -509,8 +519,8 @@ export default function BookEdit(){
     }
 
     return(
-        <div class="row">
-			<div class="col">
+        <div className="row">
+			<div className="col">
                 {displayResult}
 			</div>
 		</div>

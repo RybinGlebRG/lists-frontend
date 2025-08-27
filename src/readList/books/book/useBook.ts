@@ -4,6 +4,7 @@ import {openSignIn} from '../../../displayAreaSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import * as dateUtils from '../../../utils/dateUtils'
 import GetBookRequest from '../api/GetBookRequest';
+import PostBookRequest from '../api/PostBookRequest';
 
 export default function useBook(){
     const dispatch = useDispatch();
@@ -40,9 +41,9 @@ export default function useBook(){
         });
     },[store.listId, store.bookId]);
 
-    let updateBook = ({body, onUpdate}) => {
+    let updateBook = (postBookRequest: PostBookRequest, onUpdate: () => void) => {
         setIsUpdated(false);
-        bookApi.postBook({JWT: store.JWT, bookId: store.bookId, body: body, onUnauthorized: ()=> dispatch(openSignIn(null))}) 
+        bookApi.postBook(postBookRequest, ()=> dispatch(openSignIn(null))) 
         .then(result => {
             setUpdateError(null);
             setIsUpdated(true);
