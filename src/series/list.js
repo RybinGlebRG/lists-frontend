@@ -8,7 +8,7 @@ import {
 } from './seriesSlice'
 import  {
     loadSeriesList
-} from './seriesApi'
+} from '../dao/series/seriesApi'
 
 class SeriesList extends React.Component {
 

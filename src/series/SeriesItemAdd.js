@@ -7,7 +7,7 @@ import {
 import { Formik} from 'formik';
 import {getAuthors} from '../readList/authors/authorsApi'
 import {postBooks, getBookTypes} from '../readList/books/api/bookApi'
-import  {loadSeriesItem} from './seriesApi'
+import  {loadSeriesItem} from '../dao/series/seriesApi'
 import {
     openSeriesItem
 } from './seriesSlice'
