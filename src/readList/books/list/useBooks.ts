@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import * as bookApi from '../bookApi'
+import * as bookApi from '../api/bookApi'
 import {openSignIn} from '../../../displayAreaSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -8,38 +8,53 @@ import {
     switchListOrdering, 
     openBookAdd
 } from '../booksSlice'
+import Filter from '../api/Filter';
+import SortField from '../api/SortField';
+import SearchBooksRequest from '../api/SearchBooksRequest'
 
-async function loadData(listOrdering, bookStatuses, JWT, listId, onUnauthorized, title){
-	let body={
-			sort:[{
-				field:"createDate",
-				ordering: listOrdering
-			}],
-			isChainBySeries: true
+interface SearchBody {
+	sort: [
+		{
+			field: string,
+			ordering: string
 		}
-	let filters = [];
+	],
+	isChainBySeries: boolean,
+	filters: any[] | null
+}
+
+async function loadData(listOrdering: string, bookStatuses: any[], JWT: string, userId: number, onUnauthorized: () => void, title: string){
+
+	// Add filters
+	let filters: Filter[] = [];
 	if (bookStatuses != null){
-		filters.push({
-			"field": "bookStatusIds",
-			"values": bookStatuses
+		filters.push(new Filter(
+			"bookStatusIds",
+			bookStatuses
 				.filter(item => item.checked)
 				.map(item => item.statusId.toString())
-		});
+		));
 	}
 	if (title != null && title.length > 0){
-		filters.push({
-			"field": "titles",
-			"values": [title]
-		});
+		filters.push(new Filter(
+			"titles",
+			[title]
+		));
 	}
-	if (filters.length > 0){
-		body={
-			...body,
-			filters: filters
-		}
-	}
+	
+	// Add sorting
+	const sortFields: SortField[] = [];
+	sortFields.push(new SortField("createDate", listOrdering));
 
-	let bookList = await bookApi.searchBooks(JWT, listId, body, onUnauthorized)	
+
+	const searchBooksRequest = new SearchBooksRequest(
+		userId,
+		sortFields,
+		true,
+		filters,
+		JWT
+	);
+	let bookList = await bookApi.searchBooks(searchBooksRequest, onUnauthorized)	
 	return bookList;
 }
 
@@ -49,19 +64,20 @@ export default function useBooks(){
 	const [isLoaded,setIsLoaded] = useState(false);
 	const [bookList,setBookList] = useState(null);
 	const [isReload,setIsReload] = useState(false);
-	const [titleSearch,setTitleSearch] = useState(null);
+	const [titleSearch,setTitleSearch] = useState<any>(null);
 	// const [isExpectingSet,setIsExpectingSet] = useState(false);
-	const [bookStatuses,setBookStatuses] = useState(null);
+	const [bookStatuses, setBookStatuses] = useState<any>(null);
 	let store={
-        JWT: useSelector(state=>state.listsReducer.JWT),
-		listId: useSelector(state=>state.listsReducer.listId),
-		listOrdering: useSelector(state=>state.booksReducer.listOrdering)
+        JWT: useSelector((state: any) =>state.listsReducer.JWT),
+		listId: useSelector((state: any)=>state.listsReducer.listId),
+		listOrdering: useSelector((state: any)=>state.booksReducer.listOrdering),
+		userId: useSelector((state: any)=>state.listsReducer.userId)
     }
 
 	useEffect(()=>{
-        let promises=[];
-        promises.push(loadData(store.listOrdering, bookStatuses, store.JWT, store.listId, ()=> dispatch(openSignIn()),titleSearch ));
-		promises.push(bookApi.getBookStatuses(store.JWT,()=> dispatch(openSignIn())));
+        let promises: any[]=[];
+        promises.push(loadData(store.listOrdering, bookStatuses, store.JWT, store.listId, ()=> dispatch(openSignIn(null)),titleSearch ));
+		promises.push(bookApi.getBookStatuses(store.JWT,()=> dispatch(openSignIn(null))));
 
         Promise.all(promises)
         .then(([bookList, bookStatuses]) =>{
@@ -85,10 +101,10 @@ export default function useBooks(){
 
 	if (isReload) {
 		setIsReload(false);
-		setBookList({});
+		setBookList(null);
 		setError(null);
 		setIsLoaded(false);
-		loadData(store.listOrdering, bookStatuses, store.JWT, store.listId, ()=> dispatch(openSignIn()), titleSearch)
+		loadData(store.listOrdering, bookStatuses, store.JWT, store.listId, ()=> dispatch(openSignIn(null)), titleSearch)
 		.then(res=>{	
 			setError(null);
 			setBookList(res.items);	

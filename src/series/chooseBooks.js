@@ -7,7 +7,7 @@ import {
 import  {
     loadSeriesItem,
     saveSeriesItem
-} from './seriesApi'
+} from '../dao/series/seriesApi'
 import * as common from './common'
 
 

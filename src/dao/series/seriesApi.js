@@ -1,4 +1,4 @@
-import * as commonApi from '../common/commonApi'
+import * as commonApi from '../../common/commonApi'
 
 
 export async function loadSeriesItem(JWT, readListId, seriesId, onUnauthorized){

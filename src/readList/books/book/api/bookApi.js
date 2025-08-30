@@ -1,4 +1,4 @@
-import * as commonApi from '../../../common/commonApi'
+import * as commonApi from '../../../../common/commonApi'
 
 
 export async function getReadingRecords({JWT, bookId, onUnauthorized}){

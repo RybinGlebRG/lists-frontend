@@ -1,4 +1,4 @@
-export async function checkError(result, onUnauthorized){
+export async function checkError(result, onUnauthorized: () => void){
     if (!result.ok){
         if (result.status===401 && onUnauthorized !== undefined){
             onUnauthorized()
@@ -12,7 +12,7 @@ export async function checkError(result, onUnauthorized){
     };
 }
 
-export async function checkUnauthorized(result, onUnauthorized){
+export async function checkUnauthorized(result, onUnauthorized: () => void){
     if (!result.ok){
         if (result.status===401 && onUnauthorized !== undefined){
             onUnauthorized()

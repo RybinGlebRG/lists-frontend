@@ -1,8 +1,10 @@
 import {useState, useEffect} from 'react';
-import * as bookApi from '../bookApi'
+import * as bookApi from '../api/bookApi'
 import {openSignIn} from '../../../displayAreaSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import * as dateUtils from '../../../utils/dateUtils'
+import GetBookRequest from '../api/GetBookRequest';
+import PostBookRequest from '../api/PostBookRequest';
 
 export default function useBook(){
     const dispatch = useDispatch();
@@ -16,13 +18,14 @@ export default function useBook(){
     const [isUpdated, setIsUpdated] = useState(false);
 	
     let store={
-        JWT: useSelector(state=>state.listsReducer.JWT),
-        bookId: useSelector(state=>state.booksReducer.bookId),
-        listId: useSelector(state=>state.listsReducer.listId)
+        JWT: useSelector((state: any)=>state.listsReducer.JWT),
+        bookId: useSelector((state: any)=>state.booksReducer.bookId),
+        listId: useSelector((state: any)=>state.listsReducer.listId),
+        userId: useSelector((state: any)=>state.listsReducer.userId)
     }
 
     useEffect(()=>{
-        bookApi.loadBook(store.JWT, store.listId, store.bookId, ()=> dispatch(openSignIn()))
+        bookApi.loadBook(new GetBookRequest(store.userId, store.bookId, store.JWT), ()=> dispatch(openSignIn(null)))
         .then(result =>{
             setError(null);
             setData(result);
@@ -38,9 +41,9 @@ export default function useBook(){
         });
     },[store.listId, store.bookId]);
 
-    let updateBook = ({body, onUpdate}) => {
+    let updateBook = (postBookRequest: PostBookRequest, onUpdate: () => void) => {
         setIsUpdated(false);
-        bookApi.postBook({JWT: store.JWT, bookId: store.bookId, body: body, onUnauthorized: ()=> dispatch(openSignIn())}) 
+        bookApi.postBook(postBookRequest, ()=> dispatch(openSignIn(null))) 
         .then(result => {
             setUpdateError(null);
             setIsUpdated(true);

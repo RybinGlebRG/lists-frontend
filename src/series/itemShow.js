@@ -10,7 +10,7 @@ import {
 } from './seriesSlice'
 import  {
     loadSeriesItem
-} from './seriesApi'
+} from '../dao/series/seriesApi'
 import * as common from './common'
 import {openCategory} from '../displayAreaSlice'
 import * as categories from '../displayAreaCategories'
