@@ -1,13 +1,13 @@
 import { useSelector, useDispatch } from 'react-redux'
-import {useState, useEffect} from 'react';
+import {useState, useEffect, JSX} from 'react';
 import useBook from '../useBook';
 import useAuthorList from '../../../authors/useAuthorsList.js';
 import { selectBookId } from '../../booksSlice.js';
 import useBookTypes from '../useBookTypes.js';
 import useBookStatuses from '../useBookStatuses.js';
-import * as dateUtils from '../../../../utils/dateUtils.js'
+import * as dateUtils from '../../../../utils/dateUtils'
 import { Formik, Field, FieldArray} from 'formik';
-import * as booksApi from '../api/bookApi.js'
+import * as booksApi from '../api/bookApi'
 import {openSignIn} from '../../../../displayAreaSlice.js'
 import {
     openBook,
@@ -43,7 +43,7 @@ export default function BookEdit(){
         userId: useSelector((state: any) => state.listsReducer.userId),
     }
 
-    const {error, isLoaded, book, createDate, updateBook} = useBook();
+    const {error, isLoaded, book, updateBook} = useBook();
     const [authorListError, authorListIsLoaded, authors] = useAuthorList();
     const [bookTypesError, bookTypesIsLoaded, bookTypes] = useBookTypes({listId: store.listId});
     const [bookStatusesError, bookStatusesIsLoaded, bookStatuses] = useBookStatuses({listId: store.listId});
@@ -53,7 +53,7 @@ export default function BookEdit(){
 
 
     function handleSaveValue(values){
-        let dt = dateUtils.postprocessValues(values.createDate);
+        let dt = dateUtils.postprocessValuesDate(values.createDate);
 
         let tagIds = values.tags.map(item => {
             return item.tagId
@@ -113,7 +113,7 @@ export default function BookEdit(){
         // });
     }
 
-    let displayResult;
+    let displayResult: JSX.Element;
 
     if (error || authorListError || bookTypesError || bookStatusesError || tagsError){
         displayResult=( <div className="alert alert-danger" role="alert">{error + authorListError + bookTypesError + bookStatusesError}</div>);
@@ -125,7 +125,7 @@ export default function BookEdit(){
                 </div>
             </div>
         );
-    } else {
+    } else if (book != null && authors != null && bookTypes != null && tags != null && seriesList != null && bookStatuses != null){
         
         let createDate = dateUtils.preprocessValues(book.insertDate)
 
@@ -140,22 +140,22 @@ export default function BookEdit(){
         //     seriesItems.push(<option value={this.state.series[i].seriesId}>{this.state.series[i].title}</option>)
         // }
 
-        let bookTypesArray=[]
+        let bookTypesArray: JSX.Element[] = []
         for (let i = 0; i < bookTypes.length; i++){
             bookTypesArray.push(<option value={bookTypes[i].id}>{bookTypes[i].name}</option>)
         }
 
-        let bookStatusesArray=[]
+        let bookStatusesArray: JSX.Element[] = []
         for (let i = 0; i < bookStatuses.length; i++){
             bookStatusesArray.push(<option value={bookStatuses[i].statusId}>{bookStatuses[i].statusName}</option>)
         }
 
-        let tagsArray=[]
+        let tagsArray: JSX.Element[] = []
         for (let i = 0; i < tags.length; i++){
             tagsArray.push(<option value={tags[i].tagId}>{tags[i].name}</option>)
         }
 
-        let seriesListArray=[]
+        let seriesListArray: JSX.Element[] = []
         for (let i = 0; i < seriesList.seriesList.items.length; i++){
             seriesListArray.push(<option value={seriesList.seriesList.items[i].seriesId}>{seriesList.seriesList.items[i].title}</option>)
         }
