@@ -9,17 +9,16 @@ export default function ListPanel(){
 		bookStatuses,
 		listOrdering,
 		titleSearch,
-		openBook, 
+		books,
 		reload, 
 		switchOrdering, 
 		openBookAdd,
-		openBookUpdate,
 		updateSearched
 	} = useBooks();
 
 	return (
-		<div class="row">
-			<div class="col">
+		<div className="row">
+			<div className="col">
 				<Controls
 					listOrdering={listOrdering}
 					reload={reload}
@@ -32,9 +31,7 @@ export default function ListPanel(){
 				<Table
 					error={error}
 					isLoaded={isLoaded}
-					list={bookList}
-					openBook={openBook}
-					openBookUpdate={openBookUpdate}
+					books={books}
 				/>
 			</div>
 		</div>

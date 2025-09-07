@@ -1,5 +1,5 @@
 import React from 'react';
-import ListPanel from './books/listPanel.js'
+import ListPanel from './books/listPanel'
 import LeftMenu from './leftMenu.js' 
 import Book from './books/book/book.js'
 import BookAdd from './books/add.js'

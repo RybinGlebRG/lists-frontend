@@ -5,41 +5,39 @@ import { useSelector, useDispatch } from 'react-redux'
 import * as dateUtils from '../../../utils/dateUtils'
 import GetBookRequest from '../api/GetBookRequest';
 import PostBookRequest from '../api/PostBookRequest';
+import Book from '../../../domain/book/Book';
 
 export default function useBook(){
     const dispatch = useDispatch();
 
-	const [error,setError] = useState(null);
-	const [isLoaded,setIsLoaded] = useState(false);
-	const [data, setData] = useState(null);
-    const [createDate, setCreateDate] = useState(null);
+	const [error,setError] = useState<any>(null);
+	const [isLoaded,setIsLoaded] = useState<boolean>(false);
+	const [data, setData] = useState<Book | null>(null);
 
     const [updateError, setUpdateError] = useState(null);
     const [isUpdated, setIsUpdated] = useState(false);
+
+    const [bookId] = useState(useSelector((state: any)=>state.booksReducer.bookId));
+    const [userId] = useState(useSelector((state: any)=>state.listsReducer.userId));
 	
     let store={
-        JWT: useSelector((state: any)=>state.listsReducer.JWT),
-        bookId: useSelector((state: any)=>state.booksReducer.bookId),
-        listId: useSelector((state: any)=>state.listsReducer.listId),
-        userId: useSelector((state: any)=>state.listsReducer.userId)
+        JWT: useSelector((state: any)=>state.listsReducer.JWT)
     }
 
     useEffect(()=>{
-        bookApi.loadBook(new GetBookRequest(store.userId, store.bookId, store.JWT), ()=> dispatch(openSignIn(null)))
+        bookApi.loadBook(new GetBookRequest(userId, bookId, store.JWT), ()=> dispatch(openSignIn(null)))
         .then(result =>{
             setError(null);
             setData(result);
-            setCreateDate(dateUtils.formatToDisplay(result.insertDate))
             setIsLoaded(true);
         })
         .catch(
             error => {
                 setError(error.message);
                 setData(null);
-                setCreateDate(null);
                 setIsLoaded(true);
         });
-    },[store.listId, store.bookId]);
+    },[bookId]);
 
     let updateBook = (postBookRequest: PostBookRequest, onUpdate: () => void) => {
         setIsUpdated(false);
@@ -62,7 +60,6 @@ export default function useBook(){
         error,
         isLoaded,
         book: data,
-        createDate,
         updateBook
     }
 

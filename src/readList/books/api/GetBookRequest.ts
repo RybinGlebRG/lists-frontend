@@ -6,7 +6,7 @@ export default class GetBookRequest {
     private readonly _URL: string;
     private readonly _method: string = "GET";
 
-    constructor(userId: number, bookId: number, JWT: string) {
+    public constructor(userId: number, bookId: number, JWT: string) {
             this._userId = userId;
             this._bookId = bookId;
             this._JWT = JWT;
