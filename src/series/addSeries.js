@@ -14,7 +14,7 @@ class SeriesAdd extends React.Component {
 
 	async performSaveVals(series){
 		let res = await fetch(
-			window.location.origin+`/api/v0.2/readLists/${this.props.store.readListId}/series`,
+			window.location.origin+`/api/v1/users/${this.props.store.userId}/series`,
 			{
 				method: "POST",
 				headers: {
@@ -153,7 +153,8 @@ const mapStatetoProps = (state) => {
 	return {
 		store: {
 			JWT: state.listsReducer.JWT,
-			readListId: state.listsReducer.listId
+			readListId: state.listsReducer.listId,
+			userId: state.listsReducer.userId
 		}
 	};
 }
