@@ -31,8 +31,8 @@ export async function saveSeriesItem(JWT, seriesId, body, onUnauthorized){
     await commonApi.checkError(res, onUnauthorized);
 }
 
-export async function loadSeriesList(JWT, listId, onUnauthorized){
-    let res = await fetch(window.location.origin+`/api/v0.2/readLists/${listId}/series`,
+export async function loadSeriesList(JWT, userId, onUnauthorized){
+    let res = await fetch(window.location.origin+`/api/v1/users/${userId}/series`,
     {
         method: "GET",
         headers: {

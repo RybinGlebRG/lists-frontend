@@ -22,7 +22,7 @@ class SeriesList extends React.Component {
 	}
 
     loadList(){
-		loadSeriesList(this.props.store.JWT, this.props.store.listId,()=>{this.props.openSignIn()})
+		loadSeriesList(this.props.store.JWT, this.props.store.userId, ()=>{this.props.openSignIn()})
 		.then(res=>{
 			this.setState({
 				isLoaded:true,
@@ -135,7 +135,8 @@ const mapStatetoProps = (state) => {
 			error: state.listsReducer.seriesList.error,
 			isLoaded: state.listsReducer.seriesList.isLoaded,
 			list: state.listsReducer.seriesList.list,
-			bookCounts: state.listsReducer.seriesList.bookCounts
+			bookCounts: state.listsReducer.seriesList.bookCounts,
+			userId: state.listsReducer.userId
 		}
 	};
 }
