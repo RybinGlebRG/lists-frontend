@@ -51,3 +51,20 @@ export function currentDate(): string{
 				dt.getUTCMinutes().toString().padStart(2,"0")+ ":" +
                 dt.getSeconds().toString().padStart(2,"0");
 }
+
+export function fromString(strDate: string): Date {
+    return new Date(strDate + ".000Z");
+}
+
+export function getCurrentDate() {
+    return new Date();
+}
+
+export function toStringInput(date: Date): string {
+    let dt = new Date(date);
+    return dt.getUTCFullYear() + '-' +
+        (dt.getUTCMonth()+1).toString().padStart(2,"0") + '-' +
+        dt.getUTCDate().toString().padStart(2,"0") + 'T' +
+        dt.getUTCHours().toString().padStart(2,"0") + ':' +
+        dt.getUTCMinutes().toString().padStart(2,"0");
+}

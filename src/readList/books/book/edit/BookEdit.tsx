@@ -19,6 +19,9 @@ import * as readingRecordsApi from  '../../readingRecordsApi.js';
 import useTags from '../../../../tags/useTags.js';
 import PostBookRequest from '../../api/PostBookRequest';
 import useSeriesList from '../../../../dao/series/useSeriesList';
+import ReadingRecordModel from '../../../../domain/readingrecord/ReadingRecord';
+import { BookStatus } from '../../../../domain/bookstatus/BookStatus';
+import * as dt from '../../../../utils/dateUtils';
 
 function validateTag(value) {
     if (!value){
@@ -29,6 +32,48 @@ function validateTag(value) {
 function validateSeries(value) {
     if (!value){
         return 'Series name must be set';
+    }
+}
+
+class ReadingRecordForm {
+    public startDate: string;
+    public endDate: string;
+    public statusId: number;
+    public lastChapter: number;
+
+    public constructor(
+        startDate: string,
+        endDate: string,
+        statusId: number,
+        lastChapter: number
+    ) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.statusId = statusId;
+        this.lastChapter = lastChapter;
+    }
+} 
+
+class BookForm {
+    public title: string;
+    public author: string;
+    public status: number;
+    // series: this.props.store.book.series.length > 0 ?this.props.store.book.series[0].seriesId: null,
+    // order: this.props.store.book.series.length > 0 ? this.props.store.book.series[0].seriesOrder: null,
+    public lastChapter: number;
+    public bookType: number;
+    public createDate: string;
+    public note: string;
+    public readingRecords: ReadingRecordForm[];
+    public url: string;
+    public tags: any[];
+    public seriesList: any[];
+
+    public constructor(
+        title: string,
+        author: string
+    ) {
+
     }
 }
 
@@ -52,7 +97,7 @@ export default function BookEdit(){
     const seriesList = useSeriesList();
 
 
-    function handleSaveValue(values){
+    function handleSaveValue(values: BookForm){
         let dt = dateUtils.postprocessValuesDate(values.createDate);
 
         let tagIds = values.tags.map(item => {
@@ -226,7 +271,8 @@ export default function BookEdit(){
                             handleChange,
                             handleBlur,
                             handleSubmit,
-                            isSubmitting 
+                            isSubmitting,
+                            setFieldValue 
                         }) => (
                             <form
                                 onSubmit={handleSubmit}
@@ -353,7 +399,7 @@ export default function BookEdit(){
                                                         >
                                                             <div className="form-group" controlId="readingRecords">
                                                                 <div className="row">
-                                                                    <Field name={`readingRecords.${index}.startDate`}>
+                                                                    <Field name={`readingRecords[${index}].startDate`}>
                                                                         {({
                                                                             field,
                                                                             meta
@@ -362,13 +408,24 @@ export default function BookEdit(){
                                                                                 <input 
                                                                                     className="form-control" 
                                                                                     type="datetime-local" 
-                                                                                    {...field}
+                                                                                    value={dt.toStringInput(field.value)}
+                                                                                    onChange={(e: React.ChangeEvent<any>) => {
+                                                                                        handleChange(e);
+
+                                                                                        field.value = dt.fromString(e.currentTarget.value)
+                                                                                        // setFieldValue(
+                                                                                        //     `readingRecords[${index}].startDate`,
+                                                                                        //     dt.fromString(e.currentTarget.value)
+                                                                                        // );
+                                                                                    }}
+                                                                                    onBlur={field.handleBlur}
+                                                                                    name={`readingRecords[${index}].startDate`}
                                                                                 />
                                                                             </div>
                                                                         )}
                                                                     </Field>
 
-                                                                    <Field name={`readingRecords.${index}.endDate`}>
+                                                                    <Field name={`readingRecords[${index}].endDate`}>
                                                                         {({
                                                                             field
                                                                         })=>(
@@ -383,7 +440,7 @@ export default function BookEdit(){
                                                                     </Field>
 
 
-                                                                    <Field name={`readingRecords.${index}.bookStatus.statusId`}>
+                                                                    <Field name={`readingRecords[${index}].bookStatus.statusId`}>
                                                                         {({
                                                                             field
                                                                         })=>(
@@ -399,7 +456,7 @@ export default function BookEdit(){
                                                                         )}
                                                                     </Field>
 
-                                                                    <Field name={`readingRecords.${index}.lastChapter`}>
+                                                                    <Field name={`readingRecords[${index}].lastChapter`}>
                                                                         {({
                                                                             field
                                                                         })=>(
@@ -430,7 +487,18 @@ export default function BookEdit(){
                                                     : null
                                                 }
 
-                                                <button type="button" onClick={() => arrayHelpers.push({})}>
+                                                <button type="button" onClick={() => {
+                                                    arrayHelpers.push(
+                                                        new ReadingRecordFor(
+                                                            null,
+                                                            book.id,
+                                                            null,
+                                                            dt.getCurrentDate(),
+                                                            null,
+                                                            null
+                                                        )
+                                                    );
+                                                }}>
                                                     Add a record
                                                 </button>
                                         </ul>
