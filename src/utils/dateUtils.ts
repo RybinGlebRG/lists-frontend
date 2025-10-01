@@ -48,12 +48,24 @@ export function currentDate(): string{
 				(dt.getUTCMonth()+1).toString().padStart(2,"0") + '-' +
 				dt.getUTCDate().toString().padStart(2,"0") + 'T' +
 				dt.getUTCHours().toString().padStart(2,"0") + ':' +
-				dt.getUTCMinutes().toString().padStart(2,"0")+ ":" +
-                dt.getSeconds().toString().padStart(2,"0");
+				dt.getUTCMinutes().toString().padStart(2,"0");
+}
+
+export function currentDateForInputZoned(): string{
+    let dt: Date = new Date();
+    return dt.getFullYear() + '-' +
+				(dt.getMonth()+1).toString().padStart(2,"0") + '-' +
+				dt.getDate().toString().padStart(2,"0") + 'T' +
+				dt.getHours().toString().padStart(2,"0") + ':' +
+				dt.getMinutes().toString().padStart(2,"0");
 }
 
 export function fromString(strDate: string): Date {
     return new Date(strDate + ".000Z");
+}
+
+export function fromInputStringZoned(strDate: string): Date {
+    return new Date(strDate + ":00.000");
 }
 
 export function getCurrentDate() {
@@ -67,4 +79,13 @@ export function toStringInput(date: Date): string {
         dt.getUTCDate().toString().padStart(2,"0") + 'T' +
         dt.getUTCHours().toString().padStart(2,"0") + ':' +
         dt.getUTCMinutes().toString().padStart(2,"0");
+}
+
+export function toStringInputZoned(date: Date): string {
+    let dt = new Date(date);
+    return dt.getFullYear() + '-' +
+        (dt.getMonth()+1).toString().padStart(2,"0") + '-' +
+        dt.getDate().toString().padStart(2,"0") + 'T' +
+        dt.getHours().toString().padStart(2,"0") + ':' +
+        dt.getMinutes().toString().padStart(2,"0");
 }

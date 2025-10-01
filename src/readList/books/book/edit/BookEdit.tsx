@@ -17,7 +17,7 @@ import ReadingRecordList from './ReadingRecordList.js';
 import useReadingRecords from '../useReadingRecords.js';
 import * as readingRecordsApi from  '../../readingRecordsApi.js';
 import useTags from '../../../../tags/useTags.js';
-import PostBookRequest from '../../api/PostBookRequest';
+import PutBookRequest, { ReadingRecordPutView } from '../../api/PutBookRequest';
 import useSeriesList from '../../../../dao/series/useSeriesList';
 import ReadingRecordModel from '../../../../domain/readingrecord/ReadingRecord';
 import { BookStatus } from '../../../../domain/bookstatus/BookStatus';
@@ -35,46 +35,29 @@ function validateSeries(value) {
     }
 }
 
-class ReadingRecordForm {
-    public startDate: string;
-    public endDate: string;
-    public statusId: number;
-    public lastChapter: number;
-
-    public constructor(
-        startDate: string,
-        endDate: string,
-        statusId: number,
-        lastChapter: number
-    ) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.statusId = statusId;
-        this.lastChapter = lastChapter;
-    }
+interface ReadingRecordForm {
+    id: number | null, 
+    startDate: string,
+    endDate: string | null,
+    statusId: number | null,
+    lastChapter: number | null
 } 
 
-class BookForm {
-    public title: string;
-    public author: string;
-    public status: number;
+interface BookForm {
+    id: number,
+    title: string,
+    authorId: number,
+    statusId: number,
     // series: this.props.store.book.series.length > 0 ?this.props.store.book.series[0].seriesId: null,
     // order: this.props.store.book.series.length > 0 ? this.props.store.book.series[0].seriesOrder: null,
-    public lastChapter: number;
-    public bookType: number;
-    public createDate: string;
-    public note: string;
-    public readingRecords: ReadingRecordForm[];
-    public url: string;
-    public tags: any[];
-    public seriesList: any[];
-
-    public constructor(
-        title: string,
-        author: string
-    ) {
-
-    }
+    // lastChapter: number,
+    bookTypeId: number | null,
+    createDate: string,
+    note: string | null,
+    readingRecords: ReadingRecordForm[],
+    url: string | null,
+    tagIds: number[],
+    seriesIds: number[],
 }
 
 
@@ -97,55 +80,39 @@ export default function BookEdit(){
     const seriesList = useSeriesList();
 
 
-    function handleSaveValue(values: BookForm){
+    function handleSaveValue(values: BookForm){        
         let dt = dateUtils.postprocessValuesDate(values.createDate);
 
-        let tagIds = values.tags.map(item => {
-            return item.tagId
-        })
-
-        let readingRecords = values.readingRecords.map(item => {
-            let res = {
-                readingRecordId: item.recordId,
-                statusId: item.bookStatus != null && item.bookStatus.statusId != null ? item.bookStatus.statusId : 1,
-                startDate: item.startDate,
-                endDate: item.endDate,
-                lastChapter: item.lastChapter
-            }
-            return res;
-        });
-
-        let authorId = null;
-        if (values.author != ""){
-            authorId = values.author;
-        }
-
-        let bookTypeId = null;
-        if (values.bookType != null && values.bookType != ""){
-            bookTypeId = values.bookType;
-        }
-
-        let seriesId = null;
-        if (values.seriesList != null && values.seriesList.length > 0) {
-            seriesId = values.seriesList[0].seriesId;
-        }
-
-        let postBookRequest = new PostBookRequest(
+        let postBookRequest = new PutBookRequest(
             store.userId,
             store.JWT,
             store.bookId,
             values.title,
-            authorId,
-            values.status,
-            seriesId,
+            values.authorId,
+            values.statusId,
+            values.seriesIds.length > 0 ? values.seriesIds[0] : null,
             null,
-            values.lastChapter,
-            bookTypeId,
+            null,
+            values.bookTypeId,
             dt,
             values.note,
             values.url,
-            readingRecords,
-            tagIds
+            values.readingRecords.map(item => {
+                if (item.statusId == null) {
+                    throw new Error("Incorrect data");
+                }
+                if (item.startDate == null) {
+                    throw new Error("Incorrect data");
+                }
+                return new ReadingRecordPutView(
+                    item.id, 
+                    item.statusId, 
+                    dateUtils.fromInputStringZoned(item.startDate), 
+                    item.endDate != null ? dateUtils.fromInputStringZoned(item.endDate) : null, 
+                    item.lastChapter
+                );
+            }),
+            values.tagIds
         );
 
         updateBook(
@@ -170,7 +137,7 @@ export default function BookEdit(){
                 </div>
             </div>
         );
-    } else if (book != null && authors != null && bookTypes != null && tags != null && seriesList != null && bookStatuses != null){
+    } else if (book != null && authors != null && bookTypes != null && tags != null && seriesList != null && seriesList.seriesList != null && bookStatuses != null){
         
         let createDate = dateUtils.preprocessValues(book.insertDate)
 
@@ -205,6 +172,32 @@ export default function BookEdit(){
             seriesListArray.push(<option value={seriesList.seriesList.items[i].seriesId}>{seriesList.seriesList.items[i].title}</option>)
         }
 
+        const initialValues: BookForm = {
+            id: book.id,
+            title: book.title, 
+            authorId: book.textAuthors.length > 0 ? book.textAuthors[0].authorId: null,
+            statusId: book.bookStatus.statusId,
+            // series: this.props.store.book.series.length > 0 ?this.props.store.book.series[0].seriesId: null,
+            // order: this.props.store.book.series.length > 0 ? this.props.store.book.series[0].seriesOrder: null,
+            // lastChapter: book.lastChapter,
+            bookTypeId: book.bookType ? book.bookType.typeId: null,
+            createDate: createDate,
+            note: book.note,
+            readingRecords: book.readingRecords.map(item => {
+                let res: ReadingRecordForm = {
+                    id: item.id, 
+                    startDate: dateUtils.toStringInputZoned(item.startDate),
+                    endDate: item.endDate != null ? dateUtils.toStringInputZoned(item.endDate) : null,
+                    statusId: item.bookStatus.statusId,
+                    lastChapter: item.lastChapter
+                }
+                return res;
+            }),
+            url: book.URL,
+            tagIds: book.tags.map(item => item.id),
+            seriesIds: book.seriesList.map(item => item.id)
+        }
+
         displayResult=(
             <div className="row">
             <div className="col">
@@ -228,21 +221,7 @@ export default function BookEdit(){
                 <div className="row">
                     <div className="col">
                         <Formik
-                            initialValues={{ 
-                                title: book.title, 
-                                author: book.textAuthors.length > 0 ? book.textAuthors[0].authorId: null,
-                                status: book.bookStatus.statusId,
-                                // series: this.props.store.book.series.length > 0 ?this.props.store.book.series[0].seriesId: null,
-                                // order: this.props.store.book.series.length > 0 ? this.props.store.book.series[0].seriesOrder: null,
-                                lastChapter: book.lastChapter,
-                                bookType: book.bookType ? book.bookType.typeId: null,
-                                createDate: createDate,
-                                note: book.note,
-                                readingRecords: book.readingRecords,
-                                url: book.URL,
-                                tags: book.tags,
-                                seriesList: book.seriesList
-                            }}
+                            initialValues={initialValues}
                             validate={values => {
                                 const errors = {};
                                 // if (!values.title) {
@@ -384,126 +363,131 @@ export default function BookEdit(){
                                     )}
                                 </Field>
 
-                                <FieldArray 
-                                    name="readingRecords"
-                                    render={arrayHelpers => (
-                                        <ul className="list-group">
-                                            <label>Reading records</label>
-                                                { 
-                                                    values.readingRecords && values.readingRecords.length > 0 ?
-                                                    (
-                                                        values.readingRecords.map((record, index) => (
-                                                        <li 
-                                                            className="list-group-item p-0" 
-                                                            key={index}
-                                                        >
-                                                            <div className="form-group" controlId="readingRecords">
-                                                                <div className="row">
-                                                                    <Field name={`readingRecords[${index}].startDate`}>
-                                                                        {({
-                                                                            field,
-                                                                            meta
-                                                                        })=>(
+                                <div className="row mt-4">
+                                    <div className="col">
+                                        <FieldArray 
+                                            name="readingRecords"
+                                            render={arrayHelpers => (
+                                                <ul className="list-group list-group-flush">
+                                                    <label>Reading records</label>
+                                                        { 
+                                                            values.readingRecords && values.readingRecords.length > 0 ?
+                                                            (
+                                                                values.readingRecords.map((record, index) => (
+                                                                <li 
+                                                                    className="list-group-item" 
+                                                                    key={index}
+                                                                >
+                                                                    <div className="form-group" controlId="readingRecords">
+                                                                        <div className="row">
+                                                                            <Field name={`readingRecords[${index}].startDate`}>
+                                                                                {({
+                                                                                    field,
+                                                                                    meta
+                                                                                })=>(
+                                                                                    <div className="col">
+                                                                                            <input 
+                                                                                            className="form-control" 
+                                                                                            type="datetime-local" 
+                                                                                            {...field}
+                                                                                        />
+                                                                                    </div>
+                                                                                )}
+                                                                            </Field>
+
+                                                                            <Field name={`readingRecords[${index}].endDate`}>
+                                                                                {({
+                                                                                    field
+                                                                                })=>(
+                                                                                    <div className="col">
+                                                                                        <input 
+                                                                                            className="form-control" 
+                                                                                            type="datetime-local" 
+                                                                                            {...field}
+                                                                                        />
+                                                                                    </div>
+                                                                                )}
+                                                                            </Field>
+
+
+                                                                            <Field name={`readingRecords[${index}].statusId`}>
+                                                                                {({
+                                                                                    field
+                                                                                })=>(
+                                                                                    <div className="col">
+                                                                                        <select 
+                                                                                            className="form-control" 
+                                                                                            as="select"
+                                                                                            {...field}   
+                                                                                        >   
+                                                                                            {bookStatusesArray}
+                                                                                        </select>
+                                                                                    </div>
+                                                                                )}
+                                                                            </Field>
+
+                                                                            <Field name={`readingRecords[${index}].lastChapter`}>
+                                                                                {({
+                                                                                    field
+                                                                                })=>(
+                                                                                    <div className="col">
+                                                                                        <input 
+                                                                                            className="form-control" 
+                                                                                            type="number" 
+                                                                                            placeholder="Last chapter"
+                                                                                            {...field}
+                                                                                        />
+                                                                                    </div>
+                                                                                )}
+                                                                            </Field>
+
                                                                             <div className="col">
-                                                                                <input 
-                                                                                    className="form-control" 
-                                                                                    type="datetime-local" 
-                                                                                    value={dt.toStringInput(field.value)}
-                                                                                    onChange={(e: React.ChangeEvent<any>) => {
-                                                                                        handleChange(e);
-
-                                                                                        field.value = dt.fromString(e.currentTarget.value)
-                                                                                        // setFieldValue(
-                                                                                        //     `readingRecords[${index}].startDate`,
-                                                                                        //     dt.fromString(e.currentTarget.value)
-                                                                                        // );
-                                                                                    }}
-                                                                                    onBlur={field.handleBlur}
-                                                                                    name={`readingRecords[${index}].startDate`}
-                                                                                />
+                                                                                <button
+                                                                                    type="button"
+                                                                                    className="btn btn-outline-danger"
+                                                                                    onClick={() => arrayHelpers.remove(index)}
+                                                                                >
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
+                                                                                        <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"/>
+                                                                                    </svg>
+                                                                                </button>
                                                                             </div>
-                                                                        )}
-                                                                    </Field>
-
-                                                                    <Field name={`readingRecords[${index}].endDate`}>
-                                                                        {({
-                                                                            field
-                                                                        })=>(
-                                                                            <div className="col">
-                                                                                <input 
-                                                                                    className="form-control" 
-                                                                                    type="datetime-local" 
-                                                                                    {...field}
-                                                                                />
-                                                                            </div>
-                                                                        )}
-                                                                    </Field>
-
-
-                                                                    <Field name={`readingRecords[${index}].bookStatus.statusId`}>
-                                                                        {({
-                                                                            field
-                                                                        })=>(
-                                                                            <div className="col">
-                                                                                <select 
-                                                                                    className="form-control" 
-                                                                                    as="select"
-                                                                                    {...field}   
-                                                                                >   
-                                                                                    {bookStatusesArray}
-                                                                                </select>
-                                                                            </div>
-                                                                        )}
-                                                                    </Field>
-
-                                                                    <Field name={`readingRecords[${index}].lastChapter`}>
-                                                                        {({
-                                                                            field
-                                                                        })=>(
-                                                                            <div className="col">
-                                                                                <input 
-                                                                                    className="form-control" 
-                                                                                    type="number" 
-                                                                                    placeholder="Last chapter"
-                                                                                    {...field}
-                                                                                />
-                                                                            </div>
-                                                                        )}
-                                                                    </Field>
-
-                                                                    <div className="col">
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={() => arrayHelpers.remove(index)}
-                                                                        >
-                                                                        -
-                                                                        </button>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        ))
-                                                    )
-                                                    : null
-                                                }
+                                                                </li>
+                                                                ))
+                                                            )
+                                                            : null
+                                                        }
 
-                                                <button type="button" onClick={() => {
-                                                    arrayHelpers.push(
-                                                        new ReadingRecordFor(
-                                                            null,
-                                                            book.id,
-                                                            null,
-                                                            dt.getCurrentDate(),
-                                                            null,
-                                                            null
-                                                        )
-                                                    );
-                                                }}>
-                                                    Add a record
-                                                </button>
-                                        </ul>
-                                    )}                        
-                                />
+                                                        <div className="row">
+                                                            <div className="col">
+                                                                <button 
+                                                                    type="button" 
+                                                                    className="btn btn-outline-success mt-2"
+                                                                    onClick={() => {
+                                                                        let newReadingRecord: ReadingRecordForm = {
+                                                                            id: null,
+                                                                            startDate: dt.currentDateForInputZoned(),
+                                                                            endDate: null,
+                                                                            statusId: 0,
+                                                                            lastChapter: null
+                                                                        }
+                                                                        arrayHelpers.push(newReadingRecord);
+                                                                    }}
+                                                                >
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                                                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                                                                    </svg>
+                                                                    Add record
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                </ul>
+                                            )}                        
+                                        />
+                                    </div>
+                                </div>
 
                                 <div className="row mt-4">
                                     <div className="col-md-auto">
@@ -551,10 +535,12 @@ export default function BookEdit(){
                                                                                     <div className="col">
                                                                                         <button
                                                                                             type="button"
-                                                                                            className="btn btn-danger"
+                                                                                            className="btn btn-outline-danger"
                                                                                             onClick={() => arrayHelpers.remove(index)}
                                                                                         >
-                                                                                        -
+                                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
+                                                                                                <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"/>
+                                                                                            </svg>
                                                                                         </button>
                                                                                     </div>
                                                                                 </div>
@@ -569,9 +555,14 @@ export default function BookEdit(){
                                                             <div className="col">
                                                                 <button 
                                                                     type="button" 
-                                                                    className="btn btn-success mt-2"
+                                                                    className="btn btn-outline-success mt-2"
                                                                     onClick={() => arrayHelpers.push({})}
-                                                                >+</button>
+                                                                >
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                                                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                                                                    </svg>
+                                                                    Add tag
+                                                                </button>
                                                             </div>
                                                         </div>
                                                 </ul>
@@ -588,17 +579,17 @@ export default function BookEdit(){
                                                 <ul className="list-group list-group-flush">
                                                     <label>Series List</label>
                                                         { 
-                                                            values.seriesList && values.seriesList.length > 0 ?
+                                                            values.seriesIds.length > 0 ?
                                                             (
-                                                                values.seriesList.map((series, index) => (
+                                                                values.seriesIds.map((series, index) => (
                                                                         <li 
                                                                             className="list-group-item" 
                                                                             key={index}
                                                                         >
-                                                                            <div className="form-group" controlId="seriesList">
+                                                                            <div className="form-group" controlId="seriesIds">
                                                                                 <div className="row">
                                                                                     <Field 
-                                                                                        name={`seriesList.${index}.seriesId`}
+                                                                                        name={`seriesIds[${index}]`}
                                                                                         validate={validateSeries}
                                                                                     >
                                                                                         {({
@@ -626,10 +617,12 @@ export default function BookEdit(){
                                                                                     <div className="col">
                                                                                         <button
                                                                                             type="button"
-                                                                                            className="btn btn-danger"
+                                                                                            className="btn btn-outline-danger"
                                                                                             onClick={() => arrayHelpers.remove(index)}
                                                                                         >
-                                                                                        -
+                                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
+                                                                                                <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"/>
+                                                                                            </svg>
                                                                                         </button>
                                                                                     </div>
                                                                                 </div>
@@ -644,9 +637,14 @@ export default function BookEdit(){
                                                             <div className="col">
                                                                 <button 
                                                                     type="button" 
-                                                                    className="btn btn-success mt-2"
+                                                                    className="btn btn-outline-success mt-2"
                                                                     onClick={() => arrayHelpers.push({})}
-                                                                >+</button>
+                                                                >
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                                                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                                                                    </svg>
+                                                                    Add series
+                                                                </button>
                                                             </div>
                                                         </div>
                                                 </ul>

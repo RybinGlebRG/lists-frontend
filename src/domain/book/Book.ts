@@ -1,6 +1,8 @@
 import { BookStatus } from "../bookstatus/BookStatus";
 import BookType from "../bookType/BookType";
 import ReadingRecord from "../readingrecord/ReadingRecord";
+import Series from "../series/Series";
+import Tag from "../tag/Tag";
 
 export default class Book {
     
@@ -15,9 +17,9 @@ export default class Book {
     private _itemType: string;
     private _chain: Book[];
     private _readingRecords: ReadingRecord[];
-    private _tags: any[];
+    private _tags: Tag[];
     private _textAuthors: any[];
-    private _seriesList: any[];
+    private _seriesList: Series[];
     private _URL: string | null;
 
     public constructor(
@@ -32,9 +34,9 @@ export default class Book {
         itemType: string,
         chain: Book[],
         readingRecords: ReadingRecord[],
-        tags: any[],
+        tags: Tag[],
         textAuthors: any[],
-        seriesList: any[],
+        seriesList: Series[],
         URL: string | null
     ) {
         this._id = id;

@@ -5,7 +5,7 @@ export default class ReadingRecord {
 
     private _id: number | null;
     private _bookId: number;
-    private _bookStatus: BookStatus | null;
+    private _bookStatus: BookStatus;
     private _startDate: Date;
     private _endDate: Date | null;
     private _lastChapter: number | null;
@@ -13,7 +13,7 @@ export default class ReadingRecord {
     public constructor(
         id: number | null,
         bookId: number,
-        bookStatus: BookStatus | null,
+        bookStatus: BookStatus,
         startDate: Date,
         endDate: Date | null,
         lastChapter: number | null

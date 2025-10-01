@@ -1,3 +1,8 @@
+interface SeriesResponse {
+    seriesId: number,
+    title: string
+}
+
 interface ResponseBook {
     bookId: number,
     title: string,
@@ -18,6 +23,6 @@ interface ResponseBook {
     readingRecords: ReadingRecordResponse[],
     tags: any[],
     textAuthors: any[],
-    seriesList: any[],
+    seriesList: SeriesResponse[],
     url: string
 }

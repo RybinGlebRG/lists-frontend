@@ -2,6 +2,7 @@ import { BookStatus } from "../bookstatus/BookStatus";
 import BookType from "../bookType/BookType";
 import Book from "./Book";
 import * as readingRecordFactory from '../readingrecord/readingRecordFactory'
+import Series from "../series/Series";
 
 export function fromResponseBook(dto: ResponseBook) {
 
@@ -25,7 +26,7 @@ export function fromResponseBook(dto: ResponseBook) {
         dto.readingRecords.length > 0 ? dto.readingRecords.map(item => readingRecordFactory.fromReadingRecordResponse(item)) : [],
         dto.tags,
         dto.textAuthors,
-        dto.seriesList,
+        dto.seriesList.map(item => new Series(item.seriesId, item.title)),
         dto.url,
     );
 
