@@ -1,29 +1,8 @@
+import { BookStatus } from "../bookstatus/BookStatus";
 import BookType from "../bookType/BookType";
-
-export class BookStatus {
-
-    private _statusId: number;
-    private _statusName: string;
-
-    public constructor(
-        statusId: number,
-        statusName: string
-    ) {
-        this._statusId = statusId;
-        this._statusName = statusName;
-
-
-    }
-
-    public get statusId() {
-        return this._statusId;
-    }
-
-    public get statusName() {
-        return this._statusName;
-    }
-
-}
+import ReadingRecord from "../readingrecord/ReadingRecord";
+import Series from "../series/Series";
+import Tag from "../tag/Tag";
 
 export default class Book {
     
@@ -37,10 +16,10 @@ export default class Book {
     private _bookType: BookType | null;
     private _itemType: string;
     private _chain: Book[];
-    private _readingRecords: any[];
-    private _tags: any[];
+    private _readingRecords: ReadingRecord[];
+    private _tags: Tag[];
     private _textAuthors: any[];
-    private _seriesList: any[];
+    private _seriesList: Series[];
     private _URL: string | null;
 
     public constructor(
@@ -54,10 +33,10 @@ export default class Book {
         bookType: BookType | null,
         itemType: string,
         chain: Book[],
-        readingRecords: any[],
-        tags: any[],
+        readingRecords: ReadingRecord[],
+        tags: Tag[],
         textAuthors: any[],
-        seriesList: any[],
+        seriesList: Series[],
         URL: string | null
     ) {
         this._id = id;

@@ -11,8 +11,9 @@ import {
 import Filter from '../api/Filter';
 import SortField from '../api/SortField';
 import SearchBooksRequest from '../api/SearchBooksRequest'
-import Book, { BookStatus } from '../../../domain/book/Book';
+import Book from '../../../domain/book/Book';
 import BookType from '../../../domain/bookType/BookType';
+import * as bookFactory from '../../../domain/book/bookFactory';
 
 interface SearchBody {
 	sort: [
@@ -25,42 +26,7 @@ interface SearchBody {
 	filters: any[] | null
 }
 
-interface ResponseBook {
-	bookId: number,
-	title: string,
-	bookStatus: {
-		statusId: number,
-		statusName: string
-	},
-	insertDate: string,
-	lastUpdateDate: string,
-	lastChapter: number | null,
-	note: string | null,
-	bookType: {
-		typeId: number,
-		typeName: string
-	},
-	itemType: string,
-	chain: any[],
-	readingRecords: [
-		{
-			recordId: number,
-			bookId: number,
-			bookStatus: {
-				statusId: number,
-				statusName: string
-			},
-			startDate: string,
-			endDate: string | null,
-			isMigrated: boolean,
-			lastChapter: number | null
-		}
-	],
-	tags: any[],
-	textAuthors: any[],
-	seriesList: any[],
-	url: string
-}
+
 
 async function loadData(listOrdering: string, bookStatuses: any[], JWT: string, userId: number, onUnauthorized: () => void, title: string){
 
@@ -158,31 +124,7 @@ export default function useBooks(){
 
 	let books: Book[] = [];
 	if (bookList != null) {
-		books = bookList.map((item: ResponseBook) => {
-			return new Book(
-				item.bookId,
-				item.title,
-				new BookStatus(
-					item.bookStatus.statusId,
-					item.bookStatus.statusName
-				),
-				new Date(item.insertDate),
-				new Date(item.lastUpdateDate),
-				item.lastChapter,
-				item.note,
-				item.bookType != null ? new BookType(
-						item.bookType.typeId,
-						item.bookType.typeName
-					) : null,
-				item.itemType,
-				item.chain,
-				item.readingRecords,
-				item.tags,
-				item.textAuthors,
-				item.seriesList,
-				item.url,
-			);
-		});
+		books = bookList.map((item: ResponseBook) => bookFactory.fromResponseBook(item));
 	}
 
     const res= {

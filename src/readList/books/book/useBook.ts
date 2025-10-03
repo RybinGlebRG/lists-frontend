@@ -4,15 +4,16 @@ import {openSignIn} from '../../../displayAreaSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import * as dateUtils from '../../../utils/dateUtils'
 import GetBookRequest from '../api/GetBookRequest';
-import PostBookRequest from '../api/PostBookRequest';
+import PutBookRequest from '../api/PutBookRequest';
 import Book from '../../../domain/book/Book';
+import * as bookFactory from '../../../domain/book/bookFactory';
 
 export default function useBook(){
     const dispatch = useDispatch();
 
 	const [error,setError] = useState<any>(null);
 	const [isLoaded,setIsLoaded] = useState<boolean>(false);
-	const [data, setData] = useState<Book | null>(null);
+	const [data, setData] = useState<ResponseBook | null>(null);
 
     const [updateError, setUpdateError] = useState(null);
     const [isUpdated, setIsUpdated] = useState(false);
@@ -39,9 +40,9 @@ export default function useBook(){
         });
     },[bookId]);
 
-    let updateBook = (postBookRequest: PostBookRequest, onUpdate: () => void) => {
+    let updateBook = (postBookRequest: PutBookRequest, onUpdate: () => void) => {
         setIsUpdated(false);
-        bookApi.postBook(postBookRequest, ()=> dispatch(openSignIn(null))) 
+        bookApi.putBook(postBookRequest, ()=> dispatch(openSignIn(null))) 
         .then(result => {
             setUpdateError(null);
             setIsUpdated(true);
@@ -56,10 +57,15 @@ export default function useBook(){
         })
     }
 
+    let book: Book | null = null;
+    if (data != null) {
+        book = bookFactory.fromResponseBook(data)
+    }
+
     const res= {
         error,
         isLoaded,
-        book: data,
+        book,
         updateBook
     }
 

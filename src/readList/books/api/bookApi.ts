@@ -1,6 +1,6 @@
 import * as commonApi from '../../../common/commonApi'
 import GetBookRequest from './GetBookRequest';
-import PostBookRequest from './PostBookRequest';
+import PutBookRequest from './PutBookRequest';
 import PostBooksRequest from './PostBooksRequest';
 import SearchBooksRequest from './SearchBooksRequest';
 
@@ -82,7 +82,7 @@ export async function deleteBook(JWT, bookId, onUnauthorized){
     await commonApi.checkError(res, onUnauthorized);
 }
 
-export async function postBook(postBookRequest: PostBookRequest, onUnauthorized: () => void){
+export async function putBook(postBookRequest: PutBookRequest, onUnauthorized: () => void){
     let res = await fetch(window.location.origin+`/api/v1/users/${postBookRequest.userId}/books/${postBookRequest.bookId}`,
     {
         method: "PUT",
@@ -90,7 +90,7 @@ export async function postBook(postBookRequest: PostBookRequest, onUnauthorized:
             'Content-Type': 'application/json;charset=utf-8',
             'Authorization': `Bearer ${postBookRequest.JWT}`
         },
-        body: postBookRequest.toJsonBody()
+        body: postBookRequest.toString()
     });
     await commonApi.checkError(res, onUnauthorized);
 }
