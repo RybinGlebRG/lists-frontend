@@ -470,7 +470,7 @@ export default function BookEdit(){
                                                                             id: null,
                                                                             startDate: dt.currentDateForInputZoned(),
                                                                             endDate: null,
-                                                                            statusId: 0,
+                                                                            statusId: 1,
                                                                             lastChapter: null
                                                                         }
                                                                         arrayHelpers.push(newReadingRecord);
