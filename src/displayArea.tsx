@@ -1,25 +1,26 @@
-import React from 'react';
 import ReadList from './readList/readList'
 import WatchList from './watchList/watchList'
 import SeriesMain from './series/SeriesMain'
-import Header from './header.js'
+import Header from './header'
 import LoginPanel from './login/login.js'
 import * as categories from './displayAreaCategories'
 import Metrics from './metrics/metrics'
 import Games from './games/main';
+import Backlog from './views/backlog/Backlog'
 import { useSelector } from 'react-redux'
 
+type Props = {
+  class?: string
+}
 
-
-
-export default function DisplayArea(){
+export default function DisplayArea(): JSX.Element {
 	const store={
-		category: useSelector(state=>state.displayAreaReducer.category),
-		panelType: useSelector(state=>state.listsReducer.panel),
-		listType: useSelector(state=>state.listsReducer.listType)
+		category: useSelector((state: any) => state.displayAreaReducer.category),
+		panelType: useSelector((state: any) => state.listsReducer.panel),
+		listType: useSelector((state: any) => state.listsReducer.listType)
     }
 
-	let list;
+	let list: JSX.Element | null = null;
 	if (store.category === categories.READ_LIST){
 		list = (<ReadList/>)
 	} else if (store.category === categories.WATCH_LIST){
@@ -30,20 +31,22 @@ export default function DisplayArea(){
 		list = (<Games/>)
 	} else if (store.category === categories.METRICS){
 		list= (<Metrics/>)
+	} else if (store.category === categories.BACKLOG) {
+		list = (<Backlog/>)
 	}
 
 	list = (
-		<div class="row">
-			<div class="col">
-				<div class="row">
-					<div class="col">
-						<div class="row">
-							<div class="col">
+		<div className="row">
+			<div className="col">
+				<div className="row">
+					<div className="col">
+						<div className="row">
+							<div className="col">
 								<Header/>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col">
+						<div className="row">
+							<div className="col">
 								{list}
 							</div>	
 						</div>
@@ -60,7 +63,7 @@ export default function DisplayArea(){
 	} 
 
 	return (
-		<div class="container-fluid h-100">
+		<div className="container-fluid h-100">
 			{list}
 		</div>
 	)

@@ -4,3 +4,4 @@ export const SERIES_MAIN = "SERIES_MAIN";
 export const METRICS = "METRICS";
 export const GAMES = "GAMES";
 export const SIGN_IN = "SIGN_IN";
+export const BACKLOG = "BACKLOG";

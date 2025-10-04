@@ -8,6 +8,7 @@ import gamesReducer from '../games/gamesSlice.js'
 import loginReducer from '../login/loginSlice.js'
 import tagsReducer from '../tags/tagsSlice.js'
 import authorsReducer from '../readList/authors/authorsSlice.js'
+import backlogReducer from '../views/backlog/backlogSlice'
 
 
 // const rootReducer = combineReducers({
@@ -24,7 +25,8 @@ export default  configureStore({
       gamesReducer: gamesReducer,
       loginReducer: loginReducer,
       tagsReducer: tagsReducer,
-      authorsReducer: authorsReducer
+      authorsReducer: authorsReducer,
+      backlogReducer: backlogReducer
     } 
 })
 
