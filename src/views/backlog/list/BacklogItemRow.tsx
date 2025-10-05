@@ -11,6 +11,25 @@ export default function BacklogItemRow(props: BacklogItemRowProps) {
 
     const {deleteBacklogItem} = useBacklogItems();
 
+    let note: JSX.Element | null = null;
+    if (props.backlogItem.note != null) {
+        note = (
+            <div className="row mt-2 mb-2 me-2">
+                <div className="col">
+                    <div className="form-floating">
+                        <textarea 
+                            className="form-control" 
+                            placeholder="Leave a comment here" 
+                            id="floatingTextarea"
+                            disabled={true}
+                        >{props.backlogItem.note}</textarea>
+                        <label htmlFor="floatingTextarea">Note</label>
+                    </div>                    
+                </div>
+            </div>
+        )
+    }
+
     return (
         <li className="list-group-item" key={props.backlogItem.id}>
             <div className="row mt-2 mb-2 me-2">
@@ -41,6 +60,7 @@ export default function BacklogItemRow(props: BacklogItemRowProps) {
                     </button>
                 </div>
             </div>
+            {note}
         </li>
     )
 }
