@@ -15,7 +15,6 @@ import backlogReducer from '../views/backlog/backlogSlice'
 //     listsReducer: lists
 //   })
 
-
 export default  configureStore({ 
     reducer: {
       listsReducer: lists,
