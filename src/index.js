@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import DisplayArea from './displayArea.js';
+import DisplayArea from './displayArea';
 import { Provider } from 'react-redux'
 import store from './redux/store'
 
