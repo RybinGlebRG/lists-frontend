@@ -19,6 +19,10 @@ export interface BacklogItemCreateRequest {
     creationDate: string | null
 } 
 
+export interface BacklogItemEventCreateRequest {
+    eventTypeId: number
+}
+
 export async function getAll(userId: number, JWT: string, onUnauthorized: () => void): Promise<BacklogResponse> {
 
     let res = await fetch(`${window.location.origin}/api/v1/users/${userId}/backlogItems`,
@@ -63,6 +67,22 @@ export async function deleteBacklogItem(backlogItemId: number, userId: number, J
                 headers: {
                     'Authorization': `Bearer ${JWT}`
                 }
+            }
+        );
+    await commonApi.checkError(res, onUnauthorized);
+     
+}
+
+export async function createBacklogItemEvent(backlogItemEventCreateRequest: BacklogItemEventCreateRequest, backlogItemId: number, userId: number, JWT: string, onUnauthorized: () => void): Promise<void> {
+
+    let res = await fetch(`${window.location.origin}/api/v1/users/${userId}/backlogItems/${backlogItemId}/events`,
+            {
+                method: "POST",
+                headers: {
+                    'Authorization': `Bearer ${JWT}`,
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(backlogItemEventCreateRequest)
             }
         );
     await commonApi.checkError(res, onUnauthorized);

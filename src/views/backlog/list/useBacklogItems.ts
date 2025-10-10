@@ -19,6 +19,9 @@ export default function useBacklogItems(){
     const [deleteError, setDeleteError] = useState<string | null>(null);
     const [isDeleted, setIsDeleted] = useState<boolean>(false);
 
+    const [moveError, setMoveError] = useState<string | null>(null);
+    const [isMoved, setIsMoved] = useState<boolean>(false);
+
     const store={
         JWT: useState<string>(useSelector((state: any) =>state.listsReducer.JWT))[0],
         userId: useState<number>(useSelector((state: any)=>state.listsReducer.userId))[0],
@@ -79,6 +82,28 @@ export default function useBacklogItems(){
         })
     }
 
+    let createBookMoveEvent = (backlogItem: BacklogItem) => {
+        BacklogRepository.createBacklogItemEvent(
+            {
+                eventTypeId: 0
+            },
+            backlogItem.id,
+            store.userId,
+            store.JWT,
+            ()=> dispatch(openSignIn(null))
+        )
+        .then(result => {
+            setMoveError(null);
+            setIsMoved(true);
+            dispatch(reload());
+        })
+        .catch(error => {
+            setMoveError(error.message);
+            setIsMoved(true);
+            alert(error.message);
+        })
+    }
+
     if (store.isReload) {
         dispatch(setReloaded())
         BacklogRepository.getAll(store.userId, store.JWT, ()=> dispatch(openSignIn(null)))
@@ -106,7 +131,11 @@ export default function useBacklogItems(){
 
         deleteBacklogItem,
         deleteError,
-        isDeleted
+        isDeleted,
+
+        createBookMoveEvent,
+        moveError,
+        isMoved
     }
 
     return res;

@@ -1,3 +1,5 @@
+import SeriesItemTypesEnum from "./SeriesItemTypesEnum";
+
 export default class SeriesItemType {
     private static readonly typeEnum = {
         "0": new SeriesItemType(0, "Book"),
@@ -26,6 +28,10 @@ export default class SeriesItemType {
 
     public static findById(id: number): SeriesItemType {
         return this.typeEnum[`${id}`];
+    }
+
+    public static findByType(typeEnum: SeriesItemTypesEnum): SeriesItemType {
+        return this.typeEnum[typeEnum];
     }
 
 }
