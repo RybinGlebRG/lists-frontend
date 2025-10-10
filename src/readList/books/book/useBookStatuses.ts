@@ -10,14 +10,14 @@ export default function useBookStatuses({listId}){
 
 	const [error, setError] = useState(null);
 	const [isLoaded, setIsLoaded] = useState(false);
-	const [bookStatuses, setBookStatuses] = useState(null);
+	const [bookStatuses, setBookStatuses] = useState<any[] | null>(null);
 	
     let store={
-        JWT: useSelector(state=>state.listsReducer.JWT)
+        JWT: useSelector((state: any) => state.listsReducer.JWT)
     }
 
     useEffect(()=>{
-        bookApi.getBookStatuses(store.JWT, ()=> dispatch(openSignIn()))
+        bookApi.getBookStatuses(store.JWT, ()=> dispatch(openSignIn({})))
         .then(bookStatuses =>{
             setError(null);
             setBookStatuses(bookStatuses.items);
@@ -31,11 +31,11 @@ export default function useBookStatuses({listId}){
         });
     },[stateListId]);
 
-    const res= [
+    const res= {
         error,
         isLoaded,
         bookStatuses
-    ]
+    }
 
     return res;
 }

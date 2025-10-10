@@ -3,6 +3,11 @@ interface SeriesResponse {
     title: string
 }
 
+interface TagResponse {
+    tagId: number,
+    name: string
+}
+
 interface ResponseBook {
     bookId: number,
     title: string,
@@ -21,7 +26,7 @@ interface ResponseBook {
     itemType: string,
     chain: ResponseBook[],
     readingRecords: ReadingRecordResponse[],
-    tags: any[],
+    tags: TagResponse[],
     textAuthors: any[],
     seriesList: SeriesResponse[],
     url: string

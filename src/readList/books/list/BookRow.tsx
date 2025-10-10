@@ -160,7 +160,7 @@ export default function BookRow(props: BookRowProps){
         )
     })
 
-    let note;
+    let note: JSX.Element;
     let content = "--";
     if (props.book.note) {
         content = props.book.note;
