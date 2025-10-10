@@ -1,3 +1,18 @@
+# v0.59.1
+
+## Features
+
+ - N/A
+
+## Bugfixes
+
+ - Fixed book editing
+
+## Other
+
+ - N/A
+
+============================================
 # v0.59.0
 
 ## Features

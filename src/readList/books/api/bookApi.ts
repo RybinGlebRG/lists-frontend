@@ -26,7 +26,7 @@ export async function postBooks(postBooksRequest: PostBooksRequest, onUnauthoriz
     await commonApi.checkError(res, onUnauthorized);
 }
 
-export async function getBookTypes(JWT, onUnauthorized){
+export async function getBookTypes(JWT, onUnauthorized): Promise<any>{
     let bookTypes = await fetch(window.location.origin+`/api/v0.2/bookTypes`,
     {
         method: "GET",
@@ -55,7 +55,7 @@ export async function searchBooks(searchBooksRequest: SearchBooksRequest, onUnau
     return bookList;
 }
 
-export async function getBookStatuses(JWT, onUnauthorized){
+export async function getBookStatuses(JWT, onUnauthorized): Promise<any>{
     let res = await fetch(window.location.origin+`/api/v0.2/bookStatuses`,
     {
         method: "GET",

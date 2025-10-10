@@ -19,7 +19,10 @@
     "skipLibCheck": true,
     "strict": true,
     "preserveConstEnums": true,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "alwaysStrict": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
   },
   "include": ["src/**/*"],
   "exclude": ["**/*.spec.ts"]

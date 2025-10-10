@@ -1,39 +1,25 @@
 import { useSelector, useDispatch } from 'react-redux'
-import {useState, useEffect, JSX} from 'react';
+import {JSX} from 'react';
 import useBook from '../useBook';
-import useAuthorList from '../../../authors/useAuthorsList.js';
-import { selectBookId } from '../../booksSlice.js';
-import useBookTypes from '../useBookTypes.js';
-import useBookStatuses from '../useBookStatuses.js';
+import useAuthorList from '../../../authors/useAuthorsList';
+import useBookTypes from '../useBookTypes';
+import useBookStatuses from '../useBookStatuses';
 import * as dateUtils from '../../../../utils/dateUtils'
 import { Formik, Field, FieldArray} from 'formik';
-import * as booksApi from '../api/bookApi'
-import {openSignIn} from '../../../../displayAreaSlice.js'
 import {
     openBook,
     openBookList
 } from '../../booksSlice.js'
-import ReadingRecordList from './ReadingRecordList.js';
-import useReadingRecords from '../useReadingRecords.js';
-import * as readingRecordsApi from  '../../readingRecordsApi.js';
-import useTags from '../../../../tags/useTags.js';
+import useTags from '../../../../tags/useTags';
 import PutBookRequest, { ReadingRecordPutView } from '../../api/PutBookRequest';
 import useSeriesList from '../../../../dao/series/useSeriesList';
-import ReadingRecordModel from '../../../../domain/readingrecord/ReadingRecord';
-import { BookStatus } from '../../../../domain/bookstatus/BookStatus';
 import * as dt from '../../../../utils/dateUtils';
+import DivFormGroup from '../../../../views/common/DivFormGroup';
+import Tag from '../../../../domain/tag/Tag';
+import TagsSelector from '../../../../views/book/edit/TagsSelector';
+import SeriesSelector from '../../../../views/book/edit/SeriesSelector';
+import { ISeriesItem } from '../../../../dao/series/ISeriesList';
 
-function validateTag(value) {
-    if (!value){
-        return 'Tag name must be set';
-    }
-}
-
-function validateSeries(value) {
-    if (!value){
-        return 'Series name must be set';
-    }
-}
 
 interface ReadingRecordForm {
     id: number | null, 
@@ -43,7 +29,17 @@ interface ReadingRecordForm {
     lastChapter: number | null
 } 
 
-interface BookForm {
+export interface SeriesForm {
+    id: string,
+    title: string
+}
+
+export interface TagForm {
+    id: string,
+    name: string
+}
+
+export interface BookForm {
     id: number,
     title: string,
     authorId: number,
@@ -51,13 +47,13 @@ interface BookForm {
     // series: this.props.store.book.series.length > 0 ?this.props.store.book.series[0].seriesId: null,
     // order: this.props.store.book.series.length > 0 ? this.props.store.book.series[0].seriesOrder: null,
     // lastChapter: number,
-    bookTypeId: number | null,
+    bookTypeId: number | undefined,
     createDate: string,
     note: string | null,
     readingRecords: ReadingRecordForm[],
     url: string | null,
-    tagIds: number[],
-    seriesIds: number[],
+    tags: TagForm[],
+    series: SeriesForm[],
 }
 
 
@@ -72,17 +68,15 @@ export default function BookEdit(){
     }
 
     const {error, isLoaded, book, updateBook} = useBook();
-    const [authorListError, authorListIsLoaded, authors] = useAuthorList();
-    const [bookTypesError, bookTypesIsLoaded, bookTypes] = useBookTypes({listId: store.listId});
-    const [bookStatusesError, bookStatusesIsLoaded, bookStatuses] = useBookStatuses({listId: store.listId});
+    const authorList = useAuthorList();
+    const bookTypes = useBookTypes({listId: store.listId});
+    const bookStatuses = useBookStatuses({listId: store.listId});
     // const {readingRecordsError, readingRecordsIsLoaded, readingRecords, submitReadingRecords } = useReadingRecords({bookId: store.bookId});
-    const [tagsError, tagsIsLoaded, tags] = useTags();
+    const tagsData = useTags();
     const seriesList = useSeriesList();
 
 
-    function handleSaveValue(values: BookForm){        
-        let dt = dateUtils.postprocessValuesDate(values.createDate);
-
+    function handleSaveValue(values: BookForm){
         let postBookRequest = new PutBookRequest(
             store.userId,
             store.JWT,
@@ -90,11 +84,11 @@ export default function BookEdit(){
             values.title,
             values.authorId,
             values.statusId,
-            values.seriesIds.length > 0 ? values.seriesIds[0] : null,
+            values.series.length > 0 ? parseInt(values.series[0].id) : null,
             null,
             null,
             values.bookTypeId,
-            dt,
+            dateUtils.fromStringZonedToStringUTC(values.createDate),
             values.note,
             values.url,
             values.readingRecords.map(item => {
@@ -107,12 +101,12 @@ export default function BookEdit(){
                 return new ReadingRecordPutView(
                     item.id, 
                     item.statusId, 
-                    dateUtils.fromInputStringZoned(item.startDate), 
-                    item.endDate != null ? dateUtils.fromInputStringZoned(item.endDate) : null, 
+                    dateUtils.fromStringZonedToStringUTC(item.startDate), 
+                    item.endDate != null ? dateUtils.fromStringZonedToStringUTC(item.endDate) : null, 
                     item.lastChapter
                 );
             }),
-            values.tagIds
+            values.tags.map(item => parseInt(item.id))
         );
 
         updateBook(
@@ -125,11 +119,11 @@ export default function BookEdit(){
         // });
     }
 
-    let displayResult: JSX.Element;
+    let displayResult: JSX.Element | null = null;
 
-    if (error || authorListError || bookTypesError || bookStatusesError || tagsError){
-        displayResult=( <div className="alert alert-danger" role="alert">{error + authorListError + bookTypesError + bookStatusesError}</div>);
-    } else if (!isLoaded || !authorListIsLoaded || !bookTypesIsLoaded || !bookStatusesIsLoaded || !tagsIsLoaded){
+    if (error || authorList.error || bookTypes.error || bookStatuses.error || tagsData.error){
+        displayResult=( <div className="alert alert-danger" role="alert">{error + authorList.error + bookTypes.error + bookStatuses.error}</div>);
+    } else if (!isLoaded || !authorList.isLoaded || !bookTypes.isLoaded || !bookStatuses.isLoaded || !tagsData.isLoaded){
         displayResult=( 
             <div className="d-flex justify-content-center">
                 <div className="spinner-border m-5" role="status">
@@ -137,14 +131,12 @@ export default function BookEdit(){
                 </div>
             </div>
         );
-    } else if (book != null && authors != null && bookTypes != null && tags != null && seriesList != null && seriesList.seriesList != null && bookStatuses != null){
-        
-        let createDate = dateUtils.preprocessValues(book.insertDate)
+    } else if (book != null && authorList.authors != null && bookTypes.bookTypes != null && tagsData.data != null && seriesList != null && seriesList.seriesList != null && bookStatuses.bookStatuses != null){
 
         let authorsItems: any[] = []
-        for (let i = 0; i <authors.length; i++){
+        for (let i = 0; i <authorList.authors.length; i++){
             // authorsItems.push(<option key={i} value={i}>{i}</option>)
-            authorsItems.push(<option value={authors[i].authorId}>{authors[i].name}</option>)
+            authorsItems.push(<option value={authorList.authors[i].authorId}>{authorList.authors[i].name}</option>)
         }
 
         // let seriesItems=[]
@@ -153,23 +145,18 @@ export default function BookEdit(){
         // }
 
         let bookTypesArray: JSX.Element[] = []
-        for (let i = 0; i < bookTypes.length; i++){
-            bookTypesArray.push(<option value={bookTypes[i].id}>{bookTypes[i].name}</option>)
+        for (let i = 0; i < bookTypes.bookTypes.length; i++){
+            bookTypesArray.push(<option value={bookTypes.bookTypes[i].id}>{bookTypes.bookTypes[i].name}</option>)
         }
 
         let bookStatusesArray: JSX.Element[] = []
-        for (let i = 0; i < bookStatuses.length; i++){
-            bookStatusesArray.push(<option value={bookStatuses[i].statusId}>{bookStatuses[i].statusName}</option>)
+        for (let i = 0; i < bookStatuses.bookStatuses.length; i++){
+            bookStatusesArray.push(<option value={bookStatuses.bookStatuses[i].statusId}>{bookStatuses.bookStatuses[i].statusName}</option>)
         }
 
         let tagsArray: JSX.Element[] = []
-        for (let i = 0; i < tags.length; i++){
-            tagsArray.push(<option value={tags[i].tagId}>{tags[i].name}</option>)
-        }
-
-        let seriesListArray: JSX.Element[] = []
-        for (let i = 0; i < seriesList.seriesList.items.length; i++){
-            seriesListArray.push(<option value={seriesList.seriesList.items[i].seriesId}>{seriesList.seriesList.items[i].title}</option>)
+        for (let i = 0; i < tagsData.data.length; i++){
+            tagsArray.push(<option value={tagsData.data[i].id}>{tagsData.data[i].name}</option>)
         }
 
         const initialValues: BookForm = {
@@ -180,22 +167,34 @@ export default function BookEdit(){
             // series: this.props.store.book.series.length > 0 ?this.props.store.book.series[0].seriesId: null,
             // order: this.props.store.book.series.length > 0 ? this.props.store.book.series[0].seriesOrder: null,
             // lastChapter: book.lastChapter,
-            bookTypeId: book.bookType ? book.bookType.typeId: null,
-            createDate: createDate,
+            bookTypeId: book.bookType ? book.bookType.typeId: undefined,
+            createDate: dateUtils.fromDateToStringInputZoned(book.insertDate),
             note: book.note,
             readingRecords: book.readingRecords.map(item => {
                 let res: ReadingRecordForm = {
                     id: item.id, 
-                    startDate: dateUtils.toStringInputZoned(item.startDate),
-                    endDate: item.endDate != null ? dateUtils.toStringInputZoned(item.endDate) : null,
+                    startDate: dateUtils.fromDateToStringInputZoned(item.startDate),
+                    endDate: item.endDate != null ? dateUtils.fromDateToStringInputZoned(item.endDate) : null,
                     statusId: item.bookStatus.statusId,
                     lastChapter: item.lastChapter
                 }
                 return res;
             }),
             url: book.URL,
-            tagIds: book.tags.map(item => item.id),
-            seriesIds: book.seriesList.map(item => item.id)
+            tags: book.tags.map(item => {
+                let res: TagForm = {
+                    id: item.id.toString(),
+                    name: item.name
+                }
+                return res;
+            }),
+            series: book.seriesList.map(item => {
+                let res: SeriesForm = {
+                    id: item.id.toString(),
+                    title: item.title
+                }
+                return res;
+            })
         }
 
         displayResult=(
@@ -257,8 +256,6 @@ export default function BookEdit(){
                                 onSubmit={handleSubmit}
                                 // onSubmit={() => console.log("HERE1")}
                             >
-                                {console.log(values)}
-
                                 <Field 
                                     name="title"
                                     validate={value => {
@@ -274,7 +271,7 @@ export default function BookEdit(){
                                         meta
                                     })=>(                                        
                                         <div className="mb-3">
-                                            <label for="titleInput" className="form-label">Title</label>
+                                            <label htmlFor="titleInput" className="form-label">Title</label>
                                             <input 
                                                 id="titleInput"
                                                 className="form-control" 
@@ -290,39 +287,56 @@ export default function BookEdit(){
                                 </Field>    
 
 
-                                <div className="form-group" controlId="author">
-                                    <label>Author</label >
-                                    <select className="form-control" 
-                                        as="select"
-                                        name="author"
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        value={values.author}      
-                                    >   
-                                        <option value="" >--</option>
-                                        {authorsItems}
-                                    </select>
-                                </div>
+                                <Field 
+                                    name="authorId"
+                                >
+                                    {({
+                                        field,
+                                        meta
+                                    })=>(    
+                                        <DivFormGroup controlId={field.name}>
+                                            <label>Author</label >
+                                            <select className="form-control" 
+                                                as="select"
+                                                name={field.name}
+                                                {...field}    
+                                            >   
+                                                <option value="" >--</option>
+                                                {authorsItems}
+                                            </select>
+                                        </DivFormGroup>                                    
+                                    )}
+                                </Field>
 
-                                <div className="form-group" controlId="bookType">
-                                    <label>Book Type</label >
-                                    <select className="form-control" 
-                                        as="select"
-                                        name="bookType"
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        value={values.bookType}      
-                                    >   
-                                        <option value='' >--</option>
-                                        {/* <option value="1">Book</option>
-                                        <option value="2">Light Novel</option>
-                                        <option value="3">Webtoon</option> */}
-                                        {bookTypesArray}
-                                    </select>
-                                </div>
+                                <Field 
+                                    name="bookTypeId"
+                                >
+                                    {({
+                                        field,
+                                        meta
+                                    })=>(    
+                                        <DivFormGroup controlId={field.name}>
+                                            <label>Book Type</label >
+                                            <select 
+                                                className="form-control" 
+                                                as="select"
+                                                name={field.name}
+                                                 {...field}    
+                                            >   
+                                                <option value='' >--</option>
+                                                {/* <option value="1">Book</option>
+                                                <option value="2">Light Novel</option>
+                                                <option value="3">Webtoon</option> */}
+                                                {bookTypesArray}
+                                            </select>
+                                        </DivFormGroup>                                   
+                                    )}
+                                </Field>
 
-                                <div className="form-group" controlId="createDate">
-                                    <label>Create date UTC</label>
+                                
+
+                                <DivFormGroup controlId="createDate">
+                                    <label>Creation date</label>
                                     <input className="form-control" 
                                         type="datetime-local" 
                                         name="createDate"
@@ -330,20 +344,20 @@ export default function BookEdit(){
                                         onChange={handleChange}
                                         onBlur={handleBlur}
                                     />
-                                </div>
+                                </DivFormGroup>
 
                                 <Field name="note">
                                     {({
                                         field
                                     })=>(
-                                        <div className="form-group" controlId="note">
+                                        <DivFormGroup controlId={field.name}>
                                             <label>Note</label>
                                             <textarea
                                                 className="form-control" 
                                                 rows="3"
                                                 {...field}                             
                                             />
-                                        </div> 
+                                        </DivFormGroup> 
                                     )}
 
                                 </Field>
@@ -352,14 +366,14 @@ export default function BookEdit(){
                                     {({
                                         field
                                     })=>(
-                                        <div className="form-group" controlId="url">
+                                        <DivFormGroup controlId={field.name}>
                                             <label>URL</label>
                                             <input className="form-control" 
                                                 type="text" 
                                                 placeholder="URL"
                                                 {...field}  
                                             />
-                                        </div> 
+                                        </DivFormGroup> 
                                     )}
                                 </Field>
 
@@ -378,7 +392,7 @@ export default function BookEdit(){
                                                                     className="list-group-item" 
                                                                     key={index}
                                                                 >
-                                                                    <div className="form-group" controlId="readingRecords">
+                                                                    <DivFormGroup controlId="readingRecords">
                                                                         <div className="row">
                                                                             <Field name={`readingRecords[${index}].startDate`}>
                                                                                 {({
@@ -447,13 +461,13 @@ export default function BookEdit(){
                                                                                     className="btn btn-outline-danger"
                                                                                     onClick={() => arrayHelpers.remove(index)}
                                                                                 >
-                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-dash" viewBox="0 0 16 16">
                                                                                         <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"/>
                                                                                     </svg>
                                                                                 </button>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
+                                                                    </DivFormGroup>
                                                                 </li>
                                                                 ))
                                                             )
@@ -476,7 +490,7 @@ export default function BookEdit(){
                                                                         arrayHelpers.push(newReadingRecord);
                                                                     }}
                                                                 >
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus" viewBox="0 0 16 16">
                                                                         <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
                                                                     </svg>
                                                                     Add record
@@ -491,164 +505,19 @@ export default function BookEdit(){
 
                                 <div className="row mt-4">
                                     <div className="col-md-auto">
-                                        <FieldArray 
-                                            name="tags"
-                                            render={arrayHelpers => (
-                                                <ul className="list-group list-group-flush">
-                                                    <label>Tags</label>
-                                                        { 
-                                                            values.tags && values.tags.length > 0 ?
-                                                            (
-                                                                values.tags.map((tag, index) => (
-                                                                        <li 
-                                                                            className="list-group-item" 
-                                                                            key={index}
-                                                                        >
-                                                                            <div className="form-group" controlId="tags">
-                                                                                <div className="row">
-                                                                                    <Field 
-                                                                                        name={`tags.${index}.tagId`}
-                                                                                        validate={validateTag}
-                                                                                    >
-                                                                                        {({
-                                                                                            field,
-                                                                                            meta
-                                                                                        })=>(
-                                                                                            <div className="col-md-auto">
-                                                                                                <select 
-                                                                                                    className="form-control" 
-                                                                                                    as="select"
-                                                                                                    {...field}   
-                                                                                                >   
-                                                                                                    <option value='' >Select tag</option>
-                                                                                                    {tagsArray}
-                                                                                                </select>
-                                                                                                { meta.error ? (
-                                                                                                    <label className="text-danger">
-                                                                                                        {meta.error}
-                                                                                                    </label>
-                                                                                                ): null}
-                                                                                            </div>
-                                                                                        )}
-                                                                                    </Field>
-
-                                                                                    <div className="col">
-                                                                                        <button
-                                                                                            type="button"
-                                                                                            className="btn btn-outline-danger"
-                                                                                            onClick={() => arrayHelpers.remove(index)}
-                                                                                        >
-                                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
-                                                                                                <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"/>
-                                                                                            </svg>
-                                                                                        </button>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </li>
-                                                                ))
-                                                            )
-                                                            : null
-                                                        }
-
-                                                        <div className="row">
-                                                            <div className="col">
-                                                                <button 
-                                                                    type="button" 
-                                                                    className="btn btn-outline-success mt-2"
-                                                                    onClick={() => arrayHelpers.push({})}
-                                                                >
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-                                                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                                                                    </svg>
-                                                                    Add tag
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                </ul>
-                                            )}                        
+                                        <TagsSelector
+                                            values={values}
+                                            tagsArray={tagsArray}
+                                            tags={tagsData.data != null ? tagsData.data : []}                                            
                                         />
                                     </div>
                                 </div>
 
                                 <div className="row mt-4">
                                     <div className="col-md-auto">
-                                        <FieldArray 
-                                            name="seriesList"
-                                            render={arrayHelpers => (
-                                                <ul className="list-group list-group-flush">
-                                                    <label>Series List</label>
-                                                        { 
-                                                            values.seriesIds.length > 0 ?
-                                                            (
-                                                                values.seriesIds.map((series, index) => (
-                                                                        <li 
-                                                                            className="list-group-item" 
-                                                                            key={index}
-                                                                        >
-                                                                            <div className="form-group" controlId="seriesIds">
-                                                                                <div className="row">
-                                                                                    <Field 
-                                                                                        name={`seriesIds[${index}]`}
-                                                                                        validate={validateSeries}
-                                                                                    >
-                                                                                        {({
-                                                                                            field,
-                                                                                            meta
-                                                                                        })=>(
-                                                                                            <div className="col-md-auto">
-                                                                                                <select 
-                                                                                                    className="form-control" 
-                                                                                                    as="select"
-                                                                                                    {...field}   
-                                                                                                >   
-                                                                                                    <option value='' >Select series</option>
-                                                                                                    {seriesListArray}
-                                                                                                </select>
-                                                                                                { meta.error ? (
-                                                                                                    <label className="text-danger">
-                                                                                                        {meta.error}
-                                                                                                    </label>
-                                                                                                ): null}
-                                                                                            </div>
-                                                                                        )}
-                                                                                    </Field>
-
-                                                                                    <div className="col">
-                                                                                        <button
-                                                                                            type="button"
-                                                                                            className="btn btn-outline-danger"
-                                                                                            onClick={() => arrayHelpers.remove(index)}
-                                                                                        >
-                                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
-                                                                                                <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"/>
-                                                                                            </svg>
-                                                                                        </button>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </li>
-                                                                ))
-                                                            )
-                                                            : null
-                                                        }
-
-                                                        <div className="row">
-                                                            <div className="col">
-                                                                <button 
-                                                                    type="button" 
-                                                                    className="btn btn-outline-success mt-2"
-                                                                    onClick={() => arrayHelpers.push({})}
-                                                                >
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-                                                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                                                                    </svg>
-                                                                    Add series
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                </ul>
-                                            )}                        
+                                        <SeriesSelector
+                                            values={values}
+                                            seriesList={seriesList.seriesList != null ? seriesList.seriesList.items : []}
                                         />
                                     </div>
                                 </div>

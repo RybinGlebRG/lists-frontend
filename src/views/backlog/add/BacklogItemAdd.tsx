@@ -29,7 +29,7 @@ export default function BacklogList(): JSX.Element{
 
         let dt: Date | null = null;
         if (values.creationDate != null) {
-            dt = dateUtils.fromInputStringZoned(values.creationDate);
+            dt = dateUtils.fromStringZonedToDate(values.creationDate);
         }
 
         if (values.title == null) {

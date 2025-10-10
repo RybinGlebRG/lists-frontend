@@ -64,12 +64,30 @@ export function fromString(strDate: string): Date {
     return new Date(strDate + ".000Z");
 }
 
-export function fromInputStringZoned(strDate: string): Date {
+export function fromStringZonedToDate(strDate: string): Date {
     return new Date(strDate + ":00.000");
 }
 
 export function getCurrentDate() {
     return new Date();
+}
+
+export function fromDateToStringUTC(date: Date): string {
+    let dt = new Date(date);
+    return dt.getUTCFullYear() + '-' +
+        (dt.getUTCMonth()+1).toString().padStart(2,"0") + '-' +
+        dt.getUTCDate().toString().padStart(2,"0") + 'T' +
+        dt.getUTCHours().toString().padStart(2,"0") + ':' +
+        dt.getUTCMinutes().toString().padStart(2,"0") + ":00";
+}
+
+export function fromStringZonedToStringUTC(date: string): string {
+    let dt = fromStringZonedToDate(date);
+    return fromDateToStringUTC(dt);
+}
+
+export function fromStrinUtcToDate(date: string): Date {
+    return new Date(date + ".000Z");
 }
 
 export function toStringInput(date: Date): string {
@@ -81,7 +99,7 @@ export function toStringInput(date: Date): string {
         dt.getUTCMinutes().toString().padStart(2,"0");
 }
 
-export function toStringInputZoned(date: Date): string {
+export function fromDateToStringInputZoned(date: Date): string {
     let dt = new Date(date);
     return dt.getFullYear() + '-' +
         (dt.getMonth()+1).toString().padStart(2,"0") + '-' +
