@@ -1,9 +1,9 @@
 import ListGroup from 'react-bootstrap/ListGroup';
-import Header from '../../common/header'
+import Header from '../../../common/header'
 import { useSelector, useDispatch } from 'react-redux'
-import useAuthorList from './useAuthorsList';
-import {openAuthor, openAuthorAdd} from '../books/booksSlice'
-import { setAuthorId } from './authorsSlice';
+import useAuthorList from '../../../readList/authors/useAuthorsList';
+import {openAuthor, openAuthorAdd} from '../../../readList/books/booksSlice'
+import { setAuthorId } from '../../../readList/authors/authorsSlice';
 
 export default function AuthorList() {
 	const dispatch = useDispatch();
@@ -13,7 +13,7 @@ export default function AuthorList() {
         userId: useSelector(state=>state.listsReducer.userId)
     }
 
-	const [error, isLoaded, authors] = useAuthorList();
+	const {error, isLoaded, authors} = useAuthorList();
 
 	let result;
 

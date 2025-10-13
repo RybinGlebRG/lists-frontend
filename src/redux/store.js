@@ -6,7 +6,7 @@ import displayAreaReducer from '../displayAreaSlice'
 import booksReducer from '../readList/books/booksSlice.js'
 import gamesReducer from '../games/gamesSlice.js'
 import loginReducer from '../login/loginSlice.js'
-import tagsReducer from '../tags/tagsSlice.js'
+import tagsReducer from '../views/tags/tagsSlice.js'
 import authorsReducer from '../readList/authors/authorsSlice.js'
 import backlogReducer from '../views/backlog/backlogSlice'
 

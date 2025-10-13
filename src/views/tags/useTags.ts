@@ -1,8 +1,8 @@
 import * as tagsApi from './tagsApi'
-import {openSignIn} from '../displayAreaSlice'
+import {openSignIn} from '../../displayAreaSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import {useState, useEffect} from 'react';
-import Tag from '../domain/tag/Tag';
+import Tag from '../../domain/tag/Tag';
 
 export default function useTags() {
     const dispatch = useDispatch();

@@ -1,9 +1,9 @@
 import { useSelector, useDispatch } from 'react-redux'
 import {useState, useEffect} from 'react';
 import useTags from './useTags';
-import Header from '../common/header'
+import Header from '../../common/header'
 import { Formik, Field} from 'formik';
-import {openTags} from '../readList/books/booksSlice'
+import {openTags} from '../../readList/books/booksSlice'
 
 export default function TagsAdd() {
     const dispatch = useDispatch();

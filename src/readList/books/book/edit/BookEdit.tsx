@@ -10,7 +10,7 @@ import {
     openBook,
     openBookList
 } from '../../booksSlice.js'
-import useTags from '../../../../tags/useTags';
+import useTags from '../../../../views/tags/useTags';
 import PutBookRequest, { ReadingRecordPutView } from '../../api/PutBookRequest';
 import useSeriesList from '../../../../dao/series/useSeriesList';
 import * as dt from '../../../../utils/dateUtils';

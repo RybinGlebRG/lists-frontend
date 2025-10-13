@@ -6,7 +6,7 @@ import {
     openBookList, 
     openAuthorList,
     openTags
-} from './books/booksSlice.js'
+} from '../../../readList/books/booksSlice.js'
 import { useDispatch } from 'react-redux'
 
 
