@@ -1,3 +1,18 @@
+# v0.60.2
+
+## Features
+
+ - N/A
+
+## Bugfixes
+
+ - Fixed author and tags menus
+
+## Other
+
+ - N/A
+
+============================================
 # v0.60.1
 
 ## Features
