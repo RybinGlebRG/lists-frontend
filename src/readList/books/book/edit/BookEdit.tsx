@@ -15,10 +15,8 @@ import PutBookRequest, { ReadingRecordPutView } from '../../api/PutBookRequest';
 import useSeriesList from '../../../../dao/series/useSeriesList';
 import * as dt from '../../../../utils/dateUtils';
 import DivFormGroup from '../../../../views/common/DivFormGroup';
-import Tag from '../../../../domain/tag/Tag';
 import TagsSelector from '../../../../views/book/edit/TagsSelector';
-import SeriesSelector from '../../../../views/book/edit/SeriesSelector';
-import { ISeriesItem } from '../../../../dao/series/ISeriesList';
+import SeriesView from '../../../../views/book/edit/SeriesView';
 
 
 interface ReadingRecordForm {
@@ -84,7 +82,7 @@ export default function BookEdit(){
             values.title,
             values.authorId,
             values.statusId,
-            values.series.length > 0 ? parseInt(values.series[0].id) : null,
+            values.series.map( item => parseInt(item.id)),
             null,
             null,
             values.bookTypeId,
@@ -515,7 +513,7 @@ export default function BookEdit(){
 
                                 <div className="row mt-4">
                                     <div className="col-md-auto">
-                                        <SeriesSelector
+                                        <SeriesView
                                             values={values}
                                             seriesList={seriesList.seriesList != null ? seriesList.seriesList.items : []}
                                         />
