@@ -8,7 +8,7 @@ import {openTags} from '../../readList/books/booksSlice'
 export default function TagsAdd() {
     const dispatch = useDispatch();
 
-    const [error, isLoaded, data, addTag] = useTags();
+    const {error, isLoaded, data, addTag} = useTags();
 
     let result;
 

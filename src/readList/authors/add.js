@@ -11,7 +11,7 @@ export default function AuthorAdd() {
 
     const dispatch = useDispatch();
 
-    const [error, isLoaded, authors, addAuthor] = useAuthorList();
+    const {error, isLoaded, authors, addAuthor} = useAuthorList();
 
     let result;
 
