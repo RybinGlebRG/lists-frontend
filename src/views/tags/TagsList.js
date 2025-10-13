@@ -1,8 +1,8 @@
 import { useSelector, useDispatch } from 'react-redux'
 import {useState, useEffect} from 'react';
 import useTags from './useTags';
-import Header from '../common/header'
-import {openTagsAdd} from '../readList/books/booksSlice'
+import Header from '../../common/header'
+import {openTagsAdd} from '../../readList/books/booksSlice'
 
 export default function TagsList() {
     const dispatch = useDispatch();
@@ -12,7 +12,7 @@ export default function TagsList() {
         userId: useSelector(state=>state.listsReducer.userId)
     }
 
-    const [error, isLoaded, data, addTag, deleteTag] = useTags();
+    const {error, isLoaded, data, addTag, deleteTag} = useTags();
 
     let result;
 

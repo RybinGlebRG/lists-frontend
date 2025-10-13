@@ -1,14 +1,14 @@
 import React from 'react';
-import ListPanel from './books/listPanel'
-import LeftMenu from './leftMenu.js' 
+import ListPanel from '../views/book/list/listPanel'
+import LeftMenu from '../views/book/list/leftMenu.js' 
 import Book from './books/book/book'
 import BookAdd from './books/add.js'
 import BookEdit from './books/book/edit/BookEdit.tsx'
-import AuthorList from './authors/list.js'
+import AuthorList from '../views/authors/list/list.js'
 import Author from './authors/Author.js'
 import AuthorAdd from './authors/add.js'
-import TagsList from '../tags/TagsList.js';
-import TagsAdd from '../tags/TagsAdd.js';
+import TagsList from '../views/tags/TagsList.js';
+import TagsAdd from '../views/tags/TagsAdd.js';
 import * as bookForms from './books/forms.js'
 import { useSelector } from 'react-redux'
 

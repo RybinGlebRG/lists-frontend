@@ -1,4 +1,4 @@
-import * as commonApi from '../common/commonApi'
+import * as commonApi from '../../common/commonApi'
 
 export async function getTags(JWT, userId, onUnauthorized) {
     let res = await fetch(window.location.origin+`/api/v1/users/${userId}/tags`,
