@@ -71,7 +71,7 @@ export default class PutBookRequest {
     private _readingRecords: ReadingRecordPutView[] = [];
     private _authorId: number | null= null;
     private _bookTypeId: number | null= null;
-    private _seriesId: number | null= null;
+    private _seriesIds: number[];
     private _order: number | null= null;
 
     public constructor(
@@ -81,7 +81,7 @@ export default class PutBookRequest {
         title: string,
         authorId: number | null= null,
         status: number,
-        seriesId: number | null= null,
+        seriesIds: number[] = [],
         order: number | null= null,
         lastChapter: number | null= null,
         bookTypeId: number | null= null,
@@ -97,7 +97,7 @@ export default class PutBookRequest {
         this._title = title;
         this._authorId = authorId;
         this._status = status;
-        this._seriesId = seriesId;
+        this._seriesIds = seriesIds;
         this._order = order;
         this._lastChapter = lastChapter;
         this._bookTypeId = bookTypeId;
@@ -125,7 +125,7 @@ export default class PutBookRequest {
             title: this._title,
             authorId: this._authorId,
             status: this._status,
-            seriesId: this._seriesId,
+            seriesIds: this._seriesIds,
             order: this._order,
             lastChapter: this._lastChapter,
             bookTypeId: this._bookTypeId,
