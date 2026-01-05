@@ -8,7 +8,7 @@ dotenv.config();
 let bookName: string;
 
 test.beforeEach(async ({ page }) => {
-    const BASE_URL = process.env.BASE_URL == undefined ? "http://localhost:8080/" : process.env.BASE_URL;
+    const BASE_URL = process.env.BASE_URL == undefined ? "" : process.env.BASE_URL;
     const USERNAME = process.env.USERNAME == undefined ? "" : process.env.USERNAME;
     const PASSWORD = process.env.PASSWORD == undefined ? "" : process.env.PASSWORD; 
 
@@ -27,7 +27,7 @@ test.beforeEach(async ({ page }) => {
 })
 
 test.afterEach(async ({ page }) => {
-    const BASE_URL = process.env.BASE_URL == undefined ? "http://localhost:8080/" : process.env.BASE_URL;
+    const BASE_URL = process.env.BASE_URL == undefined ? "" : process.env.BASE_URL;
 
     // Open book list
     await expect(page.getByRole('heading', { name: 'Book List' })).toBeVisible();
