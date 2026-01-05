@@ -124,6 +124,7 @@ export default function BookRow(props: BookRowProps){
     const buttonsData = [
         {
             "key": 1,
+            "name": "open book",
             "onClick": () => dispatch(openBook({bookId: props.book.id})),
             "SVG": (
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-three-dots" viewBox="0 0 16 16">
@@ -133,6 +134,7 @@ export default function BookRow(props: BookRowProps){
         },
         {
             "key": 2,
+            "name": "edit book",
             "onClick": () => dispatch(openBookUpdate({bookId: props.book.id})),
             "SVG": (
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-pencil" viewBox="0 0 16 16">
@@ -148,6 +150,7 @@ export default function BookRow(props: BookRowProps){
                     type="button"
                     className="btn btn-link w-100 h-100 rounded-0 p-0"
                     onClick={item.onClick}
+                    aria-label={item.name}
                 >
                     <div className="row w-100 h-100 m-0">
                         <div className="col-md-auto p-0 border-start h-75 align-self-center"/>
