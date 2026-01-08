@@ -1,3 +1,18 @@
+# v0.60.3
+
+## Features
+
+ - N/A
+
+## Bugfixes
+
+ - Book update date changes unexpectedly
+
+## Other
+
+ - N/A
+
+============================================
 # v0.60.2
 
 ## Features
