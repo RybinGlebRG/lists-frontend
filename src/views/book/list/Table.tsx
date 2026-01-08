@@ -1,4 +1,4 @@
-import BookRow from './BookRow';
+import BookRow from '../../../readList/books/list/BookRow';
 import Book from '../../../domain/book/Book';
 
 interface TableProps {
@@ -30,7 +30,11 @@ export default function Table(props: TableProps){
 				<ul className="list-group">
 					{books.map((item) =>{		
 						return (
-							<li className="list-group-item p-0" key={item.id}>
+							<li 
+								className="list-group-item p-0" 
+								key={item.id}
+								aria-label={item.title}
+							>
 								<BookRow
 									book={item}
 									isChain={false}

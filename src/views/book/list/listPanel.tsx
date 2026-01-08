@@ -1,5 +1,5 @@
 import Controls from '../../../readList/books/list/Controls';
-import Table from '../../../readList/books/list/Table';
+import Table from './Table';
 import useBooks from '../../../readList/books/list/useBooks';
 
 export default function ListPanel(){

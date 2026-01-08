@@ -11,6 +11,7 @@ import SeriesListBlock from './SeriesListBlock'
 import ReadingRecordList from './ReadingRecordList';
 import TagsList from './TagsList';
 import * as dt from '../../../utils/dateUtils'
+import * as BookRepository from '../../../dao/book/BookRepository';
 
 
 export default function Book(){
@@ -20,6 +21,7 @@ export default function Book(){
         JWT: useSelector((state: any) => state.listsReducer.JWT),
         bookId: useSelector((state: any) => state.booksReducer.bookId),
         listId: useSelector((state: any) => state.listsReducer.listId),
+        userId: useSelector((state: any)=>state.listsReducer.userId)
     }
 
     const {error, isLoaded, book} = useBook();
@@ -77,11 +79,12 @@ export default function Book(){
                                 <div className="col-md-auto">
                                     <button 
                                         type="button"
+                                        aria-label="delete book"
                                         className="btn btn-danger btn-sm"
                                         onClick={()=>{
                                             const isDelete = window.confirm("Delete this book?")
                                             if (isDelete){
-                                                booksApi.deleteBook(store.JWT, store.bookId, ()=>dispatch(openSignIn({})))
+                                                BookRepository.deleteBook(store.bookId, store.userId, store.JWT, ()=>dispatch(openSignIn({})));
                                                 dispatch(openBookList());
                                             }
                                         }}

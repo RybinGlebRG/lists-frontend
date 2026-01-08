@@ -49,7 +49,7 @@ async function loadData(listOrdering: string, bookStatuses: any[], JWT: string, 
 	
 	// Add sorting
 	const sortFields: SortField[] = [];
-	sortFields.push(new SortField("lastUpdateDate", listOrdering));
+	sortFields.push(new SortField("readingRecords.updateDate", listOrdering));
 
 
 	const searchBooksRequest = new SearchBooksRequest(
