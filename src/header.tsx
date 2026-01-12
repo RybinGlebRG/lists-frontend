@@ -56,7 +56,7 @@ export default function Header(): JSX.Element {
                                         dispatch(openCategory(categories.READ_LIST))
                                         dispatch(openBookList())
                                     }}
-                                >Read List</a>
+                                >Books</a>
                                 </li>
                                 <li className="nav-item">
                                 <a 
@@ -66,7 +66,7 @@ export default function Header(): JSX.Element {
                                         dispatch(openTitlesList())
                                         dispatch(openCategory(categories.WATCH_LIST))
                                     }}
-                                >Watch List</a>
+                                >Movies </a>
                                 </li>
                                 <li className="nav-item">
                                 <a 

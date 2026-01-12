@@ -1,6 +1,6 @@
-import Controls from '../../../readList/books/list/Controls';
+import Controls from './Controls';
 import Table from './Table';
-import useBooks from '../../../readList/books/list/useBooks';
+import useBooks from './useBooks';
 
 export default function ListPanel(){
 	const {	error,

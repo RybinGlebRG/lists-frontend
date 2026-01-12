@@ -4,10 +4,10 @@ import Book from '../../../domain/book/Book';
 import {
     openBook,
     openBookUpdate
-} from '../booksSlice'
+} from '../../../readList/books/booksSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import * as dateUtils from '../../../utils/dateUtils'
-import * as statuses from '../statuses';
+import * as statuses from '../../../readList/books/statuses';
 
 function getMostRecentRecord({readingRecords}){
 	let mostRecentRecord;

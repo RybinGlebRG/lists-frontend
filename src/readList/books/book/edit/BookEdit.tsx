@@ -15,8 +15,8 @@ import PutBookRequest, { ReadingRecordPutView } from '../../api/PutBookRequest';
 import useSeriesList from '../../../../dao/series/useSeriesList';
 import * as dt from '../../../../utils/dateUtils';
 import DivFormGroup from '../../../../views/common/DivFormGroup';
-import TagsSelector from '../../../../views/book/edit/TagsSelector';
-import SeriesView from '../../../../views/book/edit/SeriesView';
+import TagsSelector from '../../../../views/books/edit/TagsSelector';
+import SeriesView from '../../../../views/books/edit/SeriesView';
 
 
 interface ReadingRecordForm {

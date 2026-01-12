@@ -55,16 +55,28 @@ export async function searchBooks(searchBooksRequest: SearchBooksRequest, onUnau
     return bookList;
 }
 
+// DEPRECATED
 export async function getBookStatuses(JWT, onUnauthorized): Promise<any>{
-    let res = await fetch(window.location.origin+`/api/v0.2/bookStatuses`,
-    {
-        method: "GET",
-        headers: {
-            'Authorization': `Bearer ${JWT}`
+    let res = {
+        items: [
+        {
+            statusId: 1,
+            statusName: "In progress"
+        },
+        {
+            statusId: 2,
+            statusName: "Completed"
+        },
+        {
+            statusId: 3,
+            statusName: "Expecting"
+        },
+        {
+            statusId: 4,
+            statusName: "Dropped"
         }
-    });
-    await commonApi.checkError(res, onUnauthorized);
-    res = await res.json();
+    ]
+    }
 
     return res;   
 }

@@ -1,4 +1,4 @@
-import BookRow from '../../../readList/books/list/BookRow';
+import BookRow from './BookRow';
 import Book from '../../../domain/book/Book';
 
 interface TableProps {

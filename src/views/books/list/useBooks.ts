@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import * as bookApi from '../api/bookApi'
+import * as bookApi from '../../../readList/books/api/bookApi'
 import {openSignIn} from '../../../displayAreaSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -7,13 +7,15 @@ import {
     openBookUpdate,
     switchListOrdering, 
     openBookAdd
-} from '../booksSlice'
-import Filter from '../api/Filter';
-import SortField from '../api/SortField';
-import SearchBooksRequest from '../api/SearchBooksRequest'
+} from '../../../readList/books/booksSlice'
+import Filter from '../../../readList/books/api/Filter';
+import SortField from '../../../readList/books/api/SortField';
+import SearchBooksRequest from '../../../readList/books/api/SearchBooksRequest'
 import Book from '../../../domain/book/Book';
 import BookType from '../../../domain/bookType/BookType';
 import * as bookFactory from '../../../domain/book/bookFactory';
+import User from '../../../domain/user/User';
+import {selectUser} from '../../login/loginSlice'
 
 interface SearchBody {
 	sort: [
@@ -28,7 +30,7 @@ interface SearchBody {
 
 
 
-async function loadData(listOrdering: string, bookStatuses: any[], JWT: string, userId: number, onUnauthorized: () => void, title: string){
+async function loadData(listOrdering: string, bookStatuses: any[], user: User, onUnauthorized: () => void, title: string){
 
 	// Add filters
 	let filters: Filter[] = [];
@@ -53,11 +55,11 @@ async function loadData(listOrdering: string, bookStatuses: any[], JWT: string, 
 
 
 	const searchBooksRequest = new SearchBooksRequest(
-		userId,
+		user.id,
 		sortFields,
 		true,
 		filters,
-		JWT
+		user.token
 	);
 	let bookList = await bookApi.searchBooks(searchBooksRequest, onUnauthorized)	
 	return bookList;
@@ -72,17 +74,18 @@ export default function useBooks(){
 	const [titleSearch, setTitleSearch] = useState<any>(null);
 	// const [isExpectingSet,setIsExpectingSet] = useState(false);
 	const [bookStatuses, setBookStatuses] = useState<any>(null);
+
 	let store={
-        JWT: useSelector((state: any) =>state.listsReducer.JWT),
 		listId: useSelector((state: any)=>state.listsReducer.listId),
-		listOrdering: useSelector((state: any)=>state.booksReducer.listOrdering),
-		userId: useSelector((state: any)=>state.listsReducer.userId)
+		listOrdering: useSelector((state: any)=>state.booksReducer.listOrdering)
     }
+	const user = useSelector(selectUser);
+	
 
 	useEffect(()=>{
         let promises: any[]=[];
-        promises.push(loadData(store.listOrdering, bookStatuses, store.JWT, store.listId, ()=> dispatch(openSignIn(null)),titleSearch ));
-		promises.push(bookApi.getBookStatuses(store.JWT,()=> dispatch(openSignIn(null))));
+        promises.push(loadData(store.listOrdering, bookStatuses, user, ()=> dispatch(openSignIn(null)),titleSearch ));
+		promises.push(bookApi.getBookStatuses(user.token,()=> dispatch(openSignIn(null))));
 
         Promise.all(promises)
         .then(([bookList, bookStatuses]) =>{
@@ -109,7 +112,7 @@ export default function useBooks(){
 		setBookList(null);
 		setError(null);
 		setIsLoaded(false);
-		loadData(store.listOrdering, bookStatuses, store.JWT, store.listId, ()=> dispatch(openSignIn(null)), titleSearch)
+		loadData(store.listOrdering, bookStatuses, user, ()=> dispatch(openSignIn(null)), titleSearch)
 		.then(res=>{	
 			setError(null);
 			setBookList(res.items);	
