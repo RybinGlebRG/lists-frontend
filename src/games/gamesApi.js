@@ -1,7 +1,7 @@
 import * as commonApi from '../common/commonApi'
 
 export async function loadList(JWT, body, userId, onUnauthorized){
-    let res = await fetch(window.location.origin+`/api/v0.2/users/${userId}/games/search`,
+    let res = await fetch(window.location.origin+`/api/v1/users/${userId}/games/search`,
 		{
 			method: "POST",
 			headers: {
@@ -17,7 +17,7 @@ export async function loadList(JWT, body, userId, onUnauthorized){
 }
 
 export async function addGame(JWT, body, userId, onUnauthorized){
-    let res = await fetch(window.location.origin+`/api/v0.2/users/${userId}/games`,
+    let res = await fetch(window.location.origin+`/api/v1/users/${userId}/games`,
 		{
 			method: "POST",
 			headers: {
@@ -29,8 +29,8 @@ export async function addGame(JWT, body, userId, onUnauthorized){
         await commonApi.checkError(res, onUnauthorized);
 }
 
-export async function deleteGame(JWT, gameId, onUnauthorized){
-    let res = await fetch(window.location.origin+`/api/v0.2/games/${gameId}`,
+export async function deleteGame(JWT, gameId, userId, onUnauthorized){
+    let res = await fetch(window.location.origin+`/api/v1/users/${userId}/games/${gameId}`,
 		{
 			method: "DELETE",
 			headers: {
