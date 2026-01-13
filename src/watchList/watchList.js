@@ -2,7 +2,7 @@ import React from 'react';
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { connect } from 'react-redux'
-import TitlesList from './titlesList'
+import TitlesList from '../views/movies/list/titlesList'
 import TitleAdd from './titleAdd'
 import Title from './title'
 import TitleEdit from './titleEdit'

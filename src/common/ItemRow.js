@@ -104,6 +104,7 @@ export default function ItemRow(props){
                     type="button"
                     class="btn btn-link w-100 h-100 rounded-0 p-0"
                     onClick={item.onClick}
+                    aria-label={item.ariaLabel}
                 >
                     <div class="row w-100 h-100 m-0">
                         <div class="col-md-auto p-0 border-start h-75 align-self-center"/>

@@ -2,7 +2,7 @@ import ReadList from './readList/readList'
 import WatchList from './watchList/watchList'
 import SeriesMain from './series/SeriesMain'
 import Header from './header'
-import LoginPanel from './login/login.js'
+import LoginPanel from './views/login/login'
 import * as categories from './displayAreaCategories'
 import Metrics from './metrics/metrics'
 import Games from './games/main';

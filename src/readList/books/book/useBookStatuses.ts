@@ -9,27 +9,25 @@ export default function useBookStatuses({listId}){
     const [stateListId] = useState(listId);
 
 	const [error, setError] = useState(null);
-	const [isLoaded, setIsLoaded] = useState(false);
-	const [bookStatuses, setBookStatuses] = useState<any[] | null>(null);
-	
-    let store={
-        JWT: useSelector((state: any) => state.listsReducer.JWT)
-    }
-
-    useEffect(()=>{
-        bookApi.getBookStatuses(store.JWT, ()=> dispatch(openSignIn({})))
-        .then(bookStatuses =>{
-            setError(null);
-            setBookStatuses(bookStatuses.items);
-            setIsLoaded(true);
-        })
-        .catch(
-            error => {
-                setError(error.message);
-                setBookStatuses(null);
-                setIsLoaded(true);
-        });
-    },[stateListId]);
+	const [isLoaded, setIsLoaded] = useState(true);
+	const [bookStatuses, setBookStatuses] = useState<any[]>([
+        {
+            statusId: 1,
+            statusName: "In progress"
+        },
+        {
+            statusId: 2,
+            statusName: "Completed"
+        },
+        {
+            statusId: 3,
+            statusName: "Expecting"
+        },
+        {
+            statusId: 4,
+            statusName: "Dropped"
+        }
+    ]);
 
     const res= {
         error,

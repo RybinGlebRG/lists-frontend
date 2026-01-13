@@ -1,3 +1,18 @@
+# v0.61.0
+
+## Features
+
+ - N/A
+
+## Bugfixes
+
+ - N/A
+
+## Other
+
+ - Refactoring
+
+============================================
 # v0.60.3
 
 ## Features

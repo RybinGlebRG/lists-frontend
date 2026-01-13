@@ -6,6 +6,7 @@ import Header from '../common/header'
 import { openGamesAdd, setNeedReload } from './gamesSlice'
 import * as dateUtils from '../utils/dateUtils'
 import ItemRow from '../common/ItemRow'
+import {selectUser} from '../views/login/loginSlice'
 
 
 
@@ -16,7 +17,8 @@ export default function GamesList(){
     const [games,setGames] = useState(null);
     let store={
         JWT: useSelector(state=>state.loginReducer.JWT),
-        isNeedReload: useSelector(state=>state.gamesReducer.isNeedListReload)
+        isNeedReload: useSelector(state=>state.gamesReducer.isNeedListReload),
+        user: useSelector(selectUser)
         // TODO: Add userId
     }
 
@@ -142,7 +144,7 @@ export default function GamesList(){
                         const isDelete = window.confirm("Delete this game?")
                         if (isDelete){
                             let promises=[];
-                            promises.push(deleteGame(store.JWT, item.gameId, ()=>{dispatch(openSignIn())}));
+                            promises.push(deleteGame(store.JWT, item.gameId, store.user.id, ()=>{dispatch(openSignIn())}));
                             Promise.all(promises)
                             .then(([del]) =>{
                                 setError(null); 
