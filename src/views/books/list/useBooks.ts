@@ -1,5 +1,4 @@
-import React, {useState, useEffect} from 'react';
-import * as bookApi from '../../../readList/books/api/bookApi'
+import {useState, useEffect} from 'react';
 import {openSignIn} from '../../../displayAreaSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -16,6 +15,8 @@ import BookType from '../../../domain/bookType/BookType';
 import * as bookFactory from '../../../domain/book/bookFactory';
 import User from '../../../domain/user/User';
 import {selectUser} from '../../login/loginSlice'
+import * as BookRepository from '../../../dao/book/BookRepository';
+
 
 interface SearchBody {
 	sort: [
@@ -61,7 +62,7 @@ async function loadData(listOrdering: string, bookStatuses: any[], user: User, o
 		filters,
 		user.token
 	);
-	let bookList = await bookApi.searchBooks(searchBooksRequest, onUnauthorized)	
+	let bookList = await BookRepository.searchBooks(searchBooksRequest, onUnauthorized)	
 	return bookList;
 }
 
@@ -85,7 +86,7 @@ export default function useBooks(){
 	useEffect(()=>{
         let promises: any[]=[];
         promises.push(loadData(store.listOrdering, bookStatuses, user, ()=> dispatch(openSignIn(null)),titleSearch ));
-		promises.push(bookApi.getBookStatuses(user.token,()=> dispatch(openSignIn(null))));
+		promises.push(BookRepository.getBookStatuses(user.token,()=> dispatch(openSignIn(null))));
 
         Promise.all(promises)
         .then(([bookList, bookStatuses]) =>{

@@ -1,12 +1,11 @@
 import {useState, useEffect} from 'react';
-import * as bookApi from '../api/bookApi'
 import {openSignIn} from '../../../displayAreaSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import * as dateUtils from '../../../utils/dateUtils'
-import GetBookRequest from '../api/GetBookRequest';
 import PutBookRequest from '../api/PutBookRequest';
 import Book from '../../../domain/book/Book';
 import * as bookFactory from '../../../domain/book/bookFactory';
+import * as BookRepository from '../../../dao/book/BookRepository';
 
 export default function useBook(){
     const dispatch = useDispatch();
@@ -26,7 +25,7 @@ export default function useBook(){
     }
 
     useEffect(()=>{
-        bookApi.loadBook(new GetBookRequest(userId, bookId, store.JWT), ()=> dispatch(openSignIn(null)))
+        BookRepository.loadBook(bookId, ()=> dispatch(openSignIn(null)))
         .then(result =>{
             setError(null);
             setData(result);
@@ -42,7 +41,7 @@ export default function useBook(){
 
     let updateBook = (postBookRequest: PutBookRequest, onUpdate: () => void) => {
         setIsUpdated(false);
-        bookApi.putBook(postBookRequest, ()=> dispatch(openSignIn(null))) 
+        BookRepository.putBook(postBookRequest, ()=> dispatch(openSignIn(null))) 
         .then(result => {
             setUpdateError(null);
             setIsUpdated(true);

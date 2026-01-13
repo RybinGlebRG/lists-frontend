@@ -6,7 +6,7 @@ import {
 } from '../redux/actionCreators'
 import { Formik} from 'formik';
 import {getAuthors} from '../readList/authors/authorsApi'
-import {postBooks, getBookTypes} from '../readList/books/api/bookApi'
+import * as BookRepository from '../dao/book/BookRepository';
 import  {loadSeriesItem} from '../dao/series/seriesApi'
 import {
     openSeriesItem
@@ -30,7 +30,7 @@ export default function SeriesItemAdd(props){
     useEffect(()=>{
         let promises=[];
         promises.push(getAuthors(store.JWT, store.listId, ()=>{dispatch(openSignIn())}));
-        promises.push(getBookTypes(store.JWT, ()=>{dispatch(openSignIn())}));
+        promises.push(BookRepository.getBookTypes(store.JWT, ()=>{dispatch(openSignIn())}));
         promises.push(loadSeriesItem(store.JWT, store.listId, store.seriesId));
 
         Promise.all(promises)
@@ -72,7 +72,7 @@ export default function SeriesItemAdd(props){
             book.bookTypeId = values.bookType;
         }
     
-        postBooks(store.JWT, store.seriesId, book,()=>{dispatch(openSignIn())})
+        BookRepository.postBooks(store.JWT, store.seriesId, book,()=>{dispatch(openSignIn())})
         .then(()=>{
             dispatch(openSeriesItem());
         })

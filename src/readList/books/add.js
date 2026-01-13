@@ -2,11 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Formik, Field} from 'formik';
 import {openSignIn} from '../../redux/actionCreators';
-import * as bookApi from './api/bookApi'
 import * as common from '../../common/common'
 import * as dateUtils from '../../utils/dateUtils'
 import {openBookList} from './booksSlice'
 import PostBooksRequest from './api/PostBooksRequest';
+import * as BookRepository from '../../dao/book/BookRepository';
 
 class BookAdd extends React.Component{
 	constructor(props){
@@ -52,8 +52,8 @@ class BookAdd extends React.Component{
 
         // let series = await res.json()
 
-        let bookTypes = await bookApi.getBookTypes(this.props.store.JWT,()=>{this.props.openSignIn()})
-        let bookStatuses = await bookApi.getBookStatuses(this.props.store.JWT,()=>{this.props.openSignIn()})
+        let bookTypes = await BookRepository.getBookTypes(this.props.store.JWT,()=>{this.props.openSignIn()})
+        let bookStatuses = await BookRepository.getBookStatuses(this.props.store.JWT,()=>{this.props.openSignIn()})
 
         let out = {
             authors: authors.items,
@@ -118,7 +118,7 @@ class BookAdd extends React.Component{
             postBooksRequest.bookTypeId(values.bookType);
         }
 
-        bookApi.postBooks(
+        BookRepository.postBooks(
             postBooksRequest.build(),
             ()=>{this.props.openSignIn()}
         )

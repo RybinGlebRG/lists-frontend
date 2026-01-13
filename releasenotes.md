@@ -1,3 +1,18 @@
+# v0.62.0
+
+## Features
+
+ - Refresh tokens
+
+## Bugfixes
+
+ - N/A
+
+## Other
+
+ - Refactoring
+
+============================================
 # v0.61.0
 
 ## Features

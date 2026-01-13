@@ -1,7 +1,8 @@
 import {useState, useEffect} from 'react';
-import * as bookApi from '../api/bookApi'
 import {openSignIn} from '../../../displayAreaSlice'
 import { useSelector, useDispatch } from 'react-redux'
+import * as BookRepository from '../../../dao/book/BookRepository';
+
 
 export default function useBookTypes({listId}){
     const dispatch = useDispatch();
@@ -17,7 +18,7 @@ export default function useBookTypes({listId}){
     }
 
     useEffect(()=>{
-        bookApi.getBookTypes(store.JWT, ()=> dispatch(openSignIn({})))
+        BookRepository.getBookTypes(store.JWT, ()=> dispatch(openSignIn({})))
         .then(bookTypes =>{
             setError(null);
             setBookTypes(bookTypes.items);

@@ -1,4 +1,3 @@
-import * as booksApi from '../api/bookApi'
 import {openSignIn} from '../../../displayAreaSlice'
 import useBook from './useBook';
 import {
@@ -18,10 +17,7 @@ export default function Book(){
     const dispatch = useDispatch();
 
     let store={
-        JWT: useSelector((state: any) => state.listsReducer.JWT),
-        bookId: useSelector((state: any) => state.booksReducer.bookId),
-        listId: useSelector((state: any) => state.listsReducer.listId),
-        userId: useSelector((state: any)=>state.listsReducer.userId)
+        bookId: useSelector((state: any) => state.booksReducer.bookId)
     }
 
     const {error, isLoaded, book} = useBook();
@@ -84,7 +80,7 @@ export default function Book(){
                                         onClick={()=>{
                                             const isDelete = window.confirm("Delete this book?")
                                             if (isDelete){
-                                                BookRepository.deleteBook(store.bookId, store.userId, store.JWT, ()=>dispatch(openSignIn({})));
+                                                BookRepository.deleteBook(store.bookId, ()=>dispatch(openSignIn({})));
                                                 dispatch(openBookList());
                                             }
                                         }}
