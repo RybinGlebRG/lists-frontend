@@ -1,11 +1,11 @@
 import React from 'react';
-import {openSignIn} from '../../redux/actionCreators';
+import {openSignIn} from '../../../redux/actionCreators';
 import { connect } from 'react-redux';
 import { Formik, Field} from 'formik';
-import {openAuthorList} from '../books/booksSlice'
+import {openAuthorList} from '../../../readList/books/booksSlice'
 import { useSelector, useDispatch } from 'react-redux'
 
-import useAuthorList from './useAuthorsList';
+import useAuthorList from '../../../controller/authors/useAuthorsList';
 
 export default function AuthorAdd() {
 

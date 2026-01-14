@@ -57,8 +57,6 @@ export class ReadingRecordPutView {
 
 export default class PutBookRequest {
 
-    private _JWT: string;
-    private _userId: number;
     private _bookId: number;
 
     private _title: string;
@@ -75,8 +73,6 @@ export default class PutBookRequest {
     private _order: number | null= null;
 
     public constructor(
-        userId: number, 
-        JWT: string,
         bookId: number,
         title: string,
         authorId: number | null= null,
@@ -91,8 +87,6 @@ export default class PutBookRequest {
         readingRecords: ReadingRecordPutView[] = [],
         tagIds: number[] = []
     ) {
-        this._userId = userId;
-        this._JWT = JWT;
         this._bookId = bookId;
         this._title = title;
         this._authorId = authorId;
@@ -106,14 +100,6 @@ export default class PutBookRequest {
         this._URL = URL;
         this._readingRecords = readingRecords;
         this._tagIds = tagIds;
-    }
-
-    public get JWT(): string {
-        return this._JWT;
-    }
-
-    public get userId(): number {
-        return this._userId;
     }
 
     public get bookId(): number {

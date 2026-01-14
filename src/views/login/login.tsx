@@ -2,14 +2,14 @@ import React from 'react';
 import { Field, Formik } from 'formik';
 import { loginUser} from '../../redux/actionCreators.js'
 import { connect } from 'react-redux'
-import { getToken } from '../../login/loginAPI'
-import { setUser} from './loginSlice'
+import { setUser} from '../../dao/user/loginSlice'
 import {openBookList} from '../../readList/books/booksSlice.js'
 import {openCategory} from '../../displayAreaSlice.js'
 import * as displayAreaCategories from '../../displayAreaCategories.js'
 import DivFormGroup from '../common/DivFormGroup.jsx';
 import { useDispatch } from 'react-redux';
 import ButtonSubmit from '../common/ButtonSubmit.jsx';
+import * as UserRepository from '../../dao/user/UserRepository'
 
 
 interface LoginForm {
@@ -27,11 +27,11 @@ export default function LoginPanel(): JSX.Element {
             throw new Error();
         }
 
-        getToken(values.login, values.password)
+        UserRepository.getUser(values.login, values.password)
         .then(
             user=>{
                 dispatch(setUser({user: user}))
-                dispatch(loginUser(user.token, values.login));
+                dispatch(loginUser(user.accessToken, values.login));
                 dispatch(openBookList());
                 dispatch(openCategory(displayAreaCategories.READ_LIST));
             }

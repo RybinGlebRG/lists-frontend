@@ -3,18 +3,14 @@ import SortField from "./SortField";
 
 export default class SearchBooksRequest {
 
-    private _userId: number;
     private _sort: SortField[];
 	private _isChainBySeries: boolean;
 	private _filters: Filter[];
-    private _JWT: string;
 
-    constructor(userId: number, sort: SortField[], isChainBySeries: boolean, filters: Filter[], JWT: string) {
-        this._userId = userId;
+    constructor(sort: SortField[], isChainBySeries: boolean, filters: Filter[]) {
         this._sort = sort;
         this._isChainBySeries = isChainBySeries;
         this._filters = filters;
-        this._JWT = JWT;
     }
 
     public toJsonBody(): string {
@@ -35,14 +31,6 @@ export default class SearchBooksRequest {
         }
 
         return JSON.stringify(body);
-    }
-
-    public get userId() {
-        return this._userId;
-    }
-
-    public get JWT() {
-        return this._JWT;
     }
 
 }

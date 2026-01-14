@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import * as authorsApi from './authorsApi'
+import * as authorsApi from '../../dao/author/AuthorsRepository'
 import {openSignIn} from '../../displayAreaSlice'
 import { useSelector, useDispatch } from 'react-redux'
 

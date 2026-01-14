@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux'
 import {JSX} from 'react';
 import useBook from '../useBook';
-import useAuthorList from '../../../authors/useAuthorsList';
+import useAuthorList from '../../../../controller/authors/useAuthorsList';
 import useBookTypes from '../useBookTypes';
 import useBookStatuses from '../useBookStatuses';
 import * as dateUtils from '../../../../utils/dateUtils'
@@ -76,8 +76,6 @@ export default function BookEdit(){
 
     function handleSaveValue(values: BookForm){
         let postBookRequest = new PutBookRequest(
-            store.userId,
-            store.JWT,
             store.bookId,
             values.title,
             values.authorId,

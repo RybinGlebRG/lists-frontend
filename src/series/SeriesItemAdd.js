@@ -5,7 +5,7 @@ import {
     openSignIn
 } from '../redux/actionCreators'
 import { Formik} from 'formik';
-import {getAuthors} from '../readList/authors/authorsApi'
+import {getAuthors} from '../dao/author/AuthorsRepository'
 import * as BookRepository from '../dao/book/BookRepository';
 import  {loadSeriesItem} from '../dao/series/seriesApi'
 import {

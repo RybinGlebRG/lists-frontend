@@ -12,14 +12,15 @@ export async function deleteBook(
     onUnauthorized: () => void
 ): Promise<void> {
 
-    BaseRepository.checkAndRefreshToken();
+    // Get current user
+    await BaseRepository.checkAndRefreshToken();
     const user = await UserRepository.getCurrentUser();
     
     let res = await fetch(`${window.location.origin}/api/v1/users/${user.id}/books/${bookId}`,
         {
             method: "DELETE",
             headers: {
-                'Authorization': `Bearer ${user.token}`
+                'Authorization': `Bearer ${user.accessToken}`
             }
         }
     );
@@ -28,14 +29,15 @@ export async function deleteBook(
 
 export async function loadBook(bookId: number, onUnauthorized: () => void){
 
-    BaseRepository.checkAndRefreshToken();
+    // Get current user
+    await BaseRepository.checkAndRefreshToken();
     const user = await UserRepository.getCurrentUser();
 
     let res = await fetch(`${window.location.origin}/api/v1/users/${user.id}/books/${bookId}`,
         {
-            method: "DELETE",
+            method: "GET",
             headers: {
-                'Authorization': `Bearer ${user.token}`
+                'Authorization': `Bearer ${user.accessToken}`
             }
         }
     );
@@ -47,12 +49,17 @@ export async function loadBook(bookId: number, onUnauthorized: () => void){
 }
 
 export async function postBooks(postBooksRequest: PostBooksRequest, onUnauthorized: () => void){
-    let res = await fetch(window.location.origin+`/api/v1/users/${postBooksRequest.userId}/books`,
+
+    // Get current user
+    await BaseRepository.checkAndRefreshToken();
+    const user = await UserRepository.getCurrentUser();
+
+    let res = await fetch(window.location.origin+`/api/v1/users/${user.id}/books`,
     {
         method: "POST",
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
-            'Authorization': `Bearer ${postBooksRequest.JWT}`
+            'Authorization': `Bearer ${user.accessToken}`
         },
         body: postBooksRequest.toJsonBody()
     });
@@ -74,12 +81,17 @@ export async function getBookTypes(JWT, onUnauthorized): Promise<any>{
 }
 
 export async function searchBooks(searchBooksRequest: SearchBooksRequest, onUnauthorized: () => void){
-    let res = await fetch(window.location.origin+`/api/v1/users/${searchBooksRequest.userId}/books/search`,
+
+    // Get current user
+    await BaseRepository.checkAndRefreshToken();
+    const user = await UserRepository.getCurrentUser();
+
+    let res = await fetch(window.location.origin+`/api/v1/users/${user.id}/books/search`,
     {
         method: "POST",
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
-            'Authorization': `Bearer ${searchBooksRequest.JWT}`
+            'Authorization': `Bearer ${user.accessToken}`
         },
         body: searchBooksRequest.toJsonBody()
     });
@@ -89,12 +101,17 @@ export async function searchBooks(searchBooksRequest: SearchBooksRequest, onUnau
 }
 
 export async function putBook(postBookRequest: PutBookRequest, onUnauthorized: () => void){
-    let res = await fetch(window.location.origin+`/api/v1/users/${postBookRequest.userId}/books/${postBookRequest.bookId}`,
+
+     // Get current user
+    await BaseRepository.checkAndRefreshToken();
+    const user = await UserRepository.getCurrentUser();
+
+    let res = await fetch(window.location.origin+`/api/v1/users/${user.id}/books/${postBookRequest.bookId}`,
     {
         method: "PUT",
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
-            'Authorization': `Bearer ${postBookRequest.JWT}`
+            'Authorization': `Bearer ${user.accessToken}`
         },
         body: postBookRequest.toString()
     });

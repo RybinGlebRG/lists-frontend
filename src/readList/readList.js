@@ -2,11 +2,11 @@ import React from 'react';
 import ListPanel from '../views/books/list/listPanel'
 import LeftMenu from '../views/books/list/leftMenu.js' 
 import Book from './books/book/book'
-import BookAdd from './books/add.js'
+import BookAdd from '../views/books/add/add'
 import BookEdit from './books/book/edit/BookEdit.tsx'
 import AuthorList from '../views/authors/list/list.js'
-import Author from './authors/Author.js'
-import AuthorAdd from './authors/add.js'
+import Author from '../views/authors/author/Author.js'
+import AuthorAdd from '../views/authors/add/add.js'
 import TagsList from '../views/tags/TagsList.js';
 import TagsAdd from '../views/tags/TagsAdd.js';
 import * as bookForms from './books/forms.js'

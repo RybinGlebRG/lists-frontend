@@ -1,8 +1,6 @@
 
 export default class PostBooksRequest {
 
-    private _JWT: string;
-    private _userId: number;
     private _title: string;
     private _authorId: number | null= null;
     private _status: number;
@@ -15,8 +13,6 @@ export default class PostBooksRequest {
     private _URL: string | null= null;
 
     private constructor(
-        userId: number, 
-        JWT: string,
         title: string,
         authorId: number | null= null,
         status: number,
@@ -28,8 +24,6 @@ export default class PostBooksRequest {
         note: string | null= null,
         URL: string | null= null
     ) {
-        this._userId = userId;
-        this._JWT = JWT;
         this._title = title;
         this._authorId = authorId;
         this._status = status;
@@ -40,14 +34,6 @@ export default class PostBooksRequest {
         this._insertDate = insertDate;
         this._note = note;
         this._URL = URL;
-    }
-
-    public get JWT(): string {
-        return this._JWT;
-    }
-
-    public get userId(): number {
-        return this._userId;
     }
 
     public toJsonBody(): string {
@@ -67,14 +53,12 @@ export default class PostBooksRequest {
         return JSON.stringify(body);
     }
 
-    public static builder(JWT: string, userId: number, title: string, status: number): InstanceType<typeof PostBooksRequest.Builder> {
-        return new this.Builder(JWT, userId, title, status);
+    public static builder(title: string, status: number): InstanceType<typeof PostBooksRequest.Builder> {
+        return new this.Builder(title, status);
     }
 
     public static Builder = class {
 
-        private _JWT: string;
-        private _userId: number;
         private _title: string;
         private _authorId: number | null = null;
         private _status: number;
@@ -86,9 +70,7 @@ export default class PostBooksRequest {
         private _note: string | null= null;
         private _URL: string | null= null;
 
-        constructor(JWT: string, userId: number, title: string, status: number) {
-            this._JWT = JWT;
-            this._userId = userId;
+        constructor(title: string, status: number) {
             this._title = title;
             this._status = status;
         }
@@ -135,8 +117,6 @@ export default class PostBooksRequest {
 
         public build(): PostBooksRequest {
             return new PostBooksRequest(
-                this._userId,
-                this._JWT,
                 this._title,
                 this._authorId,
                 this._status,

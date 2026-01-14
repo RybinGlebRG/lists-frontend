@@ -14,7 +14,7 @@ import Book from '../../../domain/book/Book';
 import BookType from '../../../domain/bookType/BookType';
 import * as bookFactory from '../../../domain/book/bookFactory';
 import User from '../../../domain/user/User';
-import {selectUser} from '../../login/loginSlice'
+import {selectUser} from '../../../dao/user/loginSlice'
 import * as BookRepository from '../../../dao/book/BookRepository';
 
 
@@ -56,11 +56,9 @@ async function loadData(listOrdering: string, bookStatuses: any[], user: User, o
 
 
 	const searchBooksRequest = new SearchBooksRequest(
-		user.id,
 		sortFields,
 		true,
-		filters,
-		user.token
+		filters
 	);
 	let bookList = await BookRepository.searchBooks(searchBooksRequest, onUnauthorized)	
 	return bookList;
@@ -86,7 +84,7 @@ export default function useBooks(){
 	useEffect(()=>{
         let promises: any[]=[];
         promises.push(loadData(store.listOrdering, bookStatuses, user, ()=> dispatch(openSignIn(null)),titleSearch ));
-		promises.push(BookRepository.getBookStatuses(user.token,()=> dispatch(openSignIn(null))));
+		promises.push(BookRepository.getBookStatuses(user.accessToken,()=> dispatch(openSignIn(null))));
 
         Promise.all(promises)
         .then(([bookList, bookStatuses]) =>{

@@ -6,7 +6,7 @@ import Header from '../common/header'
 import { openGamesAdd, setNeedReload } from './gamesSlice'
 import * as dateUtils from '../utils/dateUtils'
 import ItemRow from '../common/ItemRow'
-import {selectUser} from '../views/login/loginSlice'
+import {selectUser} from '../dao/user/loginSlice'
 
 
 

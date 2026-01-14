@@ -1,9 +1,9 @@
 import ListGroup from 'react-bootstrap/ListGroup';
 import Header from '../../../common/header'
 import { useSelector, useDispatch } from 'react-redux'
-import useAuthorList from '../../../readList/authors/useAuthorsList';
+import useAuthorList from '../../../controller/authors/useAuthorsList';
 import {openAuthor, openAuthorAdd} from '../../../readList/books/booksSlice'
-import { setAuthorId } from '../../../readList/authors/authorsSlice';
+import { setAuthorId } from '../../../dao/author/authorsSlice';
 
 export default function AuthorList() {
 	const dispatch = useDispatch();

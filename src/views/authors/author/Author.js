@@ -1,6 +1,6 @@
-import useAuthor from "./useAuthor";
-import Header from '../../common/header'
-import {openAuthorList} from '../books/booksSlice'
+import useAuthor from "../../../controller/authors/useAuthor";
+import Header from '../../../common/header'
+import {openAuthorList} from '../../../readList/books/booksSlice'
 import { useSelector, useDispatch } from 'react-redux'
 
 export default function Author() {
