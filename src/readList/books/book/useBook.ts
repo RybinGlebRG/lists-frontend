@@ -25,7 +25,7 @@ export default function useBook(){
     }
 
     useEffect(()=>{
-        BookRepository.loadBook(bookId, ()=> dispatch(openSignIn(null)))
+        BookRepository.loadBook(bookId)
         .then(result =>{
             setError(null);
             setData(result);
@@ -41,7 +41,7 @@ export default function useBook(){
 
     let updateBook = (postBookRequest: PutBookRequest, onUpdate: () => void) => {
         setIsUpdated(false);
-        BookRepository.putBook(postBookRequest, ()=> dispatch(openSignIn(null))) 
+        BookRepository.putBook(postBookRequest) 
         .then(result => {
             setUpdateError(null);
             setIsUpdated(true);

@@ -63,10 +63,7 @@ export default function BookAdd() {
             postBooksRequest.bookTypeId(values.bookTypeId);
         }
 
-        BookRepository.postBooks(
-            postBooksRequest.build(),
-            () => dispatch(openSignIn())
-        )
+        BookRepository.postBooks(postBooksRequest.build())
         .then(res => {
             dispatch(openBookList());
         })

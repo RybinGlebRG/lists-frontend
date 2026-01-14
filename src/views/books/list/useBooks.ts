@@ -31,7 +31,7 @@ interface SearchBody {
 
 
 
-async function loadData(listOrdering: string, bookStatuses: any[], user: User, onUnauthorized: () => void, title: string){
+async function loadData(listOrdering: string, bookStatuses: any[], user: User, title: string){
 
 	// Add filters
 	let filters: Filter[] = [];
@@ -60,7 +60,7 @@ async function loadData(listOrdering: string, bookStatuses: any[], user: User, o
 		true,
 		filters
 	);
-	let bookList = await BookRepository.searchBooks(searchBooksRequest, onUnauthorized)	
+	let bookList = await BookRepository.searchBooks(searchBooksRequest)	
 	return bookList;
 }
 
@@ -83,7 +83,7 @@ export default function useBooks(){
 
 	useEffect(()=>{
         let promises: any[]=[];
-        promises.push(loadData(store.listOrdering, bookStatuses, user, ()=> dispatch(openSignIn(null)),titleSearch ));
+        promises.push(loadData(store.listOrdering, bookStatuses, user, titleSearch ));
 		promises.push(BookRepository.getBookStatuses(user.accessToken,()=> dispatch(openSignIn(null))));
 
         Promise.all(promises)
@@ -111,7 +111,7 @@ export default function useBooks(){
 		setBookList(null);
 		setError(null);
 		setIsLoaded(false);
-		loadData(store.listOrdering, bookStatuses, user, ()=> dispatch(openSignIn(null)), titleSearch)
+		loadData(store.listOrdering, bookStatuses, user, titleSearch)
 		.then(res=>{	
 			setError(null);
 			setBookList(res.items);	

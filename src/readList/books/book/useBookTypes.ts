@@ -18,7 +18,7 @@ export default function useBookTypes({listId}){
     }
 
     useEffect(()=>{
-        BookRepository.getBookTypes(store.JWT, ()=> dispatch(openSignIn({})))
+        BookRepository.getBookTypes()
         .then(bookTypes =>{
             setError(null);
             setBookTypes(bookTypes.items);

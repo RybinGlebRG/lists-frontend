@@ -80,7 +80,7 @@ export default function Book(){
                                         onClick={()=>{
                                             const isDelete = window.confirm("Delete this book?")
                                             if (isDelete){
-                                                BookRepository.deleteBook(store.bookId, ()=>dispatch(openSignIn({})));
+                                                BookRepository.deleteBook(store.bookId);
                                                 dispatch(openBookList());
                                             }
                                         }}

@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore, Reducer } from '@reduxjs/toolkit'
 // import { createStore, combineReducers } from "redux";
 import lists from "./reducers/index";
 import seriesReducer from '../series/seriesSlice.js'
@@ -16,8 +16,24 @@ import { useDispatch, useSelector } from 'react-redux'
 //     listsReducer: lists
 //   })
 
-const store = configureStore({ 
-    reducer: {
+interface Store {
+  reducer: StoreReducer
+}
+
+interface StoreReducer {
+  listsReducer: Reducer<any>,
+  seriesReducer: Reducer<any>,
+  displayAreaReducer: Reducer<any>,
+  booksReducer: Reducer<any>,
+  gamesReducer: Reducer<any>,
+  loginReducer: Reducer<any>,
+  tagsReducer: Reducer<any>,
+  authorsReducer: Reducer<any>,
+  backlogReducer: Reducer<any>
+}
+
+const storeConfiguration: Store = {
+  reducer: {
       listsReducer: lists,
       seriesReducer: seriesReducer,
       displayAreaReducer: displayAreaReducer,
@@ -28,7 +44,9 @@ const store = configureStore({
       authorsReducer: authorsReducer,
       backlogReducer: backlogReducer
     } 
-})
+}
+
+const store = configureStore(storeConfiguration)
 
 // export default createStore(
 //     rootReducer, 
