@@ -11,6 +11,7 @@
 ## Other
 
  - Refactoring
+ - Version upgrades
 
 ============================================
 # v0.61.0

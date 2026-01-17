@@ -1,15 +1,14 @@
-import React from 'react';
 import { Field, Formik } from 'formik';
-import { loginUser} from '../../redux/actionCreators.js'
-import { connect } from 'react-redux'
+import { loginUser} from '../../dao/redux/actionCreators'
 import { setUser} from '../../dao/user/loginSlice'
-import {openBookList} from '../../readList/books/booksSlice.js'
-import {openCategory} from '../../displayAreaSlice.js'
-import * as displayAreaCategories from '../../displayAreaCategories.js'
-import DivFormGroup from '../common/DivFormGroup.jsx';
+import {openBookList} from '../../dao/book/booksSlice'
+import {openCategory} from '../../dao/displayAreaSlice'
+import * as displayAreaCategories from '../displayAreaCategories'
+import DivFormGroup from '../common/DivFormGroup';
 import { useDispatch } from 'react-redux';
-import ButtonSubmit from '../common/ButtonSubmit.jsx';
+import ButtonSubmit from '../common/ButtonSubmit';
 import * as UserRepository from '../../dao/user/UserRepository'
+import { JSX } from 'react';
 
 
 interface LoginForm {

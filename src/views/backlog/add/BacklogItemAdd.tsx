@@ -1,19 +1,13 @@
 import { Formik, Field} from 'formik';
-import Header from '../../../common/header'
-import useBacklogItems from '../list/useBacklogItems';
-import * as dateUtils from '../../../utils/dateUtils'
+import Header from '../../common/header'
+import useBacklogItems from '../../../controller/backlog/useBacklogItems';
+import * as dateUtils from '../../../crosscut/utils/dateUtils'
 import { useDispatch } from 'react-redux';
-import { openBacklogList } from '../backlogSlice'
+import { openBacklogList } from '../../../dao/backlog/backlogSlice'
 import DivFormGroup from '../../common/DivFormGroup';
+import { JSX } from 'react';
 
 interface BacklogItemForm {
-    title: string | null,
-    type: string | null,
-    note: string | null,
-    creationDate: string | null
-}
-
-interface BacklogItemFormError {
     title: string | null,
     type: string | null,
     note: string | null,
@@ -23,7 +17,7 @@ interface BacklogItemFormError {
 export default function BacklogList(): JSX.Element{
     const dispatch = useDispatch();
 
-    const {createBacklogItem, reload} = useBacklogItems();
+    const {createBacklogItem} = useBacklogItems();
 
     function handleSaveValue(values: BacklogItemForm){
 

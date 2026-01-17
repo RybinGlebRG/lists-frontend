@@ -1,17 +1,11 @@
 import { Field, FieldArray } from "formik";
-import DivFormGroup from "../../common/DivFormGroup";
-import { BookForm, SeriesForm } from "../../../readList/books/book/edit/BookEdit";
-import ISeriesList, { ISeriesItem } from "../../../dao/series/ISeriesList";
+import { BookForm, SeriesForm } from "./BookEdit";
+import { ISeriesItem } from "../../../dao/series/ISeriesList";
+import { JSX } from "react";
 
 interface SeriesListProps {
     values: BookForm,
     seriesList: ISeriesItem[]
-}
-
-function validateSeries(value) {
-    if (!value){
-        return 'Series name must be set';
-    }
 }
 
 export default function SeriesView(props: SeriesListProps) {

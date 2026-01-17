@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import User from '../../domain/user/User';
-import type { RootState } from '../../redux/store'
+import type { RootState } from '../redux/store'
 
 
-interface LoginState {
+export interface LoginState {
     JWT: string | null,
     username: string | null,
     id: number | null,

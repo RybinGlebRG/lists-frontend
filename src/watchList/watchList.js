@@ -6,7 +6,7 @@ import TitlesList from '../views/movies/list/titlesList'
 import TitleAdd from './titleAdd'
 import Title from './title'
 import TitleEdit from './titleEdit'
-import {ADD_TITLE, TITLES_LIST, TITLE, UPDATE_TITLE} from '../panels'
+import {ADD_TITLE, TITLES_LIST, TITLE, UPDATE_TITLE} from '../views/panels'
 
 
 class WatchList extends React.Component{

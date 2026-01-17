@@ -1,14 +1,11 @@
-import React, {useState, useEffect} from 'react';
-import { Row, Col, ListGroup } from 'react-bootstrap';
-import {openAddTitle, openTitle} from '../../../redux/actionCreators';
-import ItemRow from '../../../common/ItemRow'
-import * as dateUtils from '../../../utils/dateUtils'
+import {useState, useEffect, JSX} from 'react';
+import { ListGroup } from 'react-bootstrap';
+import {openAddTitle} from '../../../dao/redux/actionCreators';
 import { useSelector, useDispatch } from 'react-redux'
 import * as watchListApi from '../../../watchList/watchListApi'
-import {openSignIn} from '../../../displayAreaSlice'
 import MovieRow from './MovieRow';
 import Movie from '../../../domain/movie/Movie';
-import { RootState } from '../../../redux/store';
+import { RootState } from '../../../dao/redux/store';
 
 
 export default function TitlesList(): JSX.Element {
@@ -24,7 +21,7 @@ export default function TitlesList(): JSX.Element {
 
 	useEffect(()=>{
         let promises: Promise<any>[]=[];
-        promises.push(watchListApi.loadList(store.JWT, store.watchListId, ()=> dispatch(openSignIn({})) ));
+        promises.push(watchListApi.loadList(store.watchListId));
 
         Promise.all(promises)
         .then(([list]) =>{

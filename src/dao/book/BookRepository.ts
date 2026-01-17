@@ -1,10 +1,7 @@
-import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore';
-import * as commonApi from '../../common/commonApi'
 import * as BaseRepository from '../base/BaseRepository'
-import * as UserRepository from '../user/UserRepository'
-import SearchBooksRequest from '../../readList/books/api/SearchBooksRequest';
-import PostBooksRequest from '../../readList/books/api/PostBooksRequest';
-import PutBookRequest from '../../readList/books/api/PutBookRequest';
+import SearchBooksRequest from './SearchBooksRequest';
+import PostBooksRequest from './PostBooksRequest';
+import PutBookRequest from './PutBookRequest';
 import User from '../../domain/user/User';
 
 

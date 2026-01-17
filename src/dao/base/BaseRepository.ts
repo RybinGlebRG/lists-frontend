@@ -1,13 +1,10 @@
-import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore';
-import type { RootState } from '../../redux/store'
 import { jwtDecode } from "jwt-decode";
 import User from '../../domain/user/User'
 import * as UserRepository from '../../dao/user/UserRepository'
-import store from '../../redux/store'
+import store from '../redux/store'
 import {setUserData} from '../user/loginSlice'
 import * as BaseRepository from '../base/BaseRepository'
-import * as commonApi from '../../common/commonApi'
-import {openSignIn} from '../../displayAreaSlice'
+import {openSignIn} from '../displayAreaSlice'
 
 
 export async function checkAndRefreshToken() {
@@ -40,7 +37,7 @@ export async function fetchWithRetry(runfetch: (user: User) => Promise<Response>
     let res = await runfetch(user);
 
     // If first unauthorized error
-    if (isUnauthorizedError(res)) {
+    if (isForbiddenError(res)) {
 
         // Then refresh tokens
         await BaseRepository.checkAndRefreshToken();
@@ -56,8 +53,22 @@ export async function fetchWithRetry(runfetch: (user: User) => Promise<Response>
     return res;
 }
 
-function isUnauthorizedError(result): boolean {
-    return !result.ok && result.status === 401;
+/**
+ * Run fetch and check for errors
+ */
+export async function fetchWithoutRetry(runfetch: () => Promise<Response>): Promise<Response> {
+
+    // Run fetch
+    let res = await runfetch();
+
+    // Check errors
+    await checkError(res);
+
+    return res;
+}
+
+function isForbiddenError(result): boolean {
+    return !result.ok && result.status === 403;
 }
 
 async function checkError(result){

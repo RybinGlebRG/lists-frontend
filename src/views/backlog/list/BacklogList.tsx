@@ -1,18 +1,15 @@
-import { useSelector, useDispatch } from 'react-redux'
-import useBacklogItems from './useBacklogItems';
-import Header from '../../../common/header';
-import { openBacklogItemAdd, reload } from '../backlogSlice'
+import { useDispatch } from 'react-redux'
+import useBacklogItems from '../../../controller/backlog/useBacklogItems';
+import Header from '../../common/header';
+import { openBacklogItemAdd, reload } from '../../../dao/backlog/backlogSlice'
 import BacklogItemRow from './BacklogItemRow';
+import { JSX } from 'react';
 
 export default function BacklogList(): JSX.Element{
 
     const dispatch = useDispatch();
 
     const { error, isLoaded, backlogItems} = useBacklogItems();
-
-    let store={
-        JWT: useSelector((state: any) => state.listsReducer.JWT)
-    }
 
     let content: JSX.Element | null = null;
     if (error){

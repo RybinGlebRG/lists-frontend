@@ -1,8 +1,7 @@
-import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore';
-import type { RootState } from '../../redux/store'
+import type { RootState } from '../redux/store'
 import User from '../../domain/user/User';
-import store from '../../redux/store'
-import * as commonApi from '../../common/commonApi'
+import store from '../redux/store'
+import {fetchWithoutRetry} from '../base/BaseRepository'
 
 
 export async function getCurrentUser(): Promise<User> {
@@ -27,17 +26,21 @@ export async function getUser(username: string, password: string): Promise<User>
         "username": username,
         "password": password
     }
-    let res = await fetch(
-        window.location.origin+`/api/v1/users/tokens`,
-        {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-            body: JSON.stringify(vals)
+    let res = await fetchWithoutRetry(
+        () => {
+            return fetch(
+                window.location.origin+`/api/v1/users/tokens`,
+                {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    body: JSON.stringify(vals)
+                }
+            )
         }
     );
-    await commonApi.checkError(res, undefined);
+
     return res.json()
         .then((json: UserViewIn) => new User(json.id, json.name, json.accessToken, json.refreshToken));
 }
@@ -46,17 +49,21 @@ export async function refreshUser(user: User): Promise<User>{
     const vals={
         "refreshToken": user.refreshToken
     }
-    let res = await fetch(
-        window.location.origin+`/api/v1/users/refreshtoken`,
-        {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-            body: JSON.stringify(vals)
+    let res = await fetchWithoutRetry(
+        () => {
+            return fetch(
+                window.location.origin+`/api/v1/users/refreshtoken`,
+                {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    body: JSON.stringify(vals)
+                }
+            )
         }
     );
-    await commonApi.checkError(res, undefined);
+
     return res.json()
         .then((json: UserViewIn) => new User(json.id, json.name, json.accessToken, json.refreshToken));
 }

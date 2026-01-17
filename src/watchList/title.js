@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, Alert} from 'react-bootstrap'
 import { connect } from 'react-redux'
-import {openTitlesList, openUpdateTitle} from '../redux/actionCreators';
+import {openTitlesList, openUpdateTitle} from '../dao/redux/actionCreators';
 
 class Title extends React.Component{
     constructor(props){

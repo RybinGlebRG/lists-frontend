@@ -1,6 +1,6 @@
 import { BookStatus } from "../bookstatus/BookStatus";
 import ReadingRecord from "./ReadingRecord";
-import * as dt from '../../utils/dateUtils';
+import * as dt from '../../crosscut/utils/dateUtils';
 
 export function fromReadingRecordResponse(dto: ReadingRecordResponse) {
     return new ReadingRecord(

@@ -1,13 +1,13 @@
-import React, {JSX, useState} from 'react'
+import {JSX, useState} from 'react'
 import {v4 as uuidv4} from 'uuid';
 import Book from '../../../domain/book/Book';
 import {
     openBook,
     openBookUpdate
-} from '../../../readList/books/booksSlice'
-import { useSelector, useDispatch } from 'react-redux'
-import * as dateUtils from '../../../utils/dateUtils'
-import * as statuses from '../../../readList/books/statuses';
+} from '../../../dao/book/booksSlice'
+import { useDispatch } from 'react-redux'
+import * as dateUtils from '../../../crosscut/utils/dateUtils'
+import * as statuses from '../statuses';
 
 function getMostRecentRecord({readingRecords}){
 	let mostRecentRecord;
