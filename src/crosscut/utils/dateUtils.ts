@@ -107,3 +107,12 @@ export function fromDateToStringInputZoned(date: Date): string {
         dt.getHours().toString().padStart(2,"0") + ':' +
         dt.getMinutes().toString().padStart(2,"0");
 }
+
+export function fromDateToStringZoned(date: Date): string {
+    let dt = new Date(date);
+    return dt.getFullYear() + '-' +
+        (dt.getMonth()+1).toString().padStart(2,"0") + '-' +
+        dt.getDate().toString().padStart(2,"0") + 'T' +
+        dt.getHours().toString().padStart(2,"0") + ':' +
+        dt.getMinutes().toString().padStart(2,"0");
+}

@@ -5,7 +5,7 @@ import { Field, Formik} from 'formik';
 import Header from '../common/header'
 import { openGamesList } from '../../dao/game/gamesSlice'
 import * as dateUtils from '../../crosscut/utils/dateUtils'
-import { addGame } from '../../dao/game/gamesApi';
+import { addGame } from '../../dao/game/GamesRepository';
 import DivFormGroup from '../common/DivFormGroup';
 import TextArea from '../common/TextArea';
 
@@ -141,9 +141,11 @@ export default function GamesAdd(){
                                         )}
                                     </Field>
 
-                                    <button  className="btn btn-primary"
+                                    <button  
+                                        className="btn btn-primary"
                                         type="submit"
                                         disabled={isSubmitting}
+                                        aria-label="submit"
                                     >
                                         Submit
                                     </button>

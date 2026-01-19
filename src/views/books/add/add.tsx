@@ -353,9 +353,11 @@ export default function BookAdd() {
                                                 )}
                                             </Field>
 
-                                            <button className="btn btn-primary"
+                                            <button 
+                                            className="btn btn-primary"
                                                 type="submit"
                                                 disabled={isSubmitting}
+                                                aria-label="submit"
                                             >Submit</button>
                                         </form>
                                     )

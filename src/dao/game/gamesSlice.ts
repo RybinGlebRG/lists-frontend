@@ -1,12 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit'
 import * as gamesForms from '../../views/games/forms'
 
+export interface GamesState {
+    form: string,
+    isNeedListReload: boolean
+}
+
+const initialState: GamesState = {
+    form: gamesForms.LIST,
+    isNeedListReload: false
+}
+
 export const gamesSlice = createSlice({
     name: 'games',
-    initialState: {
-        form: gamesForms.LIST,
-        isNeedListReload: false
-    },
+    initialState,
     reducers:{
         openGamesList: state=>{
             state.form = gamesForms.LIST

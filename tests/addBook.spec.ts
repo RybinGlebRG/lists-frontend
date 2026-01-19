@@ -52,16 +52,16 @@ test('add book', async ({ page }) => {
     await expect(page.getByRole('heading', { name: 'Book List' })).toBeVisible();
 
     // Add book
-    await page.getByRole('button').nth(4).click();
+    await page.getByRole('button', { name: 'add book' }).click();
     await expect(page.getByRole('heading', { name: 'Add Book' })).toBeVisible();
 
     // Title
     await page.getByRole('textbox', { name: 'Title' }).click();
     await page.getByRole('textbox', { name: 'Title' }).fill(bookName);
     // Status
-    await page.locator('select[name="status"]').selectOption('1');
+    await page.locator('select[name="statusId"]').selectOption('1');
     // Submit
-    await page.getByRole('button', { name: 'Submit' }).click();
+    await page.getByRole('button', { name: 'submit' }).click();
 
     // Check added 
     await expect(page.getByRole('heading', { name: bookName })).toBeVisible();
