@@ -2,7 +2,7 @@ import React from 'react';
 import { Row, Col, Button, Form } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { Formik} from 'formik';
-import {titleAddSetResult, openTitlesList} from '../redux/actionCreators';
+import {titleAddSetResult, openTitlesList} from '../dao/redux/actionCreators';
 
 
 class TitleAdd extends React.Component{

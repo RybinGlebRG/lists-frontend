@@ -1,6 +1,6 @@
 import Movie from "../../../domain/movie/Movie";
-import { useSelector, useDispatch } from 'react-redux'
-import {openAddTitle, openTitle} from '../../../redux/actionCreators';
+import { useDispatch } from 'react-redux'
+import { openTitle} from '../../../dao/redux/actionCreators';
 
 export interface MovieRowProps {
     movie: Movie;

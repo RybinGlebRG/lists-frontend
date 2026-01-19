@@ -1,8 +1,9 @@
 import BacklogItem from "../../../domain/backlog/BacklogItem";
-import useBacklogItems from "./useBacklogItems";
-import * as dateUtils from '../../../utils/dateUtils'
+import useBacklogItems from "../../../controller/backlog/useBacklogItems";
+import * as dateUtils from '../../../crosscut/utils/dateUtils'
 import SeriesItemType from "../../../domain/seriesitemtype/SeriesItemType";
 import SeriesItemTypesEnum from "../../../domain/seriesitemtype/SeriesItemTypesEnum";
+import { JSX } from "react";
 
 export interface BacklogItemRowProps {
     backlogItem: BacklogItem

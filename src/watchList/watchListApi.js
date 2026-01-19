@@ -1,15 +1,19 @@
-import * as commonApi from '../common/commonApi'
+import * as BaseRepository from '../dao/base/BaseRepository'
 
 
-export async function loadList(JWT, watchListId, onUnauthorized){
-    let res = await fetch(window.location.origin+`/api/v0.2/watchLists/${watchListId}/titles`,
-    {
-        method: "GET",
-        headers: {
-            'Authorization': `Bearer ${JWT}`
+export async function loadList(watchListId){
+    let res = await BaseRepository.fetchWithRetry(
+        (user) => {
+            return fetch(window.location.origin+`/api/v0.2/watchLists/${watchListId}/titles`,
+            {
+                method: "GET",
+                headers: {
+                    'Authorization': `Bearer ${user.accessToken}`
+                }
+            })
         }
-    });
-    await commonApi.checkError(res, onUnauthorized);
+    );
+
     let list = await res.json();
 
     return list;       

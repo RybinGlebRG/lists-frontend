@@ -1,9 +1,9 @@
 import React from 'react';
 import { Row, Col, Alert} from 'react-bootstrap'
 import { connect } from 'react-redux'
-import {openTitle} from '../redux/actionCreators';
+import {openTitle} from '../dao/redux/actionCreators';
 import { Formik} from 'formik';
-import * as dateUtils from '../utils/dateUtils'
+import * as dateUtils from '../crosscut/utils/dateUtils'
 
 class TitleEdit extends React.Component{
     constructor(props){

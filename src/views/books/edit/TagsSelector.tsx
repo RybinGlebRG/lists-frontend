@@ -1,19 +1,13 @@
 import { FieldArray } from "formik";
-import { BookForm, TagForm } from "../../../readList/books/book/edit/BookEdit";
+import { BookForm, TagForm } from "./BookEdit";
 import Tag from "../../../domain/tag/Tag";
+import { JSX } from "react";
 
 interface TagsProps {
     values: BookForm,
     tagsArray: JSX.Element[],
     tags: Tag[] 
 }
-
-function validateTag(value) {
-    if (!value){
-        return 'Tag name must be set';
-    }
-}
-
 
 export default function TagsSelector(props: TagsProps) {
 

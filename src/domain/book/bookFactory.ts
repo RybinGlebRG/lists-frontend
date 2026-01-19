@@ -4,7 +4,7 @@ import Book from "./Book";
 import * as readingRecordFactory from '../readingrecord/readingRecordFactory'
 import Series from "../series/Series";
 import Tag from "../tag/Tag";
-import * as dateUtils from '../../utils/dateUtils';
+import * as dateUtils from '../../crosscut/utils/dateUtils';
 
 export function fromResponseBook(dto: ResponseBook) {
 

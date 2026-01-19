@@ -1,11 +1,10 @@
 import Controls from './Controls';
 import Table from './Table';
-import useBooks from './useBooks';
+import useBooks from '../../../controller/books/useBooks';
 
 export default function ListPanel(){
 	const {	error,
 		isLoaded, 
-		bookList, 
 		bookStatuses,
 		listOrdering,
 		titleSearch,

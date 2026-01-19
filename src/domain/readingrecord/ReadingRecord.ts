@@ -1,5 +1,5 @@
 import { BookStatus } from "../bookstatus/BookStatus";
-import * as dt from '../../utils/dateUtils';
+import * as dt from '../../crosscut/utils/dateUtils';
 
 export default class ReadingRecord {
 

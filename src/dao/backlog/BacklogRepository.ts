@@ -1,4 +1,5 @@
-import * as commonApi from '../../common/commonApi'
+import User from '../../domain/user/User'
+import * as BaseRepository from '../base/BaseRepository'
 
 export interface BacklogItemResponse {
     id: number,
@@ -23,68 +24,80 @@ export interface BacklogItemEventCreateRequest {
     eventTypeId: number
 }
 
-export async function getAll(userId: number, JWT: string, onUnauthorized: () => void): Promise<BacklogResponse> {
+export async function getAll(): Promise<BacklogResponse> {
 
-    let res = await fetch(`${window.location.origin}/api/v1/users/${userId}/backlogItems`,
-            {
-                method: "GET",
-                headers: {
-                    'Authorization': `Bearer ${JWT}`
+    let res = await BaseRepository.fetchWithRetry(
+        (user: User) => {
+            return fetch(`${window.location.origin}/api/v1/users/${user.id}/backlogItems`,
+                {
+                    method: "GET",
+                    headers: {
+                        'Authorization': `Bearer ${user.accessToken}`
+                    }
                 }
-            }
-        );
-    await commonApi.checkError(res, onUnauthorized);
+            )
+        }
+    );
 
     let backlog: Promise<BacklogResponse> = await res.json();
 
     return backlog;       
 }
 
-export async function create(backlogItemCreateReqauest: BacklogItemCreateRequest, userId: number, JWT: string, onUnauthorized: () => void): Promise<BacklogItemResponse> {
+export async function create(backlogItemCreateReqauest: BacklogItemCreateRequest): Promise<BacklogItemResponse> {
 
-    let res = await fetch(`${window.location.origin}/api/v1/users/${userId}/backlogItems`,
-            {
-                method: "POST",
-                headers: {
-                    'Authorization': `Bearer ${JWT}`,
-                    'Content-Type': 'application/json;charset=utf-8',
-                },
-                body: JSON.stringify(backlogItemCreateReqauest)
-            }
-        );
-    await commonApi.checkError(res, onUnauthorized);
+    let res = await BaseRepository.fetchWithRetry(
+        (user: User) => {
+            return fetch(`${window.location.origin}/api/v1/users/${user.id}/backlogItems`,
+                {
+                    method: "POST",
+                    headers: {
+                        'Authorization': `Bearer ${user.accessToken}`,
+                        'Content-Type': 'application/json;charset=utf-8',
+                    },
+                    body: JSON.stringify(backlogItemCreateReqauest)
+                }
+            )
+        }
+    );
 
     let backlog: Promise<BacklogItemResponse> = await res.json();
 
     return backlog;       
 }
 
-export async function deleteBacklogItem(backlogItemId: number, userId: number, JWT: string, onUnauthorized: () => void): Promise<void> {
+export async function deleteBacklogItem(backlogItemId: number): Promise<void> {
 
-    let res = await fetch(`${window.location.origin}/api/v1/users/${userId}/backlogItems/${backlogItemId}`,
-            {
-                method: "DELETE",
-                headers: {
-                    'Authorization': `Bearer ${JWT}`
+    await BaseRepository.fetchWithRetry(
+        (user: User) => {
+            return fetch(`${window.location.origin}/api/v1/users/${user.id}/backlogItems/${backlogItemId}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        'Authorization': `Bearer ${user.accessToken}`
+                    }
                 }
-            }
-        );
-    await commonApi.checkError(res, onUnauthorized);
+            )
+        }
+    );
      
 }
 
-export async function createBacklogItemEvent(backlogItemEventCreateRequest: BacklogItemEventCreateRequest, backlogItemId: number, userId: number, JWT: string, onUnauthorized: () => void): Promise<void> {
+export async function createBacklogItemEvent(backlogItemEventCreateRequest: BacklogItemEventCreateRequest, backlogItemId: number): Promise<void> {
 
-    let res = await fetch(`${window.location.origin}/api/v1/users/${userId}/backlogItems/${backlogItemId}/events`,
-            {
-                method: "POST",
-                headers: {
-                    'Authorization': `Bearer ${JWT}`,
-                    'Content-Type': 'application/json;charset=utf-8'
-                },
-                body: JSON.stringify(backlogItemEventCreateRequest)
-            }
-        );
-    await commonApi.checkError(res, onUnauthorized);
+    await BaseRepository.fetchWithRetry(
+        (user: User) => {
+            return fetch(`${window.location.origin}/api/v1/users/${user.id}/backlogItems/${backlogItemId}/events`,
+                {
+                    method: "POST",
+                    headers: {
+                        'Authorization': `Bearer ${user.accessToken}`,
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    body: JSON.stringify(backlogItemEventCreateRequest)
+                }
+            )
+        }
+    );
      
 }
