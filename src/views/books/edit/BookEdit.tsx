@@ -69,7 +69,7 @@ export default function BookEdit(){
     const authorList = useAuthorList();
     const bookTypes = useBookTypes({listId: store.listId});
     const bookStatuses = useBookStatuses({listId: store.listId});
-    const tagsData = useTags();
+    const tagsController = useTags();
     const seriesList = useSeriesList();
 
 
@@ -116,9 +116,9 @@ export default function BookEdit(){
 
     let displayResult: JSX.Element | null = null;
 
-    if (error || authorList.error || bookTypes.error || bookStatuses.error || tagsData.error){
+    if (error || authorList.error || bookTypes.error || bookStatuses.error || tagsController.error){
         displayResult=( <div className="alert alert-danger" role="alert">{error + authorList.error + bookTypes.error + bookStatuses.error}</div>);
-    } else if (!isLoaded || !authorList.isLoaded || !bookTypes.isLoaded || !bookStatuses.isLoaded || !tagsData.isLoaded){
+    } else if (!isLoaded || !authorList.isLoaded || !bookTypes.isLoaded || !bookStatuses.isLoaded || !tagsController.isLoaded){
         displayResult=( 
             <div className="d-flex justify-content-center">
                 <div className="spinner-border m-5" role="status">
@@ -126,7 +126,7 @@ export default function BookEdit(){
                 </div>
             </div>
         );
-    } else if (book != null && authorList.authors != null && bookTypes.bookTypes != null && tagsData.data != null && seriesList != null && seriesList.seriesList != null && bookStatuses.bookStatuses != null){
+    } else if (book != null && authorList.authors != null && bookTypes.bookTypes != null && seriesList != null && seriesList.seriesList != null && bookStatuses.bookStatuses != null){
 
         let authorsItems: any[] = []
         for (let i = 0; i <authorList.authors.length; i++){
@@ -147,11 +147,6 @@ export default function BookEdit(){
         let bookStatusesArray: JSX.Element[] = []
         for (let i = 0; i < bookStatuses.bookStatuses.length; i++){
             bookStatusesArray.push(<option value={bookStatuses.bookStatuses[i].statusId}>{bookStatuses.bookStatuses[i].statusName}</option>)
-        }
-
-        let tagsArray: JSX.Element[] = []
-        for (let i = 0; i < tagsData.data.length; i++){
-            tagsArray.push(<option value={tagsData.data[i].id}>{tagsData.data[i].name}</option>)
         }
 
         const initialValues: BookForm = {
@@ -502,8 +497,7 @@ export default function BookEdit(){
                                     <div className="col-md-auto">
                                         <TagsSelector
                                             values={values}
-                                            tagsArray={tagsArray}
-                                            tags={tagsData.data != null ? tagsData.data : []}                                            
+                                            tagsController={tagsController}                                    
                                         />
                                     </div>
                                 </div>

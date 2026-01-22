@@ -1,16 +1,27 @@
-import * as tagsApi from '../../dao/tag/TagsRepository'
+import * as TagsRepository from '../../dao/tag/TagsRepository'
 import {useState, useEffect} from 'react';
 import Tag from '../../domain/tag/Tag';
 
-export default function useTags() {
-    const [error,setError] = useState(null);
-    const [isLoaded,setIsLoaded] = useState(false);
-    const [data, setData] = useState<Tag[] | null>(null);
-    const [isReaload, setIsReload] = useState(true);
+export interface TagsController {
+    error: any,
+    isLoaded: boolean,
+    data: Tag[],
+    addTag: ({name, onUpdate}) => void,
+    deleteTag: ({tagId, onExecute}) => void
+}
+
+export default function useTags(): TagsController {
+
+    const [error,setError] = useState<any>(null);
+    const [isLoaded,setIsLoaded] = useState<boolean>(false);
+    const [data, setData] = useState<Tag[]>([]);
+    const [isReaload, setIsReload] = useState<boolean>(true);
 
     useEffect(()=>{
         if (isReaload) {
-            tagsApi.getTags()
+            setIsLoaded(false);
+            
+            TagsRepository.getTags()
             .then(result =>{
                 setError(null);
                 setData(result.items.map(item => new Tag(item.tagId, item.name)));
@@ -19,7 +30,7 @@ export default function useTags() {
             })
             .catch(error => {
                 setError(error.message);
-                setData(null);
+                setData([]);
                 setIsLoaded(true);
                 setIsReload(false);
             });
@@ -28,7 +39,7 @@ export default function useTags() {
 
     let addTag = ({name, onUpdate}) => {
         setIsLoaded(false);
-        tagsApi.addTag(name)
+        TagsRepository.addTag(name)
         .then(() =>{
             setError(null);
             setIsReload(true);
@@ -41,7 +52,7 @@ export default function useTags() {
 
     let deleteTag = ({tagId, onExecute}) => {
         setIsLoaded(false);
-        tagsApi.deleteTag(tagId)
+        TagsRepository.deleteTag(tagId)
         .then(() =>{
             setError(null);
             setIsReload(true);
