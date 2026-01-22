@@ -1,112 +1,194 @@
 import { FieldArray } from "formik";
 import { BookForm, TagForm } from "./BookEdit";
 import Tag from "../../../domain/tag/Tag";
-import { JSX } from "react";
+import { JSX, useState } from "react";
+import { TagsController } from "../../../controller/tags/useTags";
 
 interface TagsProps {
     values: BookForm,
-    tagsArray: JSX.Element[],
-    tags: Tag[] 
+    tagsController: TagsController
 }
 
-export default function TagsSelector(props: TagsProps) {
+export default function TagsSelector(props: TagsProps): JSX.Element {
+
+    const [selectedOnModalTags, setSelectedOnModalTags] = useState<string[]>(() => {
+        const selectedTags: string[] = [];
+        for (let i = 0; i < props.values.tags.length; i++) {
+            selectedTags.push(props.values.tags[i].id);
+        }
+        return selectedTags;
+    });
+
+    const [filterField, setFilterField] = useState<string>("");
+
+    let result: JSX.Element;
 
     const values = props.values;
-    const tagsArray = props.tagsArray;
-    const tags = props.tags;
+    const tagsToShowOnModal = props.tagsController.data.filter(item => item.name.includes(filterField))
 
-    return (
+    result = (
         <FieldArray 
             name="tags"
             render={arrayHelpers => (
-                <ul className="list-group list-group-flush">
-                    <label>Tags</label>
-                        { 
-                            values.tags.length > 0 ?
-                            (
-                                values.tags.map((tag, index) => (
-                                        <li 
-                                            className="list-group-item" 
-                                            key={index}
+
+                <div className="row">
+                    <div className="col">
+                        <div className="row">
+                            <div className="col">
+                                <label>Tags</label>
+                            </div>
+                        </div>
+                        <div className="row">
+                            { 
+                                values.tags.length > 0 ?
+                                (
+                                    values.tags.map((tag, index) => (
+                                        <div 
+                                            className="col-md-auto mt-2" 
                                         >
-                                            
-                                            <div className="row">
-                                                <div className="col-md-auto">
-                                                    <div className="input-group">
-                                                        <input
-                                                            className="form-control"
-                                                            type="text"
-                                                            disabled={true}
-                                                            value={tag.name}
-                                                        />
-                                                        <button
-                                                            type="button"
-                                                            className="btn btn-outline-danger"
-                                                            onClick={() => arrayHelpers.remove(index)}
-                                                        >
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-dash" viewBox="0 0 16 16">
-                                                                <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"/>
-                                                            </svg>
-                                                        </button>
-                                                    </div>
-                                                </div>
+                                            <div className="input-group">
+                                                <input
+                                                    className="form-control"
+                                                    type="text"
+                                                    disabled={true}
+                                                    value={tag.name}
+                                                />
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-outline-danger"
+                                                    onClick={() => arrayHelpers.remove(index)}
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-dash" viewBox="0 0 16 16">
+                                                        <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"/>
+                                                    </svg>
+                                                </button>
                                             </div>
                                             
-                                        </li>
-                                ))
-                            )
-                            : null
-                        }
-
+                                        </div>
+                                    ))
+                                )
+                                : null
+                            }
+                        </div>
                         <div className="row mt-4">
-                            <div className="col">
+                            <div className="col-md-auto">
 
-                                <div className="input-group">
-                                    <select
-                                        id='tagSelector'
-                                        className="form-select"
-                                    >
-                                        <option selected>Select tag</option>
-                                        {tagsArray}
-                                    </select>
-                                    <button 
-                                        className="btn btn-outline-success" 
-                                        type="button"
-                                        onClick={() => {
-                                            const tagSelector: HTMLSelectElement | null = document.getElementById('tagSelector') as HTMLSelectElement;
-                                            if (tagSelector != null) {
+                                <button type="button" className="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#selectTagsModal">
+                                    Select tags
+                                </button>
 
-                                                const inputValue = tagSelector.value;
-                                                if (inputValue != null && tags != null) {
-                                                    
-                                                    let tag: TagForm | undefined = tags
-                                                        .filter(item => item.id.toString() === inputValue)
-                                                        .map((item: Tag )=> {
-                                                            let newTag: TagForm = {
-                                                                id: item.id.toString(),
-                                                                name: item.name
-                                                            } 
-                                                            return newTag;
-                                                        })
-                                                        .pop()
-
-                                                    if (tag != undefined) {
-                                                        arrayHelpers.push(tag);
-                                                    }
+                                <div className="modal fade" id="selectTagsModal" tabIndex={-1} aria-labelledby="selectTagsModal" aria-hidden="true">
+                                    <div className="modal-dialog modal-dialog-scrollable">
+                                        <div className="modal-content">
+                                            <div className="modal-header">
+                                                <h1 className="modal-title fs-5" id="selectTagsModalLabel">Select tags</h1>
+                                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div className="modal-body">
+                                                <div className="row mb-3 border-bottom">
+                                                    <div className="col">
+                                                        <div className="mb-3">
+                                                            <label htmlFor="tagsFilter" className="form-label">Filter</label>
+                                                            <input 
+                                                                type="text" 
+                                                                className="form-control" 
+                                                                id="tagsFilter"
+                                                                placeholder="Filter value..."
+                                                                onChangeCapture={(e) => {
+                                                                    setFilterField(e.currentTarget.value);
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {
+                                                    tagsToShowOnModal.map(tag => {
+                                                        return(
+                                                            <div className="row mb-2">
+                                                                <div className="col"> 
+                                                                    <div className="input-group">
+                                                                        <div className="input-group-text">
+                                                                            <input 
+                                                                                className="form-check-input mt-0" 
+                                                                                type="checkbox" 
+                                                                                value="" 
+                                                                                checked={selectedOnModalTags.includes(tag.id.toString())}
+                                                                                onChange={e => {
+                                                                                    if (e.target.checked) {
+                                                                                        setSelectedOnModalTags([...selectedOnModalTags, tag.id.toString()]);
+                                                                                    } else {
+                                                                                        setSelectedOnModalTags(selectedOnModalTags.filter(item => item !== tag.id.toString()));
+                                                                                    }
+                                                                                }}
+                                                                            />
+                                                                        </div>
+                                                                        <input type="text" className="form-control" disabled={true} value={tag.name}/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        )
+                                                    })
                                                 }
-                                            }
-                                        }}
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus" viewBox="0 0 16 16">
-                                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                                        </svg>
-                                        Add tag
-                                    </button>
+                                            </div>
+                                            <div className="modal-footer">
+                                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button 
+                                                    type="button" 
+                                                    className="btn btn-primary" 
+                                                    data-bs-dismiss="modal" 
+                                                    onClick={() => {
+                                                    
+                                                        // For each existing tag
+                                                        for (let i = 0; i < props.tagsController.data.length; i++) {
+                                                            const tag: Tag = props.tagsController.data[i];
+
+                                                            // Get all tags selected on form
+                                                            const selectedOnFormTags: string[] = props.values.tags.map(item => item.id.toString());
+
+                                                            // If tag selected on modal
+                                                            if (selectedOnModalTags.includes(tag.id.toString())) {
+                                                                // But not selected on form
+                                                                if (!selectedOnFormTags.includes(tag.id.toString())) {
+                                                                    // Add to form
+                                                                    let newTag: TagForm = {
+                                                                        id: tag.id.toString(),
+                                                                        name: tag.name
+                                                                    } 
+                                                                    arrayHelpers.push(newTag);
+                                                                }
+                                                            } 
+                                                            // If not selected on modal
+                                                            else {
+                                                                // But selected on form
+                                                                if (selectedOnFormTags.includes(tag.id.toString())) {
+                                                                    // Find element index
+                                                                    let index = values.tags.findIndex(item => item.id.toString() === tag.id.toString());
+                                                                    // Remove from form
+                                                                    if (index > -1) {
+                                                                        arrayHelpers.remove(index);
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }}
+                                                >Select</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                </ul>
+                    </div>
+                </div>
             )}                        
         />
+    )
+
+    return (
+        <div className="row">
+            <div className="col">
+                {result}
+            </div>
+        </div>
     )
 }

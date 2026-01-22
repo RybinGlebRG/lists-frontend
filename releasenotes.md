@@ -1,3 +1,18 @@
+# v0.63.0
+
+## Features
+
+ - Change tags layout and selection
+
+## Bugfixes
+
+ - N/A
+
+## Other
+
+ - N/A
+
+============================================
 # v0.62.0
 
 ## Features
