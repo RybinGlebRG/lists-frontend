@@ -1,4 +1,3 @@
-import { jwtDecode } from "jwt-decode";
 import User from '../../domain/user/User'
 import * as UserRepository from '../../dao/user/UserRepository'
 import store from '../redux/store'
@@ -6,24 +5,16 @@ import {setUserData} from '../user/loginSlice'
 import * as BaseRepository from '../base/BaseRepository'
 import {openSignIn} from '../displayAreaSlice'
 
-
-export async function checkAndRefreshToken() {
+export async function refreshToken() {
     const user: User = await UserRepository.getCurrentUser();
 
-    const decoded = jwtDecode(user.accessToken);
-    const expirationDate = new Date(0);
-    expirationDate.setUTCSeconds(decoded?.exp ?? 0);
-    expirationDate.setMinutes(-5);
-
-    if (new Date() > expirationDate) {
-        let refreshedUser = await UserRepository.refreshUser(user);
-        store.dispatch(setUserData({
-            id: refreshedUser.id,
-            name: refreshedUser.name,
-            accessToken: refreshedUser.accessToken,
-            refreshToken: refreshedUser.refreshToken
-        }))
-    }
+    let refreshedUser = await UserRepository.refreshUser(user);
+    store.dispatch(setUserData({
+        id: refreshedUser.id,
+        name: refreshedUser.name,
+        accessToken: refreshedUser.accessToken,
+        refreshToken: refreshedUser.refreshToken
+    }))
     
 }
 
@@ -40,7 +31,7 @@ export async function fetchWithRetry(runfetch: (user: User) => Promise<Response>
     if (isForbiddenError(res)) {
 
         // Then refresh tokens
-        await BaseRepository.checkAndRefreshToken();
+        await BaseRepository.refreshToken();
         
         // And try again
         user = await UserRepository.getCurrentUser();

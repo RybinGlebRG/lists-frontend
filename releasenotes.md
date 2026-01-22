@@ -1,3 +1,18 @@
+# v0.63.1
+
+## Features
+
+ - N/A
+
+## Bugfixes
+
+ - Removed unnecessary token checks
+
+## Other
+
+ - N/A
+
+============================================
 # v0.63.0
 
 ## Features
