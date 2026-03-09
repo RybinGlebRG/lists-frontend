@@ -8,6 +8,7 @@ import {
 import { useDispatch } from 'react-redux'
 import * as dateUtils from '../../../crosscut/utils/dateUtils'
 import * as statuses from '../statuses';
+import ReadingRecord from '../../../domain/readingrecord/ReadingRecord';
 
 function getMostRecentRecord({readingRecords}){
 	let mostRecentRecord;
@@ -219,7 +220,8 @@ export default function BookRow(props: BookRowProps){
         </div>
     )
 
-    let updated = dateUtils.formatToDisplayDate(props.book.lastUpdateDate);	
+    let lastReadingRecord: ReadingRecord = props.book.readingRecords.slice(-1)[0];
+    let updated = dateUtils.formatToDisplayDate(lastReadingRecord.updateDate);	
 
     return (
         <div className="row">

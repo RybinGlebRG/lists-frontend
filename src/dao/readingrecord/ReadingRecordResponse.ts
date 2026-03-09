@@ -8,5 +8,6 @@ interface ReadingRecordResponse {
     startDate: string,
     endDate: string | null,
     isMigrated: boolean,
-    lastChapter: number | null
+    lastChapter: number | null,
+    updateDate: string
 }
