@@ -12,6 +12,7 @@ export function fromReadingRecordResponse(dto: ReadingRecordResponse) {
         ),
         dt.fromString(dto.startDate),
         dto.endDate != null ? dt.fromString(dto.endDate) : null,
-        dto.lastChapter
+        dto.lastChapter,
+        dt.fromStrinUtcToDate(dto.updateDate)
     );
 }

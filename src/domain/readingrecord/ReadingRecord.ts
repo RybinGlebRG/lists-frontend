@@ -9,6 +9,7 @@ export default class ReadingRecord {
     private _startDate: Date;
     private _endDate: Date | null;
     private _lastChapter: number | null;
+    private _updateDate: Date;
 
     public constructor(
         id: number | null,
@@ -16,7 +17,8 @@ export default class ReadingRecord {
         bookStatus: BookStatus,
         startDate: Date,
         endDate: Date | null,
-        lastChapter: number | null
+        lastChapter: number | null,
+        updateDate: Date
     ) {
         this._id = id;
         this._bookId = bookId;
@@ -24,6 +26,7 @@ export default class ReadingRecord {
         this._startDate = startDate;
         this._endDate = endDate;
         this._lastChapter = lastChapter;
+        this._updateDate = updateDate;
     }
 
     public get id() {
@@ -56,6 +59,10 @@ export default class ReadingRecord {
 
     public get lastChapter() {
         return this._lastChapter;
+    }
+
+    public get updateDate() {
+        return this._updateDate;
     }
 
 }

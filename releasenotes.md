@@ -1,3 +1,18 @@
+# v0.63.2
+
+## Features
+
+ - N/A
+
+## Bugfixes
+
+ - Fixed update date
+
+## Other
+
+ - N/A
+
+============================================
 # v0.63.1
 
 ## Features
