@@ -1,9 +1,10 @@
 import { test, expect } from '@playwright/test';
 import * as dotenv from 'dotenv';
+import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
 // Load .env file
-dotenv.config();
+dotenv.config({ path: path.resolve(process.cwd(), './tests/.env.test.local')});
 
 let bookName: string;
 
